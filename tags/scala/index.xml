@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Scala on Blog | Federico Marani</title>
+    <link>http://flagzeta.org/tags/scala/</link>
+    <description>Recent content in Scala on Blog | Federico Marani</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
+    <lastBuildDate>Sun, 27 Mar 2011 13:29:33 +0000</lastBuildDate>
+    <atom:link href="http://flagzeta.org/tags/scala/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Functional Programming ideas in OOP</title>
+      <link>http://flagzeta.org/blog/functional-programming-ideas-in-oop/</link>
+      <pubDate>Sun, 27 Mar 2011 13:29:33 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/functional-programming-ideas-in-oop/</guid>
+      <description>&lt;p&gt;About a year and half ago I started to be interested in Scala. Scala is a hybrid between an Object Oriented language and a Functional Language, and while i was using it i learnt to appreciate more and more the Functional part. I will not hide that the most difficult part in learning Scala was because of that.&lt;/p&gt;
+
+&lt;p&gt;The mindset when solving problems using FP is different because it forces you to think in terms of mapping transformations rather than step-by-step algorithms. Type systems are also very strong, more than the OOP i know.&lt;/p&gt;
+
+&lt;p&gt;Without getting the rant go too far, I found that my OOP style is now really influenced by the functional thinking:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;lots of small functions, generally short, with strict behaviour.&lt;/li&gt;
+&lt;li&gt;functional style is usually more testable because by definition there is no side effect in the code. The code does only one thing and function application to a state A always returns state B. This links to &lt;a href=&#34;http://en.wikipedia.org/wiki/Referential_transparency_%28computer_science%29&#34;&gt;Referential Transparency&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;state is partly responsible for exponential increase of complexity when stacking up code. Inheritance, composition, whatever technique you use. An object variable that changes state inside a nested object is usually quite difficult to follow. I am not going to say all variables need to be read-only, but limiting the scope in which variables are written and overwritten is good.&lt;/li&gt;
+&lt;li&gt;if you can choose between stateless and stateful implementations and you are working on the business domain but still do not know it well, go stateless. Stateless implementations are easier to change.&lt;/li&gt;
+&lt;li&gt;type systems initially are a pain, but they enforce you to write safe code and ultimately produce better code. Generally i found that there are not many cases in which you want automatic casting to happen. It also clashes with the rule &amp;ldquo;fail fast&amp;rdquo;, which is really high in my priorities. Type inference at pre-run time is generally what you want, not changing types.&lt;/li&gt;
+&lt;li&gt;i found FP use of types leads to more specific code. For instance, I would rather use a &amp;ldquo;Currency&amp;rdquo; type than a float type. Being specific is good, less space for doubt. This is not an unquestionable rule, if performance is crucial and compiler does not optimize this code, that is a big mistake..&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I am sure there is a lot more about FP, but this is it for now. These are personal opinions, i am not a language theorist. I am interested in practical consequences, and this is what is happening to my way of working.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Scala</title>
+      <link>http://flagzeta.org/blog/scala/</link>
+      <pubDate>Tue, 05 Oct 2010 20:01:04 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/scala/</guid>
+      <description>&lt;p&gt;This had quickly become one of my favourite languages. If you see it from the point of view of expressiveness, it is really close to Python. It is quite new in the world of programming languages, but it is mature enough to be used by big players such as Twitter and Foursquare.&lt;/p&gt;
+
+&lt;p&gt;What i like of that language is mainly conciseness united with the possibility of using almost every tool and library from the Java world. It is a big plus indeed, and just that alone it gives many more tools than PHP, Python and so on.&lt;/p&gt;
+
+&lt;p&gt;Secondly, i really like the functional approach. I am not going to say it is better than imperative, it is just a different way to approach the same problem. It is a bit more difficult to follow at the beginning, but it offers many advantages, you don&amp;rsquo;t specify each step for instance but rather a group of transformations. I don&amp;rsquo;t want to get into detail, i am not a functional programming expert.&lt;/p&gt;
+
+&lt;p&gt;Last thing i want to mention is speed. Being compiled to Java Bytecode, it&amp;rsquo;s blazing fast&amp;hellip; comparable with C or Java.&lt;/p&gt;
+
+&lt;p&gt;I did not mention it&amp;rsquo;s fun to use! here in London the user group started regular meetings 6-7 months ago and there is still that feeling of being a pioneer which is quite nice.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#39;http://web2dot5.files.wordpress.com/2010/10/scala-presentation.pdf&#39;&gt;Here&lt;/a&gt; is the presentation i did some time ago in my office and there are some examples i showed &lt;a href=&#34;http://gist.github.com/501552&#34;&gt;here&lt;/a&gt;. Spread the word!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Europython on Blog | Federico Marani</title>
+    <link>http://flagzeta.org/tags/europython/</link>
+    <description>Recent content in Europython on Blog | Federico Marani</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
+    <lastBuildDate>Sun, 27 Jul 2014 12:00:00 +0000</lastBuildDate>
+    <atom:link href="http://flagzeta.org/tags/europython/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Scaling with Ansible (Europython 2014)</title>
+      <link>http://flagzeta.org/blog/scaling-with-ansible/</link>
+      <pubDate>Sun, 27 Jul 2014 12:00:00 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/scaling-with-ansible/</guid>
+      <description>&lt;p&gt;The presentation I gave at Europython 2014 in Berlin. Again it is about how TrialReach uses Ansible to manage its own infrastructure and some tips and tricks about our use of Ansible.&lt;/p&gt;
+
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;38a6f0d0f48f01318f29762c3a3e275b&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;And also the video of the presentation:&lt;/p&gt;
+
+&lt;iframe width=&#34;560&#34; height=&#34;315&#34; src=&#34;//www.youtube.com/embed/ptc9E24YAcc&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

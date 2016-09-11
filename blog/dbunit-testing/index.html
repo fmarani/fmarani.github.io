@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="generator" content="Hugo 0.16" />
+        <title>Dbunit testing</title>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+        <link rel="stylesheet" type="text/css" href="http://flagzeta.org//css/crisp.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="keywords" content="code,python,django,it,software architecture,technical architecture">
+        <meta name="author" content="Federico Marani">
+        
+    </head>
+    <body>
+
+<header id="header">
+    <a id="logo" href="/"><img src="http://flagzeta.org//img/me.png" alt="me" /></a>
+    <a href="http://flagzeta.org/"><h1>Blog | Federico Marani</h1></a>
+    <p>Coder, open-source enthusiast, command-line addict. CTO at TalentRank. Former Head of Engineering @TrialReach</p>
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ"><i class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani"><i class="fa fa-linkedin-square fa-2x"></i></a>
+        <a href="http://github.com/fmarani"><i class="fa fa-github-square fa-2x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-rss-square fa-2x"></i></a> 
+    </div>                                                                  
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <h6><a href="http://flagzeta.org/about/">About me</a></h6>
+        
+    
+        
+        <h6><a href="http://flagzeta.org/projects/">Side Projects</a></h6>
+        
+    
+</header>
+
+
+<article>
+    <div class="post-stamp">
+        17 Oct 2010
+        <span class="taglist">&middot;
+            php unit-testing 
+        </span>
+    </div>
+	<h1 class="post-title">Dbunit testing</h1>
+        <div class="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+	<p>This article is about PHPUnit used in conjunction with DBUnit to test PHP code that interacts with a database server.</p>
+
+<p>Please note that DBUnit is able to load and unload sets of data to the db but does not handle table creation and queries that alter structures. This is responsibility of an ORM or an initial sql script that creates/rebases the initial environment.</p>
+
+<p>Code i wrote is run against a very simple ORM implementation we currently use in my workplace. Code should be simple enough to follow.</p>
+
+<p><strong>DB Unit test</strong></p>
+
+<p>A dbunit test is basically a unit-test which inherits from PHPUnit_Extensions_Database_TestCase and declares two more methods: getConnection() and getDataSet(). The first one must return the dbunit wrapper of PDO and the second a dataset representation created with create*Dataset() functions.</p>
+
+<pre><code class="language-php">class TestAddress extends PHPUnit_Extensions_Database_TestCase
+{
+    private $fixture_addressId;
+    private $fixture_location;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this-&gt;fixture_addressId = &quot;5&quot;;
+        $this-&gt;fixture_location = &quot;Melbourne&quot;;
+    }
+
+    protected function getConnection()
+    {
+        $pdo = getPdo(); // replace this code
+        return $this-&gt;createDefaultDBConnection($pdo, 'testdb');
+    }
+
+    protected function getDataSet()
+    {
+        return $this-&gt;createFlatXMLDataSet(dirname(__FILE__).'/../fixtures/db-addresses.xml');
+    }
+
+    public function testBasicFixtureLoading()
+    {
+        $mapper = new address_Mapper();
+        $address = $mapper-&gt;findById($this-&gt;fixture_addressId);
+        
+        $this-&gt;assertEquals($address-&gt;addressLine3, $this-&gt;fixture_location);
+    }
+
+    public function testSave()
+    {
+        $mapper = new address_Mapper();
+        $address = $mapper-&gt;findById($this-&gt;fixture_addressId);
+        $address-&gt;addressLine3 = &quot;London&quot;;
+        $mapper-&gt;save($address);
+        unset($address);
+        $address = $mapper-&gt;findById($this-&gt;fixture_addressId);
+        $this-&gt;assertEquals(&quot;London&quot;, $address-&gt;addressLine3);
+    }
+}
+</code></pre>
+
+<p><strong>model object</strong></p>
+
+<p>Model objects are a representation of data. They are basically a data container. They must not contain any integration logic (ex. database queries), that is responsibility of mapper objects.</p>
+
+<pre><code class="language-php">class Address extends Model
+{
+    public function __construct()
+    {
+        parent::__construct('addressId');
+        $this-&gt;setFieldNames(array(
+            'addressId',
+            'firstName',
+            'lastName',
+            'addressLine1',
+            'addressLine2',
+            'addressLine3',
+            'addressLine4',
+            'state',
+            'postCode',
+            'country',
+            'createdDate'
+            ));
+    }
+}
+</code></pre>
+
+<p><strong>mapper object</strong></p>
+
+<p>Responsibility of mapper object is to populate and return correspondent models of data. In this case it returns address models. Our mapper class already offers generic find()/insert()/update()/delete() operation but you may want to extend it to use different find methods.</p>
+
+<pre><code class="language-php">class address_Mapper extends Mapper
+{
+    const STORAGE_NAME = 'Addresses'; // table name
+
+    public function __construct()
+    {
+        parent::__construct(getPdo(), self::STORAGE_NAME, 'addressId');
+    }
+
+    public function findById($addressId)
+    {
+        $identity = array('addressId' =&gt; $addressId);
+        $model = new Address;
+        parent::find($identity, $model);
+        return $model;
+    }
+}
+</code></pre>
+
+<p><strong>Fixture datasets</strong></p>
+
+<p>These are our test data. Each dbunit test has his own dataset. There are many formats available for PHPUnit, the one here is called FlatXMLDataset, which is really simple.</p>
+
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;dataset&gt;
+ &lt;Addresses
+   addressId=&quot;5&quot;
+   firstName=&quot;myName&quot;
+   lastName=&quot;mySurname&quot;
+   addressLine1=&quot;myAddr1&quot;
+   addressLine2=&quot;myAddr2&quot;
+   addressLine3=&quot;myAddr3&quot;
+   addressLine4=&quot;Melbourne&quot;
+   state=&quot;&quot;
+   country=&quot;AU&quot;
+   postCode=&quot;3400&quot;
+   createdDate=&quot;18:16:19 2009-10-18&quot;
+  /&gt;
+
+ &lt;Addresses
+   addressId=&quot;6&quot;
+   firstName=&quot;Another&quot;
+   lastName=&quot;Person&quot;
+   addressLine1=&quot;Somewhere&quot;
+   addressLine2=&quot;&quot;
+   addressLine3=&quot;London&quot;
+   addressLine4=&quot;&quot;
+   state=&quot;&quot;
+   country=&quot;UK&quot;
+   postCode=&quot;XXX111&quot;
+   createdDate=&quot;18:00:19 2009-10-18&quot;
+  /&gt;
+&lt;/dataset&gt;
+</code></pre>
+
+<p>Each child tag of <dataset> is <TABLE_NAME column1="value"> kind of syntax. Nothing more than that, no structure only data.</p>
+
+<p><strong>Bootstrapping</strong></p>
+
+<p>As we said there is no table definition loading by default in DBunit. Initial environment must be setup before the dbunit test runs and this can be done using PHPUnit bootstrap files (see &ndash;bootstrap option).</p>
+
+<p>It is not necessary to drop and recreate tables everytime but highly advisable, there could be cases in which the test is supposed to fail but it does not because it reads data that should not be in the database. That is why we need to control execution environment as much as possible.</p>
+
+<pre><code class="language-php">define(&quot;FIXTURE_DB_REBASE&quot;, dirname(__FILE__).&quot;/fixtures/db-rebase.sql&quot;);
+
+// To test database-dependent classes you need a local database with the following settings
+$host = 'localhost';
+$user = 'unittests';
+$password = 'myPassword';
+$dbName = 'app_UnitTests';
+
+// Create a database adapter
+try {
+    $dbh = new PDO(&quot;mysql://&quot;.$host.&quot;/&quot;.$dbName, $user, $password);
+} catch (PDOException $e) {
+    echo 'Connection failed: ' . $e-&gt;getMessage();
+}
+
+// Ensure database credentials work
+try {
+    $results = $dbh-&gt;query(&quot;SHOW TABLES&quot;)-&gt;fetchAll();
+} catch (PDOException $e) {
+    echo &quot;You need to create a local test database - see bootstrap.php for more details\n&quot;;
+    echo &quot;Connection error: &quot;.$e-&gt;getMessage().&quot;\n&quot;;
+    exit;
+}
+
+// rebase the database
+$dbh-&gt;query(file_get_contents(FIXTURE_DB_REBASE))-&gt;closeCursor();
+</code></pre>
+
+<p><strong>DB rebase SQL fixture</strong></p>
+
+<pre><code class="language-sql">--
+-- Table structure for table 'Addresses'
+--
+
+DROP TABLE IF EXISTS Addresses;
+CREATE TABLE Addresses (
+  addressId int(10) unsigned NOT NULL auto_increment,
+  firstName varchar(128) NOT NULL,
+  lastName varchar(128) NOT NULL,
+  addressLine1 varchar(256) NOT NULL,
+  addressLine2 varchar(256) NOT NULL,
+  addressLine3 varchar(256) NOT NULL,
+  addressLine4 varchar(256) NOT NULL,
+  state varchar(128) NOT NULL,
+  country varchar(128) NOT NULL,
+  postCode varchar(32) NOT NULL,
+  createdDate datetime NOT NULL,
+  PRIMARY KEY  (addressId)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+</code></pre>
+
+     <div id="disqus_thread"></div>
+    <script type="text/javascript">
+         
+        var disqus_shortname = 'flagzeta'; 
+
+         
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</article>  
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2010-10-17T13:09:26Z").getTime();
+if (postTime < cutoffTime) {
+    $(".blogpost-old").show();
+}
+</script>
+
+		<footer id="footer">
+<section id="footer-message">&copy; 2016 Federico Marani. All rights reserved. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+		</footer>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47493827-1', 'flagzeta.org');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+

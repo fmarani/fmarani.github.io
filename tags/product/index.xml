@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Product on Blog | Federico Marani</title>
+    <link>http://flagzeta.org/tags/product/</link>
+    <description>Recent content in Product on Blog | Federico Marani</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
+    <lastBuildDate>Sun, 15 Nov 2015 12:00:00 +0000</lastBuildDate>
+    <atom:link href="http://flagzeta.org/tags/product/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Assessing quality by functionality mapping</title>
+      <link>http://flagzeta.org/blog/assessing-software-quality/</link>
+      <pubDate>Sun, 15 Nov 2015 12:00:00 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/assessing-software-quality/</guid>
+      <description>&lt;p&gt;This post is about measuring how the technology supports your current product, that being a single marketable entity. If we accept that the definition of quality is having as less bugs as possible, and the more code you write the more bugs you insert, you will have to accept the fact that the more code you write the less quality you will be able to get out of it. A good software project has the right amount of code to support the features that your product strategy dictates. That I think is independent of the paradigm you adopt, monolith or microservice, functional or not, etc. This post is really about the product.&lt;/p&gt;
+
+&lt;p&gt;A web product is made of pages and hyperlinks that bring you to other pages, all this resulting in user journeys. Your product strategy tells you what are the journeys your product needs, ux and marketing are more concerned about the how these steps are presented. Technology is influenced by both the what and the how, so we need to map both. These are some ideas on how to map out softwares based on various system architectures.&lt;/p&gt;
+
+&lt;p&gt;Simple case (Django/RoR-type setup):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;user journey description&lt;/li&gt;
+&lt;li&gt;where the html is&lt;/li&gt;
+&lt;li&gt;where the backend code files are&lt;/li&gt;
+&lt;li&gt;does the backend have unit tests&lt;/li&gt;
+&lt;li&gt;what db tables it is using&lt;/li&gt;
+&lt;li&gt;any SaaS dependency&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Single page apps:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;user journey description&lt;/li&gt;
+&lt;li&gt;where the html/js component is&lt;/li&gt;
+&lt;li&gt;what api is using&lt;/li&gt;
+&lt;li&gt;does the js component have unit tests&lt;/li&gt;
+&lt;li&gt;does the js depend on other SaaS api&lt;/li&gt;
+&lt;li&gt;where is the backend code to support those api&lt;/li&gt;
+&lt;li&gt;does the backend component have unit tests&lt;/li&gt;
+&lt;li&gt;what db tables it is using&lt;/li&gt;
+&lt;li&gt;any dependency on other installed software&lt;/li&gt;
+&lt;li&gt;any SaaS dependency&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Single page apps with microservices:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;user journey description&lt;/li&gt;
+&lt;li&gt;where the html/js component is&lt;/li&gt;
+&lt;li&gt;what api is using&lt;/li&gt;
+&lt;li&gt;does the js component have unit tests&lt;/li&gt;
+&lt;li&gt;does the js depend on other SaaS api&lt;/li&gt;
+&lt;li&gt;where is the backend code to support those api&lt;/li&gt;
+&lt;li&gt;does the backend component have unit tests&lt;/li&gt;
+&lt;li&gt;what other microservices is the backend talking to&lt;/li&gt;
+&lt;li&gt;what is the fallback mechanism in case the microservice is unavailable&lt;/li&gt;
+&lt;li&gt;what db tables or nosql resources are these microservices using&lt;/li&gt;
+&lt;li&gt;any dependency on other installed software&lt;/li&gt;
+&lt;li&gt;any SaaS dependency&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The more complex your system architecture is, the more layers you will have to map, so the above list is non-exhaustive.&lt;/p&gt;
+
+&lt;p&gt;Once you have mapped out every column presented above, you should have a good idea of how good (or entangled) your software architecture is. That is a pretty good base to assess a project&amp;rsquo;s quality. The less things you have in the list the better&amp;hellip; you will have less to justify.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

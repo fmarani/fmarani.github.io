@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="generator" content="Hugo 0.16" />
+        <title>Give everyone one (public) VM</title>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+        <link rel="stylesheet" type="text/css" href="http://flagzeta.org//css/crisp.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="keywords" content="code,python,django,it,software architecture,technical architecture">
+        <meta name="author" content="Federico Marani">
+        
+    </head>
+    <body>
+
+<header id="header">
+    <a id="logo" href="/"><img src="http://flagzeta.org//img/me.png" alt="me" /></a>
+    <a href="http://flagzeta.org/"><h1>Blog | Federico Marani</h1></a>
+    <p>Coder, open-source enthusiast, command-line addict. CTO at TalentRank. Former Head of Engineering @TrialReach</p>
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ"><i class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani"><i class="fa fa-linkedin-square fa-2x"></i></a>
+        <a href="http://github.com/fmarani"><i class="fa fa-github-square fa-2x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-rss-square fa-2x"></i></a> 
+    </div>                                                                  
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <h6><a href="http://flagzeta.org/about/">About me</a></h6>
+        
+    
+        
+        <h6><a href="http://flagzeta.org/projects/">Side Projects</a></h6>
+        
+    
+</header>
+
+
+<article>
+    <div class="post-stamp">
+        11 Feb 2014
+        <span class="taglist">&middot;
+            ansible devops 
+        </span>
+    </div>
+	<h1 class="post-title">Give everyone one (public) VM</h1>
+        <div class="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+	<p>At TrialReach we want to be always able to deploy clean versions of our code online. This allows us to show our work more quickly internally (and externally) and get feedback from people as early as possible, without having to wait release dates. This also give us the opportunity to test more frequently our server provisioning procedures, and having the ability to push something live anytime is a really empowering feeling.</p>
+
+<p>We started using Ansible as our main DevOps tool, which recently we extended to also take care of DigitalOcean VM creation. DigitalOcean has very easy APIs and is well integrated with Ansible. While we use EC2 for production/staging environments, for these throw-away environments DigitalOcean offer a good price/performance trade-off.</p>
+
+<p>Enough said, this is a vm creation snippet:</p>
+
+<pre><code>---
+- name: digitalocean creation
+  hosts: all
+  connection: local
+  vars:
+    - api_key: XXXXX
+    - client_id: XXXX
+  tasks: 
+    - name: gather user info
+      command: whoami
+      register: user
+    - name: gather ssh pub key 
+      command: cat {{ ansible_env.HOME }}/.ssh/id_rsa.pub 
+      register: ssh_pub_key
+    - name: generate id for this machine
+      shell: hostname | cksum | awk '{print $1;}'
+      register: machineid
+    - name: copy your ssh pub key on digital ocean
+      digital_ocean: &gt;
+          state=present
+          command=ssh
+          name={{ machineid.stdout }}-{{ user.stdout }}
+          client_id={{ client_id }}
+          api_key={{ api_key }}
+          ssh_pub_key='{{ ssh_pub_key.stdout }}'
+      register: my_ssh
+    - name: creating new digital ocean vm
+      digital_ocean: &gt;
+          state=present
+          command=droplet
+          name={{ machineid.stdout }}-{{ user.stdout }}
+          ssh_key_ids={{ my_ssh.ssh_key.id }}
+          unique_name=yes
+          client_id={{ client_id }}
+          api_key={{ api_key }}
+          size_id=66
+          region_id=1
+          image_id=1505447
+          wait_timeout=500
+      register: my_droplet
+    - name: writing local2cloud inventory with new vm ip
+      shell: cat local2cloud | sed 's/CHANGE/{{ my_droplet.droplet.ip_address }}/' &gt; local2cloud.templated
+</code></pre>
+
+<p>This script does a bunch of things, create ssh key and vm, but also makes sure people create only one VM. That is what we need for now. This snippet takes a inventory template (local2cloud) and fills it with the new droplet&rsquo;s IP address, so it can used to provision the new server.</p>
+
+<p>To launch this script, make sure right variables are set, and make sure you have dopy installed in your virtualenv, then run:</p>
+
+<pre><code>ansible-playbook -i 'localhost,' -e ansible_python_interpreter=`which python` create_vm.yml
+</code></pre>
+
+<p>-e makes sure uses python from your virtualenv, -i forces not to load an inventory file but use localhost directly. This last option is a bit <a href="https://groups.google.com/forum/#!topic/Ansible-project/RuntoPUvqHM" title="Ansible mailing-list">hacky</a>, hope in the future there are better ways to do this.</p>
+
+     <div id="disqus_thread"></div>
+    <script type="text/javascript">
+         
+        var disqus_shortname = 'flagzeta'; 
+
+         
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</article>  
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2014-02-11T22:45:08Z").getTime();
+if (postTime < cutoffTime) {
+    $(".blogpost-old").show();
+}
+</script>
+
+		<footer id="footer">
+<section id="footer-message">&copy; 2016 Federico Marani. All rights reserved. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+		</footer>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47493827-1', 'flagzeta.org');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+

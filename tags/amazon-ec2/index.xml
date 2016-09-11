@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Amazon Ec2 on Blog | Federico Marani</title>
+    <link>http://flagzeta.org/tags/amazon-ec2/</link>
+    <description>Recent content in Amazon Ec2 on Blog | Federico Marani</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
+    <lastBuildDate>Sun, 06 May 2012 11:39:37 +0000</lastBuildDate>
+    <atom:link href="http://flagzeta.org/tags/amazon-ec2/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Ubuntu on EC2, the simple way.</title>
+      <link>http://flagzeta.org/blog/ubuntu-on-ec2-the-simple-way/</link>
+      <pubDate>Sun, 06 May 2012 11:39:37 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/ubuntu-on-ec2-the-simple-way/</guid>
+      <description>
+
+&lt;h2 id=&#34;problem&#34;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;Sometime ago I had to run a statistical software on some data, the computation was really expensive, it was impractical to run it on my small laptop as it would hung for hours waiting for a result to come up. I thought about running it on Amazon.&lt;/p&gt;
+
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+
+&lt;p&gt;Amazon EC2 is a virtual machine hosting service, also known as IaaS. Quite similar to Linode or Rackspace. Payment here is per hour, differently from Linode&amp;hellip; slightly on the expensive side i might add, but top-end VMs are quite powerful.&lt;/p&gt;
+
+&lt;p&gt;First step is to go through the setup procedure in order to have ec2 tools setup on your machine. I run ubuntu on my laptop and i applied the steps described &lt;a href=&#34;https://help.ubuntu.com/community/EC2StartersGuide&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;After having installed the api tools and having put all EC2 environment variables in your .bashrc file, type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ec2-describe-images -o amazon
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You should see the list of public AMIs from amazon. If you don&amp;rsquo;t there are problems with your configuration.&lt;/p&gt;
+
+&lt;p&gt;By default the firewall blocks every access to every port, you have to explicitly enable access in the security group that is associated to your machine (or in the default security group).&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ec2-authorize default -p 22&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This enables the ssh port. Next thing is to create the machine, i used ubuntu 11.10 64bit EBS-backed. It&amp;rsquo;s ami code is ami-895069fd. It is possible to bootstrap this specific image with a bootstrap script:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ec2-run-instances ami-895069fd -t m1.large &amp;ndash;user-data-file ~/ec2/bootstrap.sh&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This is an example bootstrap file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;#!/bin/bash
+
+set -e -x
+export DEBIAN_FRONTEND=noninteractive
+apt-get update &amp;amp;&amp;amp; apt-get upgrade -y
+
+apt-get install -y xorg
+apt-get install -y fluxbox
+apt-get install -y vnc4server
+
+wget --user=&amp;quot;YOURUSER&amp;quot; --password=&amp;quot;YOURPASS&amp;quot; -O /tmp/vnc-conf.tgz https://server/vnc-bootstrap.tgz
+cd /home/ubuntu &amp;amp;&amp;amp; tar xfvz /tmp/vnc-conf.tgz &amp;amp;&amp;amp; chmod -R 700 .vnc
+
+chmod 755 /etc/X11/xinit/xinitrc
+su -c vnc4server ubuntu
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this script, i install all the packages i need and i download some initial data. For anything more serious than this i advise you to look into Puppet or Chef.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

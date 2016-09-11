@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="generator" content="Hugo 0.16" />
+        <title>Text classification in Python</title>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+        <link rel="stylesheet" type="text/css" href="http://flagzeta.org//css/crisp.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="keywords" content="code,python,django,it,software architecture,technical architecture">
+        <meta name="author" content="Federico Marani">
+        
+    </head>
+    <body>
+
+<header id="header">
+    <a id="logo" href="/"><img src="http://flagzeta.org//img/me.png" alt="me" /></a>
+    <a href="http://flagzeta.org/"><h1>Blog | Federico Marani</h1></a>
+    <p>Coder, open-source enthusiast, command-line addict. CTO at TalentRank. Former Head of Engineering @TrialReach</p>
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ"><i class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani"><i class="fa fa-linkedin-square fa-2x"></i></a>
+        <a href="http://github.com/fmarani"><i class="fa fa-github-square fa-2x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-rss-square fa-2x"></i></a> 
+    </div>                                                                  
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <h6><a href="http://flagzeta.org/about/">About me</a></h6>
+        
+    
+        
+        <h6><a href="http://flagzeta.org/projects/">Side Projects</a></h6>
+        
+    
+</header>
+
+
+<article>
+    <div class="post-stamp">
+        21 Mar 2012
+        <span class="taglist">&middot;
+            nltk python text analysis 
+        </span>
+    </div>
+	<h1 class="post-title">Text classification in Python</h1>
+        <div class="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+	<p>Python and NLTK form quite a good platform to do text analysis. There is a lot of information on Internet, nevertheless i have not found a clean and simple example of a classifier. Text classifiers come from techniques such as Natural Language Processing and Machine Learning, in fact i think they are exactly in the middle of these.</p>
+
+<p>Bearing in mind that building a good classifier is only possible when you have a training set that represents reality quite well, and certainly longer than the one in this example, here a first stab at it:</p>
+
+<pre><code class="language-python">import nltk
+import itertools
+import sys
+import random
+
+class Classifier(object):
+    &quot;&quot;&quot;classify by looking at a site&quot;&quot;&quot;
+    def __init__(self, training_set):
+        self.training_set = training_set
+        self.stopwords = nltk.corpus.stopwords.words(&quot;english&quot;)
+        self.stemmer = nltk.PorterStemmer()
+        self.minlength = 7
+        self.maxlength = 25
+    def text_process_entry(self, example):
+        site_text = nltk.clean_html(example[0]).lower()
+        original_tokens = itertools.chain.from_iterable(nltk.word_tokenize(w) for w in nltk.sent_tokenize(site_text))
+        tokens = original_tokens #+ [' '.join(w) for w in nltk.util.ngrams(original_tokens, 2)]
+        tokens = [w for w in tokens if not w in self.stopwords]
+        tokens = [w for w in tokens if self.minlength &lt; len(w) &lt; self.maxlength]
+        #tokens = [self.stemmer.stem(w) for w in tokens]
+        return (tokens, example[1])
+    def text_process_all(self, exampleset):
+        processed_training_set = [self.text_process_entry(i) for i in self.training_set]
+        processed_training_set = filter(lambda x: len(x[0]) &gt; 0, processed_training_set) # remove empty crawls
+        processed_texts = [i[0] for i in processed_training_set]
+        all_words = nltk.FreqDist(itertools.chain.from_iterable(processed_texts))
+        features_to_test = all_words.keys()[:5000]
+        self.features_to_test = features_to_test
+        featuresets = [(self.document_features(d), c) for (d,c) in processed_training_set]
+        return featuresets
+    def document_features(self, document):
+        #document_words = set(document)
+        features = {}
+        for word in self.features_to_test:
+            #features['contains(%s)' % word] = (word in document_words)
+            features['contains(%s)' % word] = (word in document)
+            #features['occurrencies(%s)' % word] = document.count(word) 
+            #features['atleast3(%s)' % word] = document.count(word) &gt; 3
+        return features
+    def build_classifier(self, featuresets):
+        random.shuffle(featuresets)
+        cut_point = len(featuresets) / 5
+        train_set, test_set = featuresets[cut_point:], featuresets[:cut_point]
+        classifier = nltk.NaiveBayesClassifier.train(train_set)
+        return (classifier, test_set)
+    def run(self):
+        featuresets = self.text_process_all(self.training_set)
+        classifier, test_set = self.build_classifier(featuresets)
+        self.classifier = classifier
+        self.test_classifier(classifier, test_set)
+    def classify(self, text):
+        return self.classifier.classify(self.document_features(text))
+    def test_classifier(self, classifier, test_set):
+        print nltk.classify.accuracy(classifier, test_set)
+        classifier.show_most_informative_features(45)
+
+classes = ('a la carte', 'advertising', 'commission', 'investment', 'pay as you go')
+
+training_set = [
+    ('we are a bank specialized in dealing with IT companies', classes[3]),
+    ('we sell our product at a fixed cost of 10 pounds', classes[0]),
+    ('the cost per click is 0.01 dollars but if you get more than 10000 impression the cost will be 0.12', classes[1]),
+    ('we take a 1% commission on all sales, overseas sales have an additional charge of 12%', classes[2]),
+    ('we charge a 1% on top of your final price.', classes[2]),
+    ('we sell our product at 5 pounds, excluding with the variant A which costs an extra of 55 pounds', classes[0]),
+    ('we sell our product at 6 pounds, excluding with the variant B which costs 45 pounds', classes[0]),
+    ('our commission is normally between 1% and 2%', classes[2]),
+    ('impressions on the homepage on sundays are worth 0.01 pounds', classes[1]),
+    ('we will show impressions only to users that correspond to certain criteria.', classes[1]),
+    ('we manage an hedge fund and we take care of placing investments on behalf of our clients', classes[3]),
+    ('we bill only for the amount of api you use. 0.10 per 1000 calls', classes[4]),
+    ('running a virtual machine will cost you 0.12 pounds per hour', classes[4]),
+    ('we invest in major hedge funds', classes[3]),
+    ('we are an international bank, based in all countries of europe', classes[3]),
+]
+
+test_text = &quot;we are a hedge fund collaborating with many banks in europe&quot;
+test_text2 = &quot;we charge a fixed fee on top of our client's sales&quot;
+
+if __name__ == '__main__':
+    classifier = Classifier(training_set)
+    classifier.run()
+    print &quot;%s -&gt; classified as: %s&quot; % (test_text, classifier.classify(test_text))
+    print &quot;%s -&gt; classified as: %s&quot; % (test_text2, classifier.classify(test_text2))
+
+</code></pre>
+
+<p>You can run this code and classify entities based on their preferred sales target. Some of the above lines are commented, uncomment them if you think it gives you a better representation of the example. Just add a further 1000 good examples and then it should start to make accurate decisions&hellip; enjoy!</p>
+
+     <div id="disqus_thread"></div>
+    <script type="text/javascript">
+         
+        var disqus_shortname = 'flagzeta'; 
+
+         
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</article>  
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2012-03-21T22:44:23Z").getTime();
+if (postTime < cutoffTime) {
+    $(".blogpost-old").show();
+}
+</script>
+
+		<footer id="footer">
+<section id="footer-message">&copy; 2016 Federico Marani. All rights reserved. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+		</footer>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47493827-1', 'flagzeta.org');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+

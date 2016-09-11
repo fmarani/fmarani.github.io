@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog | Federico Marani</title>
+    <link>http://flagzeta.org/</link>
+    <description>Recent content on Blog | Federico Marani</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
+    <lastBuildDate>Sun, 01 May 2016 20:43:48 +0000</lastBuildDate>
+    <atom:link href="http://flagzeta.org/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>YCombinator interview</title>
+      <link>http://flagzeta.org/blog/yc-interview/</link>
+      <pubDate>Sun, 01 May 2016 20:43:48 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/yc-interview/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/ycombinator.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A month ago me and my co-founder did an application for YC, and last week we were lucky enough to be selected for an interview, along with other startups. We got called all the way to California with not even a week of notice, everything paid&amp;hellip; definitely a bit more serious than a phone call.&lt;/p&gt;
+
+&lt;p&gt;We prepared a lot during the last few days, reading what people say online, meeting previous YC companies, doing mock interviews with YC alumni. Some of that was YC specific, as we knew they are very product-focused. Little aside here: I am an engineer and I really dislike sales talk, because most sales words are so vague that are worthless at describing specifics. It was very refreshing to see that YC thought it the same way I did.&lt;/p&gt;
+
+&lt;p&gt;The interview only lasted 10 minutes, although we got a second interview with other partners, so they had listened to our story twice. There were 3-4 groups of 3 partners doing interviews for max 10 min throughout the day, for 2 weeks, so you can imagine there were a lot of companies there, all with their online application accepted. I have spoken with a few of them, all clearly smart, although at that stage you practiced your pitch so many times that you do not want to hear yourself having to say it again :-)&lt;/p&gt;
+
+&lt;p&gt;If there is one take-away for me is: explain the product, as opposed to sell the product. Explain it in a way that someone technical might be able to rebuild it. Describe it well in a way that sales processes, addressable markets, customer acquisition strategies and costs, LTV, who buys and who uses it, all these should all come naturally from the product description. You should have a good answer for all these, even if not perfect yet.&lt;/p&gt;
+
+&lt;p&gt;In the same evening we received a negative answer, along with some good feedback. When things do not go as you would, it is easy to be dismissive, but really, there is a lot that could be learnt if you were in. I would definitely go back if we had the chance.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Assessing quality by functionality mapping</title>
+      <link>http://flagzeta.org/blog/assessing-software-quality/</link>
+      <pubDate>Sun, 15 Nov 2015 12:00:00 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/assessing-software-quality/</guid>
+      <description>&lt;p&gt;This post is about measuring how the technology supports your current product, that being a single marketable entity. If we accept that the definition of quality is having as less bugs as possible, and the more code you write the more bugs you insert, you will have to accept the fact that the more code you write the less quality you will be able to get out of it. A good software project has the right amount of code to support the features that your product strategy dictates. That I think is independent of the paradigm you adopt, monolith or microservice, functional or not, etc. This post is really about the product.&lt;/p&gt;
+
+&lt;p&gt;A web product is made of pages and hyperlinks that bring you to other pages, all this resulting in user journeys. Your product strategy tells you what are the journeys your product needs, ux and marketing are more concerned about the how these steps are presented. Technology is influenced by both the what and the how, so we need to map both. These are some ideas on how to map out softwares based on various system architectures.&lt;/p&gt;
+
+&lt;p&gt;Simple case (Django/RoR-type setup):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;user journey description&lt;/li&gt;
+&lt;li&gt;where the html is&lt;/li&gt;
+&lt;li&gt;where the backend code files are&lt;/li&gt;
+&lt;li&gt;does the backend have unit tests&lt;/li&gt;
+&lt;li&gt;what db tables it is using&lt;/li&gt;
+&lt;li&gt;any SaaS dependency&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Single page apps:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;user journey description&lt;/li&gt;
+&lt;li&gt;where the html/js component is&lt;/li&gt;
+&lt;li&gt;what api is using&lt;/li&gt;
+&lt;li&gt;does the js component have unit tests&lt;/li&gt;
+&lt;li&gt;does the js depend on other SaaS api&lt;/li&gt;
+&lt;li&gt;where is the backend code to support those api&lt;/li&gt;
+&lt;li&gt;does the backend component have unit tests&lt;/li&gt;
+&lt;li&gt;what db tables it is using&lt;/li&gt;
+&lt;li&gt;any dependency on other installed software&lt;/li&gt;
+&lt;li&gt;any SaaS dependency&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Single page apps with microservices:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;user journey description&lt;/li&gt;
+&lt;li&gt;where the html/js component is&lt;/li&gt;
+&lt;li&gt;what api is using&lt;/li&gt;
+&lt;li&gt;does the js component have unit tests&lt;/li&gt;
+&lt;li&gt;does the js depend on other SaaS api&lt;/li&gt;
+&lt;li&gt;where is the backend code to support those api&lt;/li&gt;
+&lt;li&gt;does the backend component have unit tests&lt;/li&gt;
+&lt;li&gt;what other microservices is the backend talking to&lt;/li&gt;
+&lt;li&gt;what is the fallback mechanism in case the microservice is unavailable&lt;/li&gt;
+&lt;li&gt;what db tables or nosql resources are these microservices using&lt;/li&gt;
+&lt;li&gt;any dependency on other installed software&lt;/li&gt;
+&lt;li&gt;any SaaS dependency&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The more complex your system architecture is, the more layers you will have to map, so the above list is non-exhaustive.&lt;/p&gt;
+
+&lt;p&gt;Once you have mapped out every column presented above, you should have a good idea of how good (or entangled) your software architecture is. That is a pretty good base to assess a project&amp;rsquo;s quality. The less things you have in the list the better&amp;hellip; you will have less to justify.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Another failure, another lesson - comprotempo.it</title>
+      <link>http://flagzeta.org/blog/comprotempo/</link>
+      <pubDate>Wed, 11 Mar 2015 12:00:00 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/comprotempo/</guid>
+      <description>&lt;p&gt;When it came out, I was fashinated by TaskRabbit. I thought that a generic marketplace for handymen was the perfect tool for this decade. We have lots of young unemployment in Italy and there were also middle-class people willing to pay for someone doing chores for them. The idea was simple: putting both sides in touch by agreeing location, type of task and price. The advantages for handymen were money for work, the advantages for the committant is to &amp;ldquo;buy&amp;rdquo; someone else&amp;rsquo;s time (hence the &amp;ldquo;comprotempo&amp;rdquo; name)&lt;/p&gt;
+
+&lt;p&gt;In 2012, I set out to replicate the idea and find a good team of people to work with. I am an engineer, it is easy for us to &amp;ldquo;over-build&amp;rdquo; the product, or &amp;ldquo;over-engineer&amp;rdquo; a product feature, so I only built what I thought was the minimum product. Everybody is biased in some ways, working in a team is the only way to keep these biases in check. Once I built it, 2-3 months later, it was about spreading the word: Facebook page, Twitter account, PPC on various channels, writing content, reaching out to people, etc&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Turns out building a Marketplace is very hard. You have now to convince two types of customers which may have a completely different set of concerns and motivations. The money incentive is always very strong, in fact we had a lot of users registered as handymen for a very broad set of tasks. On the other hand, feeding the system with tasks has proven to be very challenging.&lt;/p&gt;
+
+&lt;p&gt;Because we started with handling a broad set of tasks, we had a problem with audience addressability: people likely to buy services on our site were not very addressable, distinguishable from the crowd. For instance, how do you target people willing to pay for lawn mowing, and willing to trust an online service for it? Not easy. We had to do that for every type of service the site was offering, so it was hardly marketing scalable. Some of these services were by nature recurrent, most of them were not though.&lt;/p&gt;
+
+&lt;p&gt;We were also doing a bad job at keeping people&amp;rsquo;s attention on the site. The homepage was generic on purpose, and I don&amp;rsquo;t think people were understanding the relevance to their problem. Also they were very likely to be busy people, I think we were wasting their attention timespan. Posting an ad for a task also required filling a lot of information about the task before-hand, in order to receive good money quotes for it. People don&amp;rsquo;t like long forms.&lt;/p&gt;
+
+&lt;p&gt;Most of all, I think we had done a very bad job at building trust as a community. We had a rating system for handymen, but with no user-generated ratings it was not helpful. It is a bit of a chicken-and-egg problem sometimes, communities are not self-sustaining from the start. Building brand reputation is just really long and hard.&lt;/p&gt;
+
+&lt;p&gt;At the end, we also had problems with the team. With internal divisions, you just cannot focus your energies anymore. I can&amp;rsquo;t stress this enough, problems with founding team are just incredibly hard to deal with. They ripple out into everything else. That was the end for us.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Monitoring servers with Munin</title>
+      <link>http://flagzeta.org/blog/monitoring-with-munin/</link>
+      <pubDate>Fri, 16 Jan 2015 12:51:25 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/monitoring-with-munin/</guid>
+      <description>&lt;p&gt;I normally use Munin for server monitoring, it is very easy to install and the kind of tool with not much setup. It may not be the best tool when you have many servers, due to static graph generation. Munin 2, released recently, has a few changes in that regard, they might have improved that.&lt;/p&gt;
+
+&lt;p&gt;Munin is mainly a resource usage graph tool, which monitors many metrics from a pool of servers (called nodes). When set up, the monitoring server connects to every node (specified in its configuration) and then asks for a list of current values for all monitored metrics, through a simple text-based protocol. Every node has a list of enabled &amp;ldquo;plugins&amp;rdquo; which will be run everytime the server connects to the node. Many plugins come installed by default with Munin, and many additional plugins are available online with an open source license (or public domain). Those plugins have default parameters in it, but much can be customized in the munin-node configuration file.&lt;/p&gt;
+
+&lt;p&gt;These &amp;ldquo;plugins&amp;rdquo; define the metrics, then the server will render any metrics the node send, without any a priori knowledge. The security model is IP whitelisting: each node has a list of IPs allowed to ask for metrics. The server, by default, will connect to every host every 5 minutes and add all collected metrics to its database. Every hour all the html and graphs are generated and put in a folder where Nginx is able to serve these.&lt;/p&gt;
+
+&lt;p&gt;Munin can also be configured to trigger alerts in case a metric changes state between OK, Warning and Critical. Alerts via email are easy to setup and normally enough for basic error reporting. These thresholds can be changed if needed, but the values defined by the plugins are normally good enough. Alerts for specific plugins can be disabled if needed, see &lt;a href=&#34;http://serverfault.com/questions/532319/i-have-setup-munin-how-do-i-set-up-alerts-for-specific-parameters&#34; title=&#34;here&#34;&gt;http://serverfault.com/questions/532319/i-have-setup-munin-how-do-i-set-up-alerts-for-specific-parameters&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The only daemon in the Munin architecture is munin-node, which runs on every monitored server. On the monitoring server side, everything is managed through cron. Munin is written in Perl and its core modules are quite battle-tested.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Working with caches and Memcache</title>
+      <link>http://flagzeta.org/blog/working-with-memcache/</link>
+      <pubDate>Wed, 14 Jan 2015 11:45:46 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/working-with-memcache/</guid>
+      <description>&lt;p&gt;The traditional use of Memcache is to cache things like computations that take some time or result coming from external system with limited throughput. Examples of these may be database queries (sometimes long to compute), search queries coming from dedicated search services or simply feeds from other sites that don&amp;rsquo;t change often.&lt;/p&gt;
+
+&lt;p&gt;Memcache is both a cache system and a separate component in your system architecture, so it is very important to understand the implications. There are many negatives: it is another dependency, which adds complexity to the system, it potentially contains stale data, and it is a potential point of failure. Please consider all these things before inserting a cache in your app, many annoying and hard to find bugs in software development are related to cache.&lt;/p&gt;
+
+&lt;p&gt;On the positive side, if done right, caching means increase in performance for the website and less stress for the underlying service. Start by looking at the areas of your application which are executed very frequently and are computationally or IO heavy. For example, loading recursive structures (like category trees) from relational databases (which are flat) is an expensive operation.&lt;/p&gt;
+
+&lt;p&gt;One common usecase is search: results depend only on a set of parameters which are repetitive. If parameters are not repetitive, they can be made to by approximating them to some common form: free text keywords can be stemmed (see NLP), geographic coordinates can be rounded, number of results can be made multiple of some base number, etc&amp;hellip; in this way we increase the cache hit rate without losing too much precision.&lt;/p&gt;
+
+&lt;p&gt;This exercise of increasing cache hits is quite common, and it is also very common in compilers when they try to align structures in a way that they fit CPU caches. The principle is similar, you want to increase the likelihood of having fast read operations instead of slow operations.&lt;/p&gt;
+
+&lt;p&gt;In python there are libraries to interact with memcache, as in Django. They are quite small as the protocol is very simple to understand.&lt;/p&gt;
+
+&lt;p&gt;I am generally against systems that automatically cache all database queries: if you have a good schema, you should not need it. We used to cache all Postgresql queries but the speed gain was not noticeable so we removed it, we have a fast network, enough memory for the disk buffer and, honestly, not a great volume of complex queries.&lt;/p&gt;
+
+&lt;p&gt;The setup of Memcache is really simple, you can start by just using the defaults after the installation. The default cache size is 64Mb and when exceeding that it will start to delete keys in least recently used order.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Scaling with Ansible (Europython 2014)</title>
+      <link>http://flagzeta.org/blog/scaling-with-ansible/</link>
+      <pubDate>Sun, 27 Jul 2014 12:00:00 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/scaling-with-ansible/</guid>
+      <description>&lt;p&gt;The presentation I gave at Europython 2014 in Berlin. Again it is about how TrialReach uses Ansible to manage its own infrastructure and some tips and tricks about our use of Ansible.&lt;/p&gt;
+
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;38a6f0d0f48f01318f29762c3a3e275b&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;And also the video of the presentation:&lt;/p&gt;
+
+&lt;iframe width=&#34;560&#34; height=&#34;315&#34; src=&#34;//www.youtube.com/embed/ptc9E24YAcc&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Give everyone one (public) VM</title>
+      <link>http://flagzeta.org/blog/give-everyone-one-vm/</link>
+      <pubDate>Tue, 11 Feb 2014 22:45:08 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/give-everyone-one-vm/</guid>
+      <description>&lt;p&gt;At TrialReach we want to be always able to deploy clean versions of our code online. This allows us to show our work more quickly internally (and externally) and get feedback from people as early as possible, without having to wait release dates. This also give us the opportunity to test more frequently our server provisioning procedures, and having the ability to push something live anytime is a really empowering feeling.&lt;/p&gt;
+
+&lt;p&gt;We started using Ansible as our main DevOps tool, which recently we extended to also take care of DigitalOcean VM creation. DigitalOcean has very easy APIs and is well integrated with Ansible. While we use EC2 for production/staging environments, for these throw-away environments DigitalOcean offer a good price/performance trade-off.&lt;/p&gt;
+
+&lt;p&gt;Enough said, this is a vm creation snippet:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;---
+- name: digitalocean creation
+  hosts: all
+  connection: local
+  vars:
+    - api_key: XXXXX
+    - client_id: XXXX
+  tasks: 
+    - name: gather user info
+      command: whoami
+      register: user
+    - name: gather ssh pub key 
+      command: cat {{ ansible_env.HOME }}/.ssh/id_rsa.pub 
+      register: ssh_pub_key
+    - name: generate id for this machine
+      shell: hostname | cksum | awk &#39;{print $1;}&#39;
+      register: machineid
+    - name: copy your ssh pub key on digital ocean
+      digital_ocean: &amp;gt;
+          state=present
+          command=ssh
+          name={{ machineid.stdout }}-{{ user.stdout }}
+          client_id={{ client_id }}
+          api_key={{ api_key }}
+          ssh_pub_key=&#39;{{ ssh_pub_key.stdout }}&#39;
+      register: my_ssh
+    - name: creating new digital ocean vm
+      digital_ocean: &amp;gt;
+          state=present
+          command=droplet
+          name={{ machineid.stdout }}-{{ user.stdout }}
+          ssh_key_ids={{ my_ssh.ssh_key.id }}
+          unique_name=yes
+          client_id={{ client_id }}
+          api_key={{ api_key }}
+          size_id=66
+          region_id=1
+          image_id=1505447
+          wait_timeout=500
+      register: my_droplet
+    - name: writing local2cloud inventory with new vm ip
+      shell: cat local2cloud | sed &#39;s/CHANGE/{{ my_droplet.droplet.ip_address }}/&#39; &amp;gt; local2cloud.templated
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This script does a bunch of things, create ssh key and vm, but also makes sure people create only one VM. That is what we need for now. This snippet takes a inventory template (local2cloud) and fills it with the new droplet&amp;rsquo;s IP address, so it can used to provision the new server.&lt;/p&gt;
+
+&lt;p&gt;To launch this script, make sure right variables are set, and make sure you have dopy installed in your virtualenv, then run:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ansible-playbook -i &#39;localhost,&#39; -e ansible_python_interpreter=`which python` create_vm.yml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;-e makes sure uses python from your virtualenv, -i forces not to load an inventory file but use localhost directly. This last option is a bit &lt;a href=&#34;https://groups.google.com/forum/#!topic/Ansible-project/RuntoPUvqHM&#34; title=&#34;Ansible mailing-list&#34;&gt;hacky&lt;/a&gt;, hope in the future there are better ways to do this.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Why my first startup failed - tabs.to</title>
+      <link>http://flagzeta.org/blog/why-my-first-startup-failed/</link>
+      <pubDate>Sun, 26 Jan 2014 15:24:59 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/why-my-first-startup-failed/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/logo.png&#34; alt=&#34;logo&#34; title=&#34;Tabs.to&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Tabs.to was a url shortener, but with a twist, it could support multiple urls and it was displaying them with a sort of tabbed interface which you could use to switch between pages. The use case I was seeing was sending multiple links via twitter, and by doing so you would have saved space. In hindsight, it seems pretty short-sighted but that was the problem I had. This was in 2010, 4 years ago.&lt;/p&gt;
+
+&lt;p&gt;I really liked the idea, it was simple, easy to explain, easy to pitch. The way I saw this challenge was really a growth problem, more than a revenue problem. After having grown big, we would have had a ton of data about sites, and we could have built a kickass analytics tool on it.&lt;/p&gt;
+
+&lt;p&gt;I am pretty sure the reason why this failed was mainly overengineering, will come back to this later.&lt;/p&gt;
+
+&lt;p&gt;I wanted the site to be accessible through Web and API. I wanted to build this in Scala and MongoDB, two technologies I did not know, for the web-serving part, and Python/RabbitMQ for the offline processing part. I wanted the site to scale to thousands of requests, and it did. It took 6 months of hard work, every day, every weekend, it took an incredible amount of energy. A good friend of mine made me a logo and a design, someone on elance made me the front-end, my other co-founder helped me define the product, do wireframes and prioritize what needed to be done.&lt;/p&gt;
+
+&lt;p&gt;I started talking about this to people, and I also went to Hacker News in London to present this. It was a 20 minute presentation to a lot of people, it was fairly technical because I believed that the idea did not require explanation and technology was what I am passionate about. At the end I have received some good feedback, and I also had some angel investors interested in the product. People offered to mentor me, and I had interesting chats with some of them in the following weeks. We also met a lawyer for possibly patenting parts of this idea.&lt;/p&gt;
+
+&lt;p&gt;People started to use the product, but numbers were low and fundamental problems started to appear in the product. It turns out many websites did not like to be loaded in an frame, either by giving back a white page or escaping the frame. Resolving this was going to be really tricky, to give to the user the same site, I would have had to create a browser extension and use the real browser tabs for that.&lt;/p&gt;
+
+&lt;p&gt;Besides that, because I focused so much on technology and scaling, the energy I invested here was too high and I did not enough of what really matters in a startup, like market research, talking to other companies for integrations, offer content online myself, talking to early adopters.&lt;/p&gt;
+
+&lt;p&gt;People have a limited amount of energy before they burn out. At some point I exhausted mine, all the energy I spent on making the perfect platform turned out to have been misplaced.&lt;/p&gt;
+
+&lt;p&gt;I learned in the hard way from this experience, but it was really good learning. You can be really motivated at something, but motivation is not infinite, needs to be reinforced with success.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>DevOps with Ansible presentation</title>
+      <link>http://flagzeta.org/blog/devops-with-ansible-presentation/</link>
+      <pubDate>Mon, 02 Dec 2013 13:13:47 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/devops-with-ansible-presentation/</guid>
+      <description>&lt;p&gt;Presentation I gave at DJUGL in September 2013 about how TrialReach uses Ansible to automate server provisioning.&lt;/p&gt;
+
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;cf5216a0021b013147b94e9ac2870296&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spatial search on multiple points in Solr</title>
+      <link>http://flagzeta.org/blog/spatial-search-on-multiple-points-in-solr/</link>
+      <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/spatial-search-on-multiple-points-in-solr/</guid>
+      <description>&lt;p&gt;At TrialReach we deal with clinical trials data, which contain a lot of spatial information. Tipically, clinical trials treat a certain set of conditions and they happen in various locations globally.
+If you are a patient then searching across clinical trials becomes really spatial sensitive: you are only interested in the closest location to you.&lt;/p&gt;
+
+&lt;p&gt;This case might apply to other events as well, but the key point is global distribution. I am not interested in any point in the globe, just the closest to me.&lt;/p&gt;
+
+&lt;p&gt;&lt;h2&gt;Solution&lt;/h2&gt;
+Solr 4 does have support for this with the new spatial field called SpatialRecursivePrefixTreeFieldType, with many caveats though.&lt;/p&gt;
+
+&lt;p&gt;A schema could look this way:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; ?&amp;gt;
+&amp;lt;schema name=&amp;quot;example&amp;quot; version=&amp;quot;1.5&amp;quot;&amp;gt;
+ &amp;lt;fields&amp;gt;
+   &amp;lt;field name=&amp;quot;id&amp;quot; type=&amp;quot;string&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot; multiValued=&amp;quot;false&amp;quot; /&amp;gt; 
+   &amp;lt;field name=&amp;quot;title&amp;quot; type=&amp;quot;text_en&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot;/&amp;gt;
+   &amp;lt;field name=&amp;quot;condition&amp;quot; type=&amp;quot;text_en&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot; multiValued=&amp;quot;true&amp;quot;/&amp;gt;
+   &amp;lt;field name=&amp;quot;location&amp;quot; type=&amp;quot;location_rpt&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; multiValued=&amp;quot;true&amp;quot;/&amp;gt;
+   &amp;lt;field name=&amp;quot;_version_&amp;quot; type=&amp;quot;long&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; /&amp;gt;
+ &amp;lt;/fields&amp;gt;
+ ... 
+  &amp;lt;types&amp;gt;
+ ...
+    &amp;lt;fieldType name=&amp;quot;location_rpt&amp;quot; class=&amp;quot;solr.SpatialRecursivePrefixTreeFieldType&amp;quot;
+        geo=&amp;quot;true&amp;quot; distErrPct=&amp;quot;0.025&amp;quot; maxDistErr=&amp;quot;0.000009&amp;quot; units=&amp;quot;degrees&amp;quot; /&amp;gt;
+ &amp;lt;/types&amp;gt;
+&amp;lt;/schema&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A sample indexer using GeoDjango and PySolr (Haystack does not support this). It should be quite easy to work out how it works, PySolr is just a very thin wrapper for doing HTTP POST requests to Apache Solr.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pysolr
+
+solr = pysolr.Solr(&amp;quot;http://1.2.3.4:8983/solr/&amp;quot;, timeout=10)
+
+records = models.Study.objects.all()
+solr_data = []
+for record in records:
+    solr_dict = {
+                &amp;quot;id&amp;quot;: str(record.id),
+                &amp;quot;title&amp;quot;: record.title,
+                &amp;quot;condition&amp;quot;: [c.name for c in record.conditions.all()],
+                &amp;quot;location&amp;quot;: [&amp;quot;{1} {0}&amp;quot;.format(l.point.coords[0], l.point.coords[1]) for l in record.locations.all()],
+        # &amp;quot;point&amp;quot; is a Point GeoDjango type
+        # SOLR FORMAT is &amp;quot;long lat&amp;quot;, separated by a space
+            }
+    solr_data.append(solr_dict)
+solr.add(solr_data)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For querying, we use these sort of urls:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http://1.2.3.4:8983/solr/select/?sort=score+asc&amp;amp;fq=title:lupus+condition:lupus&amp;amp;q={!geofilt score=distance sfield=location pt=LAT,LONG d=KM_RADIUS}&amp;amp;fl=*,score
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;to return the distance you need to use the score, and the only thing you use in the q parameter is the geofilt (otherwise will influence the score), all other filters go in fq&lt;/li&gt;
+&lt;li&gt;if you do not need the distance, loose the score parameter in geofilt (it is inefficient)&lt;/li&gt;
+&lt;li&gt;distance returned is the distance between specified LAT,LONG and the closest LAT,LONG in the SpatialRecursivePrefixTreeFieldType set.&lt;/li&gt;
+&lt;li&gt;score returned is in DEGREES. You have to convert it in Km or miles.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;h2&gt;Shortcomings&lt;/h2&gt;
+- the only way to get the distance is through the score
+- you cannot get the matched point through highlighting or any other way
+- units of measure are a bit confusing&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Transifex for your Django projects</title>
+      <link>http://flagzeta.org/blog/transifex-for-your-django-projects/</link>
+      <pubDate>Thu, 31 Jan 2013 15:39:37 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/transifex-for-your-django-projects/</guid>
+      <description>&lt;p&gt;I am assuming you already created a project on Transifex (in this example is TxProject), either on the hosted version or on the downloadable version, and all the users you need are on there (just one to start is enough). I am also assuming i18n is already setup and you have at least 2 languages already in your project.&lt;/p&gt;
+
+&lt;p&gt;The aim of integrating Transifex libraries into your code is to make it really easy to push/pull translations of a project to their web front-end.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;pip install transifex-client&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;First thing is to install their python client, make things much easier instead of manually uploading PO files.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;user@host:/workspace/project$ tx init&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This creates a .tx folder in your project root to store all tx configuration. You should include this in the repository.&lt;/p&gt;
+
+&lt;p&gt;Now suppose you have multiple apps in your django project. For each of those, you should have a locale/ folder inside it with all the application PO files. You need to generate a source language PO file before linking to transifex.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;user@host:/workspace/project/apps/main$ ../../manage.py makemessages -l en&lt;/p&gt;
+
+&lt;p&gt;user@host:/workspace/project$ tx set &amp;ndash;auto-local -r TxProject.main &amp;lsquo;apps/main/locale/&lt;lang&gt;/LC_MESSAGES/django.po&amp;rsquo; &amp;ndash;source-lang en &amp;ndash;source-file apps/main/locale/en/LC_MESSAGES/django.po -t PO&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Repeat the last command for every app you have in your project, changing the resource name (-r option) in TxProject.APPNAME. Next step is to push all your PO files to transifex.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;user@host:/workspace/project$ tx push -s -t&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;After the translations have been done on Transifex, you can pull them into your project by typing.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;user@host:/workspace/project$ tx pull&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;All very nice and easy!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Technology behind tools.seogadget.co.uk</title>
+      <link>http://flagzeta.org/blog/technology-behind-toolsseogadgetcouk/</link>
+      <pubDate>Sun, 25 Nov 2012 17:30:21 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/technology-behind-toolsseogadgetcouk/</guid>
+      <description>&lt;p&gt;Scalability was one of the primary concerns when we started building the tool. Essentially, the tool gathers numbers about links you post, it is quite straightforward. To gather these numbers, our tool uses many external APIs and in a way acts as a sort of proxy between the user and many other 3rd party API providers, on top of which some internal indicators are derived. Many tools allow you to do that, but, regarding scalability, some ways are better than others. Much better actually. Gathering information for 1000 urls a day is different than doing it on 1 million, lots of challenges came in the way.
+&lt;h2&gt;TECHNOLOGY&lt;/h2&gt;
+Deciding on which platform to use, we ended up using the well-known combo Python-Django-Celery. It is the one i have most experience with, and the task is really I/O bound therefore it is not one of those cases in which writing everything in C makes a big difference. This combo also allows us to code things pretty quickly, testing various methods and combinations. The real complexity is in the Celery backend, which is where the data gathering takes place.
+&lt;h2&gt;WORKFLOW&lt;/h2&gt;
+Requests could come in through API or through the Web interface. Web interface is a better example because that is the only way now to send multiple urls at once. When URLs enter into the system, each one of those is done in parallel. For every url, there are two rounds of data gathering, the first gets part of the final results, and then a second round gets the results that are dependent on the first round of numbers.&lt;/p&gt;
+
+&lt;p&gt;All these single rounds of API calls are done asynchronously, not sequentially. We make heavy use of Celery advanced features such as tasksets and chords to make sure we squeeze every bit of performance we can from the system.&lt;/p&gt;
+
+&lt;p&gt;Each background task takes then care of storing these numbers in a PostgreSql database server, which they later get pulled back in the Web interface (or API results)
+&lt;h2&gt;INFRASTRUCTURE&lt;/h2&gt;
+Heroku has allowed us to build something quickly, although we had to switch to an hybrid EC2 - Heroku, mainly because of heavy use of RabbitMQ. The advantage of Heroku is that you can scale the number of instances pretty quickly if there is a lot of traffic. We distribute the background tasks using RabbitMQ which has gone through some configuration changes. Some of the more interesting tweaks have gone into the configuration of Celery, especially on setting expiration limits for every single external API call to 3rd party systems. We do not want 3rd party APIs failure to bring down our service. All this has been wrapped up in a quite minimal interface, using Twitter Bootstrap as a CSS framework. Very easy to use.
+&lt;h2&gt;IDEAS FOR THE FUTURE&lt;/h2&gt;
+There has been some thought about improving the &amp;ldquo;spam&amp;rdquo; flag with something which can learn and adapt to new types of spam. What features to take into account when deciding about spammy links is also under review. There is also a lot of enhancements we can do on the APIs, such as different tiers, perhaps a tier with a different priority (e.g. reduced response time) or different limits which will be a paid option. There is also always room for speed improvements such as bulk queries, result caching, etc&amp;hellip; what is the feature you would like to see in this tool?&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Basic things to do and not in Django</title>
+      <link>http://flagzeta.org/blog/basic-things-to-do-and-not-in-django/</link>
+      <pubDate>Sun, 23 Sep 2012 19:33:30 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/basic-things-to-do-and-not-in-django/</guid>
+      <description>&lt;p&gt;Make software dependent on absolute paths: One of the projects i was working on had all module imports including the project main folder name. That in turn made impossible to have the same project installed 2 times in the same folder with 2 distinct names. (e.g. 2 versions of the staging site). Sometime is even worse than this, when you have a full path in the code. These should always be in configuration files which are changeable at deployment.&lt;/p&gt;
+
+&lt;p&gt;Massive views.py file: It is probably time to split the project in separate applications. Also try to remove the code which is not directly view related and separate it in different files. Django has a very good form validation framework, if you use it your views.py file will shrink considerably.&lt;/p&gt;
+
+&lt;p&gt;Please no grammatical mistakes: This is very bad and means you did not care about the project enough, plus not everyone is using IDEs so you should make the effort to write function names properly.&lt;/p&gt;
+
+&lt;p&gt;Don&amp;rsquo;t throw everything in the database: I hate when applications are dependent on huge models, models should be lean and you should be able to recreate them easily enough with fixtures. For the sake of forensics, you really should make good use of logging and perhaps keep a backup of the imported feeds. Not all data needs to be in the database, only the one your project uses.&lt;/p&gt;
+
+&lt;p&gt;Make all a varchar: Relational databases are strongly typed and this is the reason why they can do all the things they do&amp;hellip; if you want more flexibility, use mongodb.&lt;/p&gt;
+
+&lt;p&gt;Always have automated deployments: Even if all you do is rsync to a server, you should have that command in a bash or fabric script.&lt;/p&gt;
+
+&lt;p&gt;Not reinvent Django features: Unless there is no way to solve your problem with existing tools&amp;hellip; usually Django modules are pretty extensible and rock-solid.&lt;/p&gt;
+
+&lt;p&gt;Use django-extensions and Django debug toolbar: It&amp;rsquo;s like going camping and not having the swiss army knife. My favourite parts are the graph models extensions which makes you an image representing all models and connections between them, and the runserver_plus which uses the Werkzeug debugger to run your code&amp;hellip; very handy the debugger. Regarding the debug toolbar, makes it really easy to diagnose what&amp;rsquo;s gone wrong when rendering a page: are all variables included in the template, some bad value coming back from the db, etc&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Include everything needed for the project in the repository: No files laying around the server should exist unless they are checked in the repo, this includes apache conf files&amp;hellip; unless you have a separate repository for them.&lt;/p&gt;
+
+&lt;p&gt;Always use virtualenv: Really, projects without virtualenv are a thing of the past, and using it is trivial. Another thing to do is always have a requirements.txt in the repository, so you can recreate the virtualenv easily.&lt;/p&gt;
+
+&lt;p&gt;Keep the project clean: Which means remove old features when they are not required anymore, just like you would clean your room from time to time. Keep in mind that all code on the site need to be maintained, and if it&amp;rsquo;s not worth maintaining it anymore, it&amp;rsquo;s time to get rid of it.&lt;/p&gt;
+
+&lt;p&gt;Always use RequestContext and STATIC_URL for rendering templates: In that case you do not hard-code links to your static media. It&amp;rsquo;s one of those things easy to do and will make your life easier when you will have a separate static server or serve files through a CDN.&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>From idea to a product</title>
+      <link>http://flagzeta.org/blog/from-idea-to-a-product/</link>
+      <pubDate>Thu, 17 May 2012 00:28:34 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/from-idea-to-a-product/</guid>
+      <description>
+
+&lt;p&gt;This is my history in one of the first startups I worked for, very small, but nevertheless a very good learning experience.&lt;/p&gt;
+
+&lt;h2 id=&#34;selling-the-idea&#34;&gt;Selling the idea&lt;/h2&gt;
+
+&lt;p&gt;We had the vision, and we sold our vision in the way a lean startup would do: sell the vision, receive funding for the project, deliver the product. Turns out it is extremely hard to sell something that does not exist, but we did it. After a while we found our first customer, which believed in us and was the right kind of customer. We worked for about a month alongside them, formalized the vision into a product, writing schemas, functional specifications, project plans, time estimates, wireframes. I think they were quite supportive and not too pretentious. They also saw a lot of value in what we were delivering. We also won a TSB grant, which helped us to go through initial stages and eventually hire our second developer.&lt;/p&gt;
+
+&lt;h2 id=&#34;studying-the-idea&#34;&gt;Studying the idea&lt;/h2&gt;
+
+&lt;p&gt;How to realize what we had in mind went through many iterations. Nobody of us had the complete knowledge to realize what we sold, the company did not have the expertise in house and the possibility to afford anyone who had it, so we had to learn a lot. I am not talking about frameworks and libraries but algorithms.
+Luckily enough, all the stanford classes of the past year introduced us to the techniques that we ended up using&amp;hellip; machine learning and nlp most of all.
+Our original idea was to be able to estimate how much a company is making in terms of revenue, estimating it with an acceptable margin of error, starting from data available publicly. There is a lot of data available publicly, some from Companies house, some from other financial institutes, some from the social sphere, some from search engines. Some information is also given away by the companies themselves on their site (e.g. testimonials, press releases, etc&amp;hellip;). Some other from press releases of investors such as VCs. If you dig deep enough you will see there is a LOT of data, but the problem is that there is always noise, would this noise have compromised our efforts?&lt;/p&gt;
+
+&lt;h2 id=&#34;machine-learning&#34;&gt;Machine learning&lt;/h2&gt;
+
+&lt;p&gt;Turns out ML is a very vast field, much of it unexplored. Neural networks are not the only method to instruct a machine to take decisions like humans&amp;hellip; there are many others. Human brain can fine tune automatically, but in a machine you have to pick the right algorithm: SVM, kNN, Naive bayes, NN, linear-logistic regression..
+Once you know these techniques, actually what we do is pretty simple, take known connections between data and revenue, train the system and use it to predict revenue when we do not have it. In the real-world though, there is a lot of work to do on data.. smoothing, make sure it is time-overlapping, make sure features you chose represent well the reality, etc.&lt;/p&gt;
+
+&lt;h2 id=&#34;choosing-the-technology&#34;&gt;Choosing the technology&lt;/h2&gt;
+
+&lt;p&gt;Python was the perfect choice for me. The one i have most experience with, and a very good language for prototyping ideas. I had previous experience in a startup using Scala and I was not able to reach the same development speed. I think slow development is absolutely to be avoided in a startup, it is a motivation killer&amp;hellip; Generally in a startup you should use things you know well, it cuts development time. Forget all the cool techs you always wanted to try, try them in a personal project, not a serious startup. I know it is a blow, but you have to accept it, it is a matter of life or death. We used Mysql, not Cassandra. I knew Mysql very well already and, to be honest, how many Mysql experts can you find on the market? and how many Cassandra experts?&lt;/p&gt;
+
+&lt;h2 id=&#34;building-the-team&#34;&gt;Building the team&lt;/h2&gt;
+
+&lt;p&gt;When i joined, it was just me and the CEO. It is a pretty exciting time to join a company, i had to give a direction to everything in terms of software development. We needed a team, but i was not sure exactly what kind of person.. senior, junior, contractor? Our budget was limited, therefore the best choice turned out to be someone junior-mid level with potential to grow quickly in the organization. Which skills did we require in a developer? Initialy i thought we need someone that knew Python but having thought about it.. what we really needed is someone interested in what we do and in the algorithms we use. Python is such an easy language you can pick it up in a couple of weeks, and if you don&amp;rsquo;t, you are probably not the right kind of developer for us anyway.&lt;/p&gt;
+
+&lt;h2 id=&#34;stay-lean&#34;&gt;Stay lean&lt;/h2&gt;
+
+&lt;p&gt;All we needed is a shared folder for docs, a code repository, a virtual machine and a whiteboard with lots of post-it notes. No need for issue tracking or CI server when you start, but that is not an excuse to get sloppy with unit-tests. I like 5-10 minutes stand-ups in the morning, you get a sense of what the team is up to and you can offer solutions to problems pretty quickly. There is not really time for documenting code either, at the start it is all in the heads of people. I am a fan of writing code like a prose, that is the best way to write docs.&lt;/p&gt;
+
+&lt;h2 id=&#34;lesson-learnt&#34;&gt;Lesson learnt&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You are in a startup usually because you are incentivized by the idea, team or equity in the company, not because you have a good salary. Make sure you understand this.&lt;/li&gt;
+&lt;li&gt;Team is the most important thing. Much better if you have the same level of experience but specialize in different things.&lt;/li&gt;
+&lt;li&gt;Use what you already know, learn quickly what you don&amp;rsquo;t.&lt;/li&gt;
+&lt;li&gt;Identify a market and clients before starting. Call them and sell them the product, before, during and after you build it.&lt;/li&gt;
+&lt;li&gt;You have to tackle issues, not wait for somebody else.&lt;/li&gt;
+&lt;li&gt;Write down the rules of the game before joining.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;launch&#34;&gt;Launch!&lt;/h2&gt;
+
+&lt;p&gt;We delivered our first version of the product a couple of weeks ago&amp;hellip; Some screenshots:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-company-list-plus-filter.png&#34; alt=&#34;company list&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-company-detail.png&#34; alt=&#34;company detail&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-building-list.png&#34; alt=&#34;building list&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-building-detail.png&#34; alt=&#34;building detail&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-map.png&#34; alt=&#34;map&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-insert-company.png&#34; alt=&#34;insert company&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu on EC2, the simple way.</title>
+      <link>http://flagzeta.org/blog/ubuntu-on-ec2-the-simple-way/</link>
+      <pubDate>Sun, 06 May 2012 11:39:37 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/ubuntu-on-ec2-the-simple-way/</guid>
+      <description>
+
+&lt;h2 id=&#34;problem&#34;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;Sometime ago I had to run a statistical software on some data, the computation was really expensive, it was impractical to run it on my small laptop as it would hung for hours waiting for a result to come up. I thought about running it on Amazon.&lt;/p&gt;
+
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+
+&lt;p&gt;Amazon EC2 is a virtual machine hosting service, also known as IaaS. Quite similar to Linode or Rackspace. Payment here is per hour, differently from Linode&amp;hellip; slightly on the expensive side i might add, but top-end VMs are quite powerful.&lt;/p&gt;
+
+&lt;p&gt;First step is to go through the setup procedure in order to have ec2 tools setup on your machine. I run ubuntu on my laptop and i applied the steps described &lt;a href=&#34;https://help.ubuntu.com/community/EC2StartersGuide&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;After having installed the api tools and having put all EC2 environment variables in your .bashrc file, type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ec2-describe-images -o amazon
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You should see the list of public AMIs from amazon. If you don&amp;rsquo;t there are problems with your configuration.&lt;/p&gt;
+
+&lt;p&gt;By default the firewall blocks every access to every port, you have to explicitly enable access in the security group that is associated to your machine (or in the default security group).&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ec2-authorize default -p 22&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This enables the ssh port. Next thing is to create the machine, i used ubuntu 11.10 64bit EBS-backed. It&amp;rsquo;s ami code is ami-895069fd. It is possible to bootstrap this specific image with a bootstrap script:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ec2-run-instances ami-895069fd -t m1.large &amp;ndash;user-data-file ~/ec2/bootstrap.sh&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This is an example bootstrap file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;#!/bin/bash
+
+set -e -x
+export DEBIAN_FRONTEND=noninteractive
+apt-get update &amp;amp;&amp;amp; apt-get upgrade -y
+
+apt-get install -y xorg
+apt-get install -y fluxbox
+apt-get install -y vnc4server
+
+wget --user=&amp;quot;YOURUSER&amp;quot; --password=&amp;quot;YOURPASS&amp;quot; -O /tmp/vnc-conf.tgz https://server/vnc-bootstrap.tgz
+cd /home/ubuntu &amp;amp;&amp;amp; tar xfvz /tmp/vnc-conf.tgz &amp;amp;&amp;amp; chmod -R 700 .vnc
+
+chmod 755 /etc/X11/xinit/xinitrc
+su -c vnc4server ubuntu
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this script, i install all the packages i need and i download some initial data. For anything more serious than this i advise you to look into Puppet or Chef.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

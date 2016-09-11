@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Nltk on Blog | Federico Marani</title>
+    <link>http://flagzeta.org/tags/nltk/</link>
+    <description>Recent content in Nltk on Blog | Federico Marani</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 21 Mar 2012 22:44:23 +0000</lastBuildDate>
+    <atom:link href="http://flagzeta.org/tags/nltk/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Text classification in Python</title>
+      <link>http://flagzeta.org/blog/text-classification-in-python/</link>
+      <pubDate>Wed, 21 Mar 2012 22:44:23 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/text-classification-in-python/</guid>
+      <description>&lt;p&gt;Python and NLTK form quite a good platform to do text analysis. There is a lot of information on Internet, nevertheless i have not found a clean and simple example of a classifier. Text classifiers come from techniques such as Natural Language Processing and Machine Learning, in fact i think they are exactly in the middle of these.&lt;/p&gt;
+
+&lt;p&gt;Bearing in mind that building a good classifier is only possible when you have a training set that represents reality quite well, and certainly longer than the one in this example, here a first stab at it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import nltk
+import itertools
+import sys
+import random
+
+class Classifier(object):
+    &amp;quot;&amp;quot;&amp;quot;classify by looking at a site&amp;quot;&amp;quot;&amp;quot;
+    def __init__(self, training_set):
+        self.training_set = training_set
+        self.stopwords = nltk.corpus.stopwords.words(&amp;quot;english&amp;quot;)
+        self.stemmer = nltk.PorterStemmer()
+        self.minlength = 7
+        self.maxlength = 25
+    def text_process_entry(self, example):
+        site_text = nltk.clean_html(example[0]).lower()
+        original_tokens = itertools.chain.from_iterable(nltk.word_tokenize(w) for w in nltk.sent_tokenize(site_text))
+        tokens = original_tokens #+ [&#39; &#39;.join(w) for w in nltk.util.ngrams(original_tokens, 2)]
+        tokens = [w for w in tokens if not w in self.stopwords]
+        tokens = [w for w in tokens if self.minlength &amp;lt; len(w) &amp;lt; self.maxlength]
+        #tokens = [self.stemmer.stem(w) for w in tokens]
+        return (tokens, example[1])
+    def text_process_all(self, exampleset):
+        processed_training_set = [self.text_process_entry(i) for i in self.training_set]
+        processed_training_set = filter(lambda x: len(x[0]) &amp;gt; 0, processed_training_set) # remove empty crawls
+        processed_texts = [i[0] for i in processed_training_set]
+        all_words = nltk.FreqDist(itertools.chain.from_iterable(processed_texts))
+        features_to_test = all_words.keys()[:5000]
+        self.features_to_test = features_to_test
+        featuresets = [(self.document_features(d), c) for (d,c) in processed_training_set]
+        return featuresets
+    def document_features(self, document):
+        #document_words = set(document)
+        features = {}
+        for word in self.features_to_test:
+            #features[&#39;contains(%s)&#39; % word] = (word in document_words)
+            features[&#39;contains(%s)&#39; % word] = (word in document)
+            #features[&#39;occurrencies(%s)&#39; % word] = document.count(word) 
+            #features[&#39;atleast3(%s)&#39; % word] = document.count(word) &amp;gt; 3
+        return features
+    def build_classifier(self, featuresets):
+        random.shuffle(featuresets)
+        cut_point = len(featuresets) / 5
+        train_set, test_set = featuresets[cut_point:], featuresets[:cut_point]
+        classifier = nltk.NaiveBayesClassifier.train(train_set)
+        return (classifier, test_set)
+    def run(self):
+        featuresets = self.text_process_all(self.training_set)
+        classifier, test_set = self.build_classifier(featuresets)
+        self.classifier = classifier
+        self.test_classifier(classifier, test_set)
+    def classify(self, text):
+        return self.classifier.classify(self.document_features(text))
+    def test_classifier(self, classifier, test_set):
+        print nltk.classify.accuracy(classifier, test_set)
+        classifier.show_most_informative_features(45)
+
+classes = (&#39;a la carte&#39;, &#39;advertising&#39;, &#39;commission&#39;, &#39;investment&#39;, &#39;pay as you go&#39;)
+
+training_set = [
+    (&#39;we are a bank specialized in dealing with IT companies&#39;, classes[3]),
+    (&#39;we sell our product at a fixed cost of 10 pounds&#39;, classes[0]),
+    (&#39;the cost per click is 0.01 dollars but if you get more than 10000 impression the cost will be 0.12&#39;, classes[1]),
+    (&#39;we take a 1% commission on all sales, overseas sales have an additional charge of 12%&#39;, classes[2]),
+    (&#39;we charge a 1% on top of your final price.&#39;, classes[2]),
+    (&#39;we sell our product at 5 pounds, excluding with the variant A which costs an extra of 55 pounds&#39;, classes[0]),
+    (&#39;we sell our product at 6 pounds, excluding with the variant B which costs 45 pounds&#39;, classes[0]),
+    (&#39;our commission is normally between 1% and 2%&#39;, classes[2]),
+    (&#39;impressions on the homepage on sundays are worth 0.01 pounds&#39;, classes[1]),
+    (&#39;we will show impressions only to users that correspond to certain criteria.&#39;, classes[1]),
+    (&#39;we manage an hedge fund and we take care of placing investments on behalf of our clients&#39;, classes[3]),
+    (&#39;we bill only for the amount of api you use. 0.10 per 1000 calls&#39;, classes[4]),
+    (&#39;running a virtual machine will cost you 0.12 pounds per hour&#39;, classes[4]),
+    (&#39;we invest in major hedge funds&#39;, classes[3]),
+    (&#39;we are an international bank, based in all countries of europe&#39;, classes[3]),
+]
+
+test_text = &amp;quot;we are a hedge fund collaborating with many banks in europe&amp;quot;
+test_text2 = &amp;quot;we charge a fixed fee on top of our client&#39;s sales&amp;quot;
+
+if __name__ == &#39;__main__&#39;:
+    classifier = Classifier(training_set)
+    classifier.run()
+    print &amp;quot;%s -&amp;gt; classified as: %s&amp;quot; % (test_text, classifier.classify(test_text))
+    print &amp;quot;%s -&amp;gt; classified as: %s&amp;quot; % (test_text2, classifier.classify(test_text2))
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can run this code and classify entities based on their preferred sales target. Some of the above lines are commented, uncomment them if you think it gives you a better representation of the example. Just add a further 1000 good examples and then it should start to make accurate decisions&amp;hellip; enjoy!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

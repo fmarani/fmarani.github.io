@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Django on Blog | Federico Marani</title>
+    <link>http://flagzeta.org/tags/django/</link>
+    <description>Recent content in Django on Blog | Federico Marani</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 31 Jul 2013 12:09:43 +0000</lastBuildDate>
+    <atom:link href="http://flagzeta.org/tags/django/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Spatial search on multiple points in Solr</title>
+      <link>http://flagzeta.org/blog/spatial-search-on-multiple-points-in-solr/</link>
+      <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/spatial-search-on-multiple-points-in-solr/</guid>
+      <description>&lt;p&gt;At TrialReach we deal with clinical trials data, which contain a lot of spatial information. Tipically, clinical trials treat a certain set of conditions and they happen in various locations globally.
+If you are a patient then searching across clinical trials becomes really spatial sensitive: you are only interested in the closest location to you.&lt;/p&gt;
+
+&lt;p&gt;This case might apply to other events as well, but the key point is global distribution. I am not interested in any point in the globe, just the closest to me.&lt;/p&gt;
+
+&lt;p&gt;&lt;h2&gt;Solution&lt;/h2&gt;
+Solr 4 does have support for this with the new spatial field called SpatialRecursivePrefixTreeFieldType, with many caveats though.&lt;/p&gt;
+
+&lt;p&gt;A schema could look this way:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; ?&amp;gt;
+&amp;lt;schema name=&amp;quot;example&amp;quot; version=&amp;quot;1.5&amp;quot;&amp;gt;
+ &amp;lt;fields&amp;gt;
+   &amp;lt;field name=&amp;quot;id&amp;quot; type=&amp;quot;string&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot; multiValued=&amp;quot;false&amp;quot; /&amp;gt; 
+   &amp;lt;field name=&amp;quot;title&amp;quot; type=&amp;quot;text_en&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot;/&amp;gt;
+   &amp;lt;field name=&amp;quot;condition&amp;quot; type=&amp;quot;text_en&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot; multiValued=&amp;quot;true&amp;quot;/&amp;gt;
+   &amp;lt;field name=&amp;quot;location&amp;quot; type=&amp;quot;location_rpt&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; multiValued=&amp;quot;true&amp;quot;/&amp;gt;
+   &amp;lt;field name=&amp;quot;_version_&amp;quot; type=&amp;quot;long&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; /&amp;gt;
+ &amp;lt;/fields&amp;gt;
+ ... 
+  &amp;lt;types&amp;gt;
+ ...
+    &amp;lt;fieldType name=&amp;quot;location_rpt&amp;quot; class=&amp;quot;solr.SpatialRecursivePrefixTreeFieldType&amp;quot;
+        geo=&amp;quot;true&amp;quot; distErrPct=&amp;quot;0.025&amp;quot; maxDistErr=&amp;quot;0.000009&amp;quot; units=&amp;quot;degrees&amp;quot; /&amp;gt;
+ &amp;lt;/types&amp;gt;
+&amp;lt;/schema&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A sample indexer using GeoDjango and PySolr (Haystack does not support this). It should be quite easy to work out how it works, PySolr is just a very thin wrapper for doing HTTP POST requests to Apache Solr.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pysolr
+
+solr = pysolr.Solr(&amp;quot;http://1.2.3.4:8983/solr/&amp;quot;, timeout=10)
+
+records = models.Study.objects.all()
+solr_data = []
+for record in records:
+    solr_dict = {
+                &amp;quot;id&amp;quot;: str(record.id),
+                &amp;quot;title&amp;quot;: record.title,
+                &amp;quot;condition&amp;quot;: [c.name for c in record.conditions.all()],
+                &amp;quot;location&amp;quot;: [&amp;quot;{1} {0}&amp;quot;.format(l.point.coords[0], l.point.coords[1]) for l in record.locations.all()],
+        # &amp;quot;point&amp;quot; is a Point GeoDjango type
+        # SOLR FORMAT is &amp;quot;long lat&amp;quot;, separated by a space
+            }
+    solr_data.append(solr_dict)
+solr.add(solr_data)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For querying, we use these sort of urls:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http://1.2.3.4:8983/solr/select/?sort=score+asc&amp;amp;fq=title:lupus+condition:lupus&amp;amp;q={!geofilt score=distance sfield=location pt=LAT,LONG d=KM_RADIUS}&amp;amp;fl=*,score
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;to return the distance you need to use the score, and the only thing you use in the q parameter is the geofilt (otherwise will influence the score), all other filters go in fq&lt;/li&gt;
+&lt;li&gt;if you do not need the distance, loose the score parameter in geofilt (it is inefficient)&lt;/li&gt;
+&lt;li&gt;distance returned is the distance between specified LAT,LONG and the closest LAT,LONG in the SpatialRecursivePrefixTreeFieldType set.&lt;/li&gt;
+&lt;li&gt;score returned is in DEGREES. You have to convert it in Km or miles.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;h2&gt;Shortcomings&lt;/h2&gt;
+- the only way to get the distance is through the score
+- you cannot get the matched point through highlighting or any other way
+- units of measure are a bit confusing&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Technology behind tools.seogadget.co.uk</title>
+      <link>http://flagzeta.org/blog/technology-behind-toolsseogadgetcouk/</link>
+      <pubDate>Sun, 25 Nov 2012 17:30:21 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/technology-behind-toolsseogadgetcouk/</guid>
+      <description>&lt;p&gt;Scalability was one of the primary concerns when we started building the tool. Essentially, the tool gathers numbers about links you post, it is quite straightforward. To gather these numbers, our tool uses many external APIs and in a way acts as a sort of proxy between the user and many other 3rd party API providers, on top of which some internal indicators are derived. Many tools allow you to do that, but, regarding scalability, some ways are better than others. Much better actually. Gathering information for 1000 urls a day is different than doing it on 1 million, lots of challenges came in the way.
+&lt;h2&gt;TECHNOLOGY&lt;/h2&gt;
+Deciding on which platform to use, we ended up using the well-known combo Python-Django-Celery. It is the one i have most experience with, and the task is really I/O bound therefore it is not one of those cases in which writing everything in C makes a big difference. This combo also allows us to code things pretty quickly, testing various methods and combinations. The real complexity is in the Celery backend, which is where the data gathering takes place.
+&lt;h2&gt;WORKFLOW&lt;/h2&gt;
+Requests could come in through API or through the Web interface. Web interface is a better example because that is the only way now to send multiple urls at once. When URLs enter into the system, each one of those is done in parallel. For every url, there are two rounds of data gathering, the first gets part of the final results, and then a second round gets the results that are dependent on the first round of numbers.&lt;/p&gt;
+
+&lt;p&gt;All these single rounds of API calls are done asynchronously, not sequentially. We make heavy use of Celery advanced features such as tasksets and chords to make sure we squeeze every bit of performance we can from the system.&lt;/p&gt;
+
+&lt;p&gt;Each background task takes then care of storing these numbers in a PostgreSql database server, which they later get pulled back in the Web interface (or API results)
+&lt;h2&gt;INFRASTRUCTURE&lt;/h2&gt;
+Heroku has allowed us to build something quickly, although we had to switch to an hybrid EC2 - Heroku, mainly because of heavy use of RabbitMQ. The advantage of Heroku is that you can scale the number of instances pretty quickly if there is a lot of traffic. We distribute the background tasks using RabbitMQ which has gone through some configuration changes. Some of the more interesting tweaks have gone into the configuration of Celery, especially on setting expiration limits for every single external API call to 3rd party systems. We do not want 3rd party APIs failure to bring down our service. All this has been wrapped up in a quite minimal interface, using Twitter Bootstrap as a CSS framework. Very easy to use.
+&lt;h2&gt;IDEAS FOR THE FUTURE&lt;/h2&gt;
+There has been some thought about improving the &amp;ldquo;spam&amp;rdquo; flag with something which can learn and adapt to new types of spam. What features to take into account when deciding about spammy links is also under review. There is also a lot of enhancements we can do on the APIs, such as different tiers, perhaps a tier with a different priority (e.g. reduced response time) or different limits which will be a paid option. There is also always room for speed improvements such as bulk queries, result caching, etc&amp;hellip; what is the feature you would like to see in this tool?&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Basic things to do and not in Django</title>
+      <link>http://flagzeta.org/blog/basic-things-to-do-and-not-in-django/</link>
+      <pubDate>Sun, 23 Sep 2012 19:33:30 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/basic-things-to-do-and-not-in-django/</guid>
+      <description>&lt;p&gt;Make software dependent on absolute paths: One of the projects i was working on had all module imports including the project main folder name. That in turn made impossible to have the same project installed 2 times in the same folder with 2 distinct names. (e.g. 2 versions of the staging site). Sometime is even worse than this, when you have a full path in the code. These should always be in configuration files which are changeable at deployment.&lt;/p&gt;
+
+&lt;p&gt;Massive views.py file: It is probably time to split the project in separate applications. Also try to remove the code which is not directly view related and separate it in different files. Django has a very good form validation framework, if you use it your views.py file will shrink considerably.&lt;/p&gt;
+
+&lt;p&gt;Please no grammatical mistakes: This is very bad and means you did not care about the project enough, plus not everyone is using IDEs so you should make the effort to write function names properly.&lt;/p&gt;
+
+&lt;p&gt;Don&amp;rsquo;t throw everything in the database: I hate when applications are dependent on huge models, models should be lean and you should be able to recreate them easily enough with fixtures. For the sake of forensics, you really should make good use of logging and perhaps keep a backup of the imported feeds. Not all data needs to be in the database, only the one your project uses.&lt;/p&gt;
+
+&lt;p&gt;Make all a varchar: Relational databases are strongly typed and this is the reason why they can do all the things they do&amp;hellip; if you want more flexibility, use mongodb.&lt;/p&gt;
+
+&lt;p&gt;Always have automated deployments: Even if all you do is rsync to a server, you should have that command in a bash or fabric script.&lt;/p&gt;
+
+&lt;p&gt;Not reinvent Django features: Unless there is no way to solve your problem with existing tools&amp;hellip; usually Django modules are pretty extensible and rock-solid.&lt;/p&gt;
+
+&lt;p&gt;Use django-extensions and Django debug toolbar: It&amp;rsquo;s like going camping and not having the swiss army knife. My favourite parts are the graph models extensions which makes you an image representing all models and connections between them, and the runserver_plus which uses the Werkzeug debugger to run your code&amp;hellip; very handy the debugger. Regarding the debug toolbar, makes it really easy to diagnose what&amp;rsquo;s gone wrong when rendering a page: are all variables included in the template, some bad value coming back from the db, etc&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Include everything needed for the project in the repository: No files laying around the server should exist unless they are checked in the repo, this includes apache conf files&amp;hellip; unless you have a separate repository for them.&lt;/p&gt;
+
+&lt;p&gt;Always use virtualenv: Really, projects without virtualenv are a thing of the past, and using it is trivial. Another thing to do is always have a requirements.txt in the repository, so you can recreate the virtualenv easily.&lt;/p&gt;
+
+&lt;p&gt;Keep the project clean: Which means remove old features when they are not required anymore, just like you would clean your room from time to time. Keep in mind that all code on the site need to be maintained, and if it&amp;rsquo;s not worth maintaining it anymore, it&amp;rsquo;s time to get rid of it.&lt;/p&gt;
+
+&lt;p&gt;Always use RequestContext and STATIC_URL for rendering templates: In that case you do not hard-code links to your static media. It&amp;rsquo;s one of those things easy to do and will make your life easier when you will have a separate static server or serve files through a CDN.&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

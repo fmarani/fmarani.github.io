@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Startups on Blog | Federico Marani</title>
+    <link>http://flagzeta.org/tags/startups/</link>
+    <description>Recent content in Startups on Blog | Federico Marani</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
+    <lastBuildDate>Sun, 01 May 2016 20:43:48 +0000</lastBuildDate>
+    <atom:link href="http://flagzeta.org/tags/startups/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>YCombinator interview</title>
+      <link>http://flagzeta.org/blog/yc-interview/</link>
+      <pubDate>Sun, 01 May 2016 20:43:48 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/yc-interview/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/ycombinator.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A month ago me and my co-founder did an application for YC, and last week we were lucky enough to be selected for an interview, along with other startups. We got called all the way to California with not even a week of notice, everything paid&amp;hellip; definitely a bit more serious than a phone call.&lt;/p&gt;
+
+&lt;p&gt;We prepared a lot during the last few days, reading what people say online, meeting previous YC companies, doing mock interviews with YC alumni. Some of that was YC specific, as we knew they are very product-focused. Little aside here: I am an engineer and I really dislike sales talk, because most sales words are so vague that are worthless at describing specifics. It was very refreshing to see that YC thought it the same way I did.&lt;/p&gt;
+
+&lt;p&gt;The interview only lasted 10 minutes, although we got a second interview with other partners, so they had listened to our story twice. There were 3-4 groups of 3 partners doing interviews for max 10 min throughout the day, for 2 weeks, so you can imagine there were a lot of companies there, all with their online application accepted. I have spoken with a few of them, all clearly smart, although at that stage you practiced your pitch so many times that you do not want to hear yourself having to say it again :-)&lt;/p&gt;
+
+&lt;p&gt;If there is one take-away for me is: explain the product, as opposed to sell the product. Explain it in a way that someone technical might be able to rebuild it. Describe it well in a way that sales processes, addressable markets, customer acquisition strategies and costs, LTV, who buys and who uses it, all these should all come naturally from the product description. You should have a good answer for all these, even if not perfect yet.&lt;/p&gt;
+
+&lt;p&gt;In the same evening we received a negative answer, along with some good feedback. When things do not go as you would, it is easy to be dismissive, but really, there is a lot that could be learnt if you were in. I would definitely go back if we had the chance.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Another failure, another lesson - comprotempo.it</title>
+      <link>http://flagzeta.org/blog/comprotempo/</link>
+      <pubDate>Wed, 11 Mar 2015 12:00:00 +0000</pubDate>
+      
+      <guid>http://flagzeta.org/blog/comprotempo/</guid>
+      <description>&lt;p&gt;When it came out, I was fashinated by TaskRabbit. I thought that a generic marketplace for handymen was the perfect tool for this decade. We have lots of young unemployment in Italy and there were also middle-class people willing to pay for someone doing chores for them. The idea was simple: putting both sides in touch by agreeing location, type of task and price. The advantages for handymen were money for work, the advantages for the committant is to &amp;ldquo;buy&amp;rdquo; someone else&amp;rsquo;s time (hence the &amp;ldquo;comprotempo&amp;rdquo; name)&lt;/p&gt;
+
+&lt;p&gt;In 2012, I set out to replicate the idea and find a good team of people to work with. I am an engineer, it is easy for us to &amp;ldquo;over-build&amp;rdquo; the product, or &amp;ldquo;over-engineer&amp;rdquo; a product feature, so I only built what I thought was the minimum product. Everybody is biased in some ways, working in a team is the only way to keep these biases in check. Once I built it, 2-3 months later, it was about spreading the word: Facebook page, Twitter account, PPC on various channels, writing content, reaching out to people, etc&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Turns out building a Marketplace is very hard. You have now to convince two types of customers which may have a completely different set of concerns and motivations. The money incentive is always very strong, in fact we had a lot of users registered as handymen for a very broad set of tasks. On the other hand, feeding the system with tasks has proven to be very challenging.&lt;/p&gt;
+
+&lt;p&gt;Because we started with handling a broad set of tasks, we had a problem with audience addressability: people likely to buy services on our site were not very addressable, distinguishable from the crowd. For instance, how do you target people willing to pay for lawn mowing, and willing to trust an online service for it? Not easy. We had to do that for every type of service the site was offering, so it was hardly marketing scalable. Some of these services were by nature recurrent, most of them were not though.&lt;/p&gt;
+
+&lt;p&gt;We were also doing a bad job at keeping people&amp;rsquo;s attention on the site. The homepage was generic on purpose, and I don&amp;rsquo;t think people were understanding the relevance to their problem. Also they were very likely to be busy people, I think we were wasting their attention timespan. Posting an ad for a task also required filling a lot of information about the task before-hand, in order to receive good money quotes for it. People don&amp;rsquo;t like long forms.&lt;/p&gt;
+
+&lt;p&gt;Most of all, I think we had done a very bad job at building trust as a community. We had a rating system for handymen, but with no user-generated ratings it was not helpful. It is a bit of a chicken-and-egg problem sometimes, communities are not self-sustaining from the start. Building brand reputation is just really long and hard.&lt;/p&gt;
+
+&lt;p&gt;At the end, we also had problems with the team. With internal divisions, you just cannot focus your energies anymore. I can&amp;rsquo;t stress this enough, problems with founding team are just incredibly hard to deal with. They ripple out into everything else. That was the end for us.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

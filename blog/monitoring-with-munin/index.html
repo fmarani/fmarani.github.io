@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="generator" content="Hugo 0.16" />
+        <title>Monitoring servers with Munin</title>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+        <link rel="stylesheet" type="text/css" href="http://flagzeta.org//css/crisp.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="keywords" content="code,python,django,it,software architecture,technical architecture">
+        <meta name="author" content="Federico Marani">
+        
+    </head>
+    <body>
+
+<header id="header">
+    <a id="logo" href="/"><img src="http://flagzeta.org//img/me.png" alt="me" /></a>
+    <a href="http://flagzeta.org/"><h1>Blog | Federico Marani</h1></a>
+    <p>Coder, open-source enthusiast, command-line addict. CTO at TalentRank. Former Head of Engineering @TrialReach</p>
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ"><i class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani"><i class="fa fa-linkedin-square fa-2x"></i></a>
+        <a href="http://github.com/fmarani"><i class="fa fa-github-square fa-2x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-rss-square fa-2x"></i></a> 
+    </div>                                                                  
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <h6><a href="http://flagzeta.org/about/">About me</a></h6>
+        
+    
+        
+        <h6><a href="http://flagzeta.org/projects/">Side Projects</a></h6>
+        
+    
+</header>
+
+
+<article>
+    <div class="post-stamp">
+        16 Jan 2015
+        <span class="taglist">&middot;
+            monitoring 
+        </span>
+    </div>
+	<h1 class="post-title">Monitoring servers with Munin</h1>
+        <div class="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+	<p>I normally use Munin for server monitoring, it is very easy to install and the kind of tool with not much setup. It may not be the best tool when you have many servers, due to static graph generation. Munin 2, released recently, has a few changes in that regard, they might have improved that.</p>
+
+<p>Munin is mainly a resource usage graph tool, which monitors many metrics from a pool of servers (called nodes). When set up, the monitoring server connects to every node (specified in its configuration) and then asks for a list of current values for all monitored metrics, through a simple text-based protocol. Every node has a list of enabled &ldquo;plugins&rdquo; which will be run everytime the server connects to the node. Many plugins come installed by default with Munin, and many additional plugins are available online with an open source license (or public domain). Those plugins have default parameters in it, but much can be customized in the munin-node configuration file.</p>
+
+<p>These &ldquo;plugins&rdquo; define the metrics, then the server will render any metrics the node send, without any a priori knowledge. The security model is IP whitelisting: each node has a list of IPs allowed to ask for metrics. The server, by default, will connect to every host every 5 minutes and add all collected metrics to its database. Every hour all the html and graphs are generated and put in a folder where Nginx is able to serve these.</p>
+
+<p>Munin can also be configured to trigger alerts in case a metric changes state between OK, Warning and Critical. Alerts via email are easy to setup and normally enough for basic error reporting. These thresholds can be changed if needed, but the values defined by the plugins are normally good enough. Alerts for specific plugins can be disabled if needed, see <a href="http://serverfault.com/questions/532319/i-have-setup-munin-how-do-i-set-up-alerts-for-specific-parameters" title="here">http://serverfault.com/questions/532319/i-have-setup-munin-how-do-i-set-up-alerts-for-specific-parameters</a>.</p>
+
+<p>The only daemon in the Munin architecture is munin-node, which runs on every monitored server. On the monitoring server side, everything is managed through cron. Munin is written in Perl and its core modules are quite battle-tested.</p>
+
+     <div id="disqus_thread"></div>
+    <script type="text/javascript">
+         
+        var disqus_shortname = 'flagzeta'; 
+
+         
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</article>  
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2015-01-16T12:51:25Z").getTime();
+if (postTime < cutoffTime) {
+    $(".blogpost-old").show();
+}
+</script>
+
+		<footer id="footer">
+<section id="footer-message">&copy; 2016 Federico Marani. All rights reserved. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+		</footer>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47493827-1', 'flagzeta.org');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+

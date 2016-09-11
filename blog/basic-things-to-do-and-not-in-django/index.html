@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="generator" content="Hugo 0.16" />
+        <title>Basic things to do and not in Django</title>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+        <link rel="stylesheet" type="text/css" href="http://flagzeta.org//css/crisp.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="keywords" content="code,python,django,it,software architecture,technical architecture">
+        <meta name="author" content="Federico Marani">
+        
+    </head>
+    <body>
+
+<header id="header">
+    <a id="logo" href="/"><img src="http://flagzeta.org//img/me.png" alt="me" /></a>
+    <a href="http://flagzeta.org/"><h1>Blog | Federico Marani</h1></a>
+    <p>Coder, open-source enthusiast, command-line addict. CTO at TalentRank. Former Head of Engineering @TrialReach</p>
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ"><i class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani"><i class="fa fa-linkedin-square fa-2x"></i></a>
+        <a href="http://github.com/fmarani"><i class="fa fa-github-square fa-2x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-rss-square fa-2x"></i></a> 
+    </div>                                                                  
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <h6><a href="http://flagzeta.org/about/">About me</a></h6>
+        
+    
+        
+        <h6><a href="http://flagzeta.org/projects/">Side Projects</a></h6>
+        
+    
+</header>
+
+
+<article>
+    <div class="post-stamp">
+        23 Sep 2012
+        <span class="taglist">&middot;
+            django 
+        </span>
+    </div>
+	<h1 class="post-title">Basic things to do and not in Django</h1>
+        <div class="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+	<p>Make software dependent on absolute paths: One of the projects i was working on had all module imports including the project main folder name. That in turn made impossible to have the same project installed 2 times in the same folder with 2 distinct names. (e.g. 2 versions of the staging site). Sometime is even worse than this, when you have a full path in the code. These should always be in configuration files which are changeable at deployment.</p>
+
+<p>Massive views.py file: It is probably time to split the project in separate applications. Also try to remove the code which is not directly view related and separate it in different files. Django has a very good form validation framework, if you use it your views.py file will shrink considerably.</p>
+
+<p>Please no grammatical mistakes: This is very bad and means you did not care about the project enough, plus not everyone is using IDEs so you should make the effort to write function names properly.</p>
+
+<p>Don&rsquo;t throw everything in the database: I hate when applications are dependent on huge models, models should be lean and you should be able to recreate them easily enough with fixtures. For the sake of forensics, you really should make good use of logging and perhaps keep a backup of the imported feeds. Not all data needs to be in the database, only the one your project uses.</p>
+
+<p>Make all a varchar: Relational databases are strongly typed and this is the reason why they can do all the things they do&hellip; if you want more flexibility, use mongodb.</p>
+
+<p>Always have automated deployments: Even if all you do is rsync to a server, you should have that command in a bash or fabric script.</p>
+
+<p>Not reinvent Django features: Unless there is no way to solve your problem with existing tools&hellip; usually Django modules are pretty extensible and rock-solid.</p>
+
+<p>Use django-extensions and Django debug toolbar: It&rsquo;s like going camping and not having the swiss army knife. My favourite parts are the graph models extensions which makes you an image representing all models and connections between them, and the runserver_plus which uses the Werkzeug debugger to run your code&hellip; very handy the debugger. Regarding the debug toolbar, makes it really easy to diagnose what&rsquo;s gone wrong when rendering a page: are all variables included in the template, some bad value coming back from the db, etc&hellip;</p>
+
+<p>Include everything needed for the project in the repository: No files laying around the server should exist unless they are checked in the repo, this includes apache conf files&hellip; unless you have a separate repository for them.</p>
+
+<p>Always use virtualenv: Really, projects without virtualenv are a thing of the past, and using it is trivial. Another thing to do is always have a requirements.txt in the repository, so you can recreate the virtualenv easily.</p>
+
+<p>Keep the project clean: Which means remove old features when they are not required anymore, just like you would clean your room from time to time. Keep in mind that all code on the site need to be maintained, and if it&rsquo;s not worth maintaining it anymore, it&rsquo;s time to get rid of it.</p>
+
+<p>Always use RequestContext and STATIC_URL for rendering templates: In that case you do not hard-code links to your static media. It&rsquo;s one of those things easy to do and will make your life easier when you will have a separate static server or serve files through a CDN.</p>
+
+<p> </p>
+
+     <div id="disqus_thread"></div>
+    <script type="text/javascript">
+         
+        var disqus_shortname = 'flagzeta'; 
+
+         
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</article>  
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2012-09-23T19:33:30Z").getTime();
+if (postTime < cutoffTime) {
+    $(".blogpost-old").show();
+}
+</script>
+
+		<footer id="footer">
+<section id="footer-message">&copy; 2016 Federico Marani. All rights reserved. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+		</footer>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47493827-1', 'flagzeta.org');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+

@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="generator" content="Hugo 0.16" />
+        <title>About the use of queues and pubsub in Laconi.ca</title>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+        <link rel="stylesheet" type="text/css" href="http://flagzeta.org//css/crisp.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="keywords" content="code,python,django,it,software architecture,technical architecture">
+        <meta name="author" content="Federico Marani">
+        
+    </head>
+    <body>
+
+<header id="header">
+    <a id="logo" href="/"><img src="http://flagzeta.org//img/me.png" alt="me" /></a>
+    <a href="http://flagzeta.org/"><h1>Blog | Federico Marani</h1></a>
+    <p>Coder, open-source enthusiast, command-line addict. CTO at TalentRank. Former Head of Engineering @TrialReach</p>
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ"><i class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani"><i class="fa fa-linkedin-square fa-2x"></i></a>
+        <a href="http://github.com/fmarani"><i class="fa fa-github-square fa-2x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-rss-square fa-2x"></i></a> 
+    </div>                                                                  
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <h6><a href="http://flagzeta.org/about/">About me</a></h6>
+        
+    
+        
+        <h6><a href="http://flagzeta.org/projects/">Side Projects</a></h6>
+        
+    
+</header>
+
+
+<article>
+    <div class="post-stamp">
+        15 Mar 2009
+        <span class="taglist">&middot;
+            laconica pubsub stomp 
+        </span>
+    </div>
+	<h1 class="post-title">About the use of queues and pubsub in Laconi.ca</h1>
+        <div class="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+	
+
+<p>Lately i have been working on the idea of queues and pubsub mechanisms and how it is possible to integrate them in a microblogging service. I am fascinated by messaging protocols and event pushing!</p>
+
+<p>Let me say that XMPP is in my opinion the protocol of the future, however its pubsub implementation is quite complex if compared to what STOMP offers, and I didn&rsquo;t find any mature PHP library.</p>
+
+<p>AQMP and STOMP are more suitable for internal processing, while XMPP is the perfect option for exposing data to the outside world and perhaps to connect desktop clients with microblogging services.</p>
+
+<p>Apart from my opinions, STOMP is a mature protocol with a PHP library that works pretty well and  Apache ActiveMQ, the message broker, offers access using several protocols.</p>
+
+<p><strong>INTRODUCING A MESSAGE BROKER IN LACONI.CA</strong></p>
+
+<p>If queues are enabled in laconi.ca, it is possible to modify common_enqueue_notice() (called after the storage of the dent) in order to push the dent in the 4 queues that the software uses (OMB, jabber, sms, public), or simply push the dent in one and configure 3 mirror queues.</p>
+
+<p>In this way the internal queue system is not used. Queue_item::top() has potential race conditions and polls the db every 5 seconds. That means that if we&rsquo;re lucky we get the message quickly, if unlucky in 5 seconds. Latency could even be something secondary, but the system now is pretty inefficient.</p>
+
+<p>If laconi.ca passes the message to an external broker, delivery would be more efficient and it is a piece of code that the community wouldn&rsquo;t have to maintain.</p>
+
+<p>The downside of this is that another software is on the list of requirements. However, if you have the possibility to run queuehandlers in background, it probably means you own the server and you can afford to install a message broker. Queues can still be disabled and the system still works without queues and message brokers, the only difference is that everything is done synchronously.</p>
+
+<p><strong>WITH A MESSAGE BROKER, PUBSUB COMES FOR FREE</strong></p>
+
+<p>Another feature of ActiveMQ is the use of &ldquo;topics&rdquo;. The main differences between queues and topics are that in the queues messages are sent to only one consumer (precisely, round-robin among consumers) and messages are persistent (stored internally while waiting consumers to connect). Topics are the opposite, the same message is sent to all its consumers that are currently connected to the broker.</p>
+
+<p>Topics could be used for introducing a publish-subscribe system in Laconi.ca. In common_enqueue_notice() with only some lines of code it is possible to push each dent to topics such as &ldquo;/topic/laconica.user.IDUSER&rdquo;, &ldquo;/topic/laconica.allusers&rdquo; or do more complex association like &ldquo;/topic/laconica.group.IDGROUP&rdquo; and &ldquo;/topic/laconica.tag.TAGNAME&rdquo;.</p>
+
+<p>With a topic dedicated to a group and using the XMPP endpoint of ActiveMQ, you can also gain MUC support in Laconi.ca (only read-only if there isn&rsquo;t an handler)</p>
+
+<p>Offering pubsub using ActiveMQ and STOMP calls is very easy, however i am not sure how interoperable this solution could be. I did not find any XMPP/Pubsub interface for ActiveMQ, although topics could be easily mapped to XMPP/Pubsub nodes.</p>
+
+<p>If the pubsub notifications have to be XMPP based, i see two solutions: write a wrapper that gets all the messages via an ActiveMQ queue and speaks XMPP with ejabberd, or forget about ActiveMQ and use XMPP requests directly, perhaps using an AtomPub interface.</p>
+
+<p><strong>POSSIBLE FUTURE DIRECTIONS</strong></p>
+
+<p>Integrating queues at the end of the stack is not going to help much in terms of performance or flexibility of the whole system, but it&rsquo;s a first step and, as they&rsquo;re used marginally, they&rsquo;re still an optional requirement.</p>
+
+<p>With all these ideas around, like offering XMPP MUC support, AtomPub interfaces, XMPP/Pubsub output, etc.. in the future the system would have to be &ldquo;decoupled&rdquo;.</p>
+
+<p>An input system that pushes dents in a queue as quickly as possible. The main Laconi.ca logic that works in the background and asynchronously. The internal logic will then push the info to queue handlers for real-time delivery AND store the dents in the DB. The main website will still poll data from the DB, with all the necessary caching layers, OR/AND poll directly the message broker for the required type of dent (see the list of topics mentioned before) via AJAX calls (ActiveMQ has support for that).</p>
+
+<p>Any feedback is appreciated, or suggestions on things i might have overlooked! I am not an expert of message queue system so many of the things i have said may seem obvious, but not to someone who has a background of normal website and MVC development so i clearly stated all the steps&hellip;</p>
+
+<p><strong>WHAT I DID</strong></p>
+
+<p><code>
+function common_enqueue_notice($notice)
+{
+if (common_config(&lsquo;queue&rsquo;,&lsquo;subsystem&rsquo;) == &lsquo;stomp&rsquo;) {
+// use an external message queue system via STOMP
+require_once(&ldquo;Stomp.php&rdquo;);
+$con = new Stomp(common_config(&lsquo;queue&rsquo;,&lsquo;stomp_server&rsquo;));
+if (!$con-&gt;connect()) {
+common_log(LOG_ERR, &lsquo;Failed to connect to queue server&rsquo;);
+return false;
+}
+$queue_basename = common_config(&lsquo;queue&rsquo;,&lsquo;queue_basename&rsquo;);
+foreach (array(&lsquo;jabber&rsquo;, &lsquo;omb&rsquo;, &lsquo;sms&rsquo;, &lsquo;public&rsquo;) as $transport) {
+if (!$con-&gt;send(
+&lsquo;/queue/&rsquo;.$queue_basename.&lsquo;-&rsquo;.$transport, // QUEUE
+$notice-&gt;id,            // BODY of the message
+array (                 // HEADERS of the msg
+&lsquo;created&rsquo; =&gt; $notice-&gt;created
+))) {
+common_log(LOG_ERR, &lsquo;Error sending to &lsquo;.$transport.&rsquo; queue&rsquo;);
+return false;
+}
+common_log(LOG_DEBUG, &lsquo;complete remote queueing notice ID = &rsquo; . $notice-&gt;id . &lsquo; for &rsquo; . $transport);
+}
+$con-&gt;send(&lsquo;/topic/laconica.&rsquo;.$notice-&gt;profile_id,
+$notice-&gt;content,
+array(
+&lsquo;profile_id&rsquo; =&gt; $notice-&gt;profile_id,
+&lsquo;created&rsquo; =&gt; $notice-&gt;created
+)
+);
+$con-&gt;send(&lsquo;/topic/laconica.allusers&rsquo;,
+$notice-&gt;content,
+array(
+&lsquo;profile_id&rsquo; =&gt; $notice-&gt;profile_id,
+&lsquo;created&rsquo; =&gt; $notice-&gt;created
+)
+);
+$result = true;
+}
+else {
+// in any other case, &lsquo;internal&rsquo;
+foreach (array(&lsquo;jabber&rsquo;, &lsquo;omb&rsquo;, &lsquo;sms&rsquo;, &lsquo;public&rsquo;) as $transport) {
+$qi = new Queue_item();
+#OTHER OLD CODE&hellip;
+</code></p>
+
+<p>This code sends the dent to 4 queues and 2 topics. Queues are used by the 4 background queuehandlers while 2 topics offer a simple pubsub service to either a single userid or to all of them (public timeline).</p>
+
+<p>As regards queues, queuehandler.php has to be modified:
+<code></p>
+
+<h1 id="called-by-run">called by run()</h1>
+
+<p>function stomp_dispatch() {
+require(&ldquo;Stomp.php&rdquo;);
+$con = new Stomp(common_config(&lsquo;queue&rsquo;,&lsquo;stomp_server&rsquo;));
+if (!$con-&gt;connect()) {
+$this-&gt;log(LOG_ERR, &lsquo;Failed to connect to queue server&rsquo;);
+return false;
+}
+$queue_basename = common_config(&lsquo;queue&rsquo;,&lsquo;queue_basename&rsquo;);
+// subscribe to the relevant queue (format: basename-transport)
+$con-&gt;subscribe(&lsquo;/queue/&rsquo;.$queue_basename.&lsquo;-&rsquo;.$this-&gt;transport());
+do {
+$frame = $con-&gt;readFrame();
+if ($frame) {
+$this-&gt;log(LOG_INFO, &lsquo;Got item enqueued &lsquo;.common_exact_date($frame-&gt;headers[&lsquo;created&rsquo;]));
+// XXX: Now the queue handler receives only the ID of the
+// notice, and it has to get it from the DB
+// A massive improvement would be avoid DB query by transmitting
+// all the notice details via queue server&hellip;
+$notice = Notice::staticGet($frame-&gt;body);
+if ($notice) {
+$this-&gt;log(LOG_INFO, &lsquo;broadcasting notice ID = &rsquo; . $notice-&gt;id);
+$result = $this-&gt;handle_notice($notice);
+if ($result) {
+// if the msg has been handled positively, ack it
+// and the queue server will remove it from the queue
+$con-&gt;ack($frame);
+$this-&gt;log(LOG_INFO, &lsquo;finished broadcasting notice ID = &rsquo; . $notice-&gt;id);
+}
+else {
+// no ack
+$this-&gt;log(LOG_WARNING, &lsquo;Failed broadcast for notice ID = &rsquo; . $notice-&gt;id);
+}
+$notice-&gt;free();
+unset($notice);
+$notice = null;
+} else {
+$this-&gt;log(LOG_WARNING, &lsquo;queue item for notice that does not exist&rsquo;);
+}
+}
+} while (true);
+$con-&gt;disconnect();
+}
+</code></p>
+
+<p>Here there&rsquo;s the code for a simple pubsub consumer
+<code>
+require_once &ldquo;Stomp.php&rdquo;;
+$con = new Stomp(&lsquo;tcp://localhost:61613&rsquo;);
+if (!$con-&gt;connect())
+print &lsquo;conn failed&rsquo;;
+$what = &lsquo;/topic/laconica.2&rsquo;;
+if (!$con-&gt;subscribe($what))
+print &ldquo;sub failed&rdquo;;
+else
+print &ldquo;sub to &ldquo;.$what.&rdquo; successful\n&rdquo;;
+while (true) {
+$msg = $con-&gt;readFrame();
+if ($msg) {
+print $msg-&gt;headers[&lsquo;profile_id&rsquo;].&rdquo;: &ldquo;.$msg-&gt;body. &rdquo; &ndash; &ldquo;;
+print &ldquo;msg_time:&ldquo;.$msg-&gt;headers[&lsquo;created&rsquo;].&rdquo; &ldquo;;
+print &ldquo;received:&ldquo;.date(&ldquo;Y-m-d H:i:s&rdquo;).&rdquo;\n&rdquo;;
+$con-&gt;ack($msg);
+}
+}
+$con-&gt;disconnect();
+</code></p>
+
+<p>Except the last bit, all this code is on the fmarani-clone of the dev repo on gitorious, branch 0.8.x</p>
+
+     <div id="disqus_thread"></div>
+    <script type="text/javascript">
+         
+        var disqus_shortname = 'flagzeta'; 
+
+         
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</article>  
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2009-03-15T19:57:51Z").getTime();
+if (postTime < cutoffTime) {
+    $(".blogpost-old").show();
+}
+</script>
+
+		<footer id="footer">
+<section id="footer-message">&copy; 2016 Federico Marani. All rights reserved. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+		</footer>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47493827-1', 'flagzeta.org');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+

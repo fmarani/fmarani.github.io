@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="generator" content="Hugo 0.16" />
+        <title>Technology behind tools.seogadget.co.uk</title>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+        <link rel="stylesheet" type="text/css" href="http://flagzeta.org//css/crisp.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="keywords" content="code,python,django,it,software architecture,technical architecture">
+        <meta name="author" content="Federico Marani">
+        
+    </head>
+    <body>
+
+<header id="header">
+    <a id="logo" href="/"><img src="http://flagzeta.org//img/me.png" alt="me" /></a>
+    <a href="http://flagzeta.org/"><h1>Blog | Federico Marani</h1></a>
+    <p>Coder, open-source enthusiast, command-line addict. CTO at TalentRank. Former Head of Engineering @TrialReach</p>
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ"><i class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani"><i class="fa fa-linkedin-square fa-2x"></i></a>
+        <a href="http://github.com/fmarani"><i class="fa fa-github-square fa-2x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-rss-square fa-2x"></i></a> 
+    </div>                                                                  
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <h6><a href="http://flagzeta.org/about/">About me</a></h6>
+        
+    
+        
+        <h6><a href="http://flagzeta.org/projects/">Side Projects</a></h6>
+        
+    
+</header>
+
+
+<article>
+    <div class="post-stamp">
+        25 Nov 2012
+        <span class="taglist">&middot;
+            celery django scalability 
+        </span>
+    </div>
+	<h1 class="post-title">Technology behind tools.seogadget.co.uk</h1>
+        <div class="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+	<p>Scalability was one of the primary concerns when we started building the tool. Essentially, the tool gathers numbers about links you post, it is quite straightforward. To gather these numbers, our tool uses many external APIs and in a way acts as a sort of proxy between the user and many other 3rd party API providers, on top of which some internal indicators are derived. Many tools allow you to do that, but, regarding scalability, some ways are better than others. Much better actually. Gathering information for 1000 urls a day is different than doing it on 1 million, lots of challenges came in the way.
+<h2>TECHNOLOGY</h2>
+Deciding on which platform to use, we ended up using the well-known combo Python-Django-Celery. It is the one i have most experience with, and the task is really I/O bound therefore it is not one of those cases in which writing everything in C makes a big difference. This combo also allows us to code things pretty quickly, testing various methods and combinations. The real complexity is in the Celery backend, which is where the data gathering takes place.
+<h2>WORKFLOW</h2>
+Requests could come in through API or through the Web interface. Web interface is a better example because that is the only way now to send multiple urls at once. When URLs enter into the system, each one of those is done in parallel. For every url, there are two rounds of data gathering, the first gets part of the final results, and then a second round gets the results that are dependent on the first round of numbers.</p>
+
+<p>All these single rounds of API calls are done asynchronously, not sequentially. We make heavy use of Celery advanced features such as tasksets and chords to make sure we squeeze every bit of performance we can from the system.</p>
+
+<p>Each background task takes then care of storing these numbers in a PostgreSql database server, which they later get pulled back in the Web interface (or API results)
+<h2>INFRASTRUCTURE</h2>
+Heroku has allowed us to build something quickly, although we had to switch to an hybrid EC2 - Heroku, mainly because of heavy use of RabbitMQ. The advantage of Heroku is that you can scale the number of instances pretty quickly if there is a lot of traffic. We distribute the background tasks using RabbitMQ which has gone through some configuration changes. Some of the more interesting tweaks have gone into the configuration of Celery, especially on setting expiration limits for every single external API call to 3rd party systems. We do not want 3rd party APIs failure to bring down our service. All this has been wrapped up in a quite minimal interface, using Twitter Bootstrap as a CSS framework. Very easy to use.
+<h2>IDEAS FOR THE FUTURE</h2>
+There has been some thought about improving the &ldquo;spam&rdquo; flag with something which can learn and adapt to new types of spam. What features to take into account when deciding about spammy links is also under review. There is also a lot of enhancements we can do on the APIs, such as different tiers, perhaps a tier with a different priority (e.g. reduced response time) or different limits which will be a paid option. There is also always room for speed improvements such as bulk queries, result caching, etc&hellip; what is the feature you would like to see in this tool?</p>
+
+     <div id="disqus_thread"></div>
+    <script type="text/javascript">
+         
+        var disqus_shortname = 'flagzeta'; 
+
+         
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</article>  
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2012-11-25T17:30:21Z").getTime();
+if (postTime < cutoffTime) {
+    $(".blogpost-old").show();
+}
+</script>
+
+		<footer id="footer">
+<section id="footer-message">&copy; 2016 Federico Marani. All rights reserved. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+		</footer>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47493827-1', 'flagzeta.org');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+

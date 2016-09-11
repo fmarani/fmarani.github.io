@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="generator" content="Hugo 0.16" />
+        <title>How small websites become big</title>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+        <link rel="stylesheet" type="text/css" href="http://flagzeta.org//css/crisp.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="keywords" content="code,python,django,it,software architecture,technical architecture">
+        <meta name="author" content="Federico Marani">
+        
+    </head>
+    <body>
+
+<header id="header">
+    <a id="logo" href="/"><img src="http://flagzeta.org//img/me.png" alt="me" /></a>
+    <a href="http://flagzeta.org/"><h1>Blog | Federico Marani</h1></a>
+    <p>Coder, open-source enthusiast, command-line addict. CTO at TalentRank. Former Head of Engineering @TrialReach</p>
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ"><i class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani"><i class="fa fa-linkedin-square fa-2x"></i></a>
+        <a href="http://github.com/fmarani"><i class="fa fa-github-square fa-2x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-rss-square fa-2x"></i></a> 
+    </div>                                                                  
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <h6><a href="http://flagzeta.org/about/">About me</a></h6>
+        
+    
+        
+        <h6><a href="http://flagzeta.org/projects/">Side Projects</a></h6>
+        
+    
+</header>
+
+
+<article>
+    <div class="post-stamp">
+        30 Mar 2011
+        <span class="taglist">&middot;
+            scalability web architectures 
+        </span>
+    </div>
+	<h1 class="post-title">How small websites become big</h1>
+        <div class="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+	<p>There is no secret recipe, there is no list of check boxes to tick&hellip; just some guidelines. Part of these lessons have been learned in the hard way, part because i have been always taught that if you want to be the best, you have to copy the best. There is plenty of literature on Internet about this&hellip; read, understand and copy.</p>
+
+<p>I think the art of building high-traffic websites is part about the code, but mostly about your web architecture and the tools you use. Here some points, from basic to advanced.
+<ul>
+    <li>Separation between web server and database server is a basic step. Do it if not for speed, for safety. If the database server gets overloaded, your web server will still be up and running. If one of the two breaks, you need half the time to go back online. If the website goes much slower, you over-rely on the database. You may have to rethink how you use databases.</li>
+    <li>Databases often are the main bottleneck of your website. Everything that is I/O related is a bottleneck because no matter what server you have, disks will always be a order of magnitude slower than memory. Consider running these servers on physical machines rather than virtual servers, with properly fast hardware.</li>
+    <li>Optimize your queries, use indexes on fields that you search on frequently. This can make a big difference. Databases are weird creatures, you need to know them well before feeling safe.</li>
+    <li>Caches are both a blessing and a curse. Using systems like Memcache (or Redis) really makes a difference. Install memcache on every webserver machine and cache all the SELECTs that can be re-used in the next X minutes. When the cache is empty, execute the query on the database and put the results in the cache for later retrieval.</li>
+    <li>Optimization makes much sense in certain areas of code. Use profiling tools to see which functions/classes get executed more often and modify that code to make it fast.</li>
+    <li>Do not blindly believe ORM is always a good solution. In fact, for heavy db tasks, do not use them.</li>
+    <li>Move all your static files on a static web server and serve them from there instead of the main web server. You will split the load without having to do any complex configuration change, other than changing base href in the html. If you have many many files, you may want to tweak the filesystem for it.</li>
+    <li>For static files, use a lightweight asynchronous web server like Nginx. Especially if you send emails with lots of images&hellip; people tend to open emails as soon as they get to work or during lunch time therefore you will get very high peaks of traffic during those hours. Asynchronous web servers handle traffic spikes much better than traditional web servers.</li>
+    <li>Start adding web servers. If you use sessions, you need to store those in a space shared between all web servers, which could be database or shared drive. Shared drive is generally a good idea, put your application on it.. when you upgrade you need to do it only in one location.</li>
+    <li>Start thinking about reverse proxy, load balancers and HTTPS accelerators. Here presented in order of cost.. Reverse proxy solve the so-called &ldquo;spoon feeding&rdquo; problem quite well, plus you can serve cached responses if configured properly. Nginx is my favourite, followed by Varnish for complex caching policies.</li>
+    <li>Database servers are not &ldquo;full text&rdquo; search servers. Search is an expensive operation, must be done on dedicated systems, especially if website users do it frequently.</li>
+    <li>If you have much off-line data processing to do, do it on a dedicate server. You may want to look into Hadoop if volumes of data are enormous.</li>
+    <li>The more code and servers you have, the more likely is that something wrong happens. Learn to log events properly, with all the information you may need. In areas in which performance is really important, you may want to consider conditional logging. It is always better to have some logging than to have extremely fast code which is not debuggable when it fails.</li>
+    <li>Automatize! Having a script for everything is important. Deployment is one of the first things to automatize, especially when more than one server is involved.</li>
+</ul>
+I think i mentioned a lot of things. There are many more to mention but it is more about the management of code and project itself. Maybe in another post.</p>
+
+     <div id="disqus_thread"></div>
+    <script type="text/javascript">
+         
+        var disqus_shortname = 'flagzeta'; 
+
+         
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</article>  
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2011-03-30T00:42:56Z").getTime();
+if (postTime < cutoffTime) {
+    $(".blogpost-old").show();
+}
+</script>
+
+		<footer id="footer">
+<section id="footer-message">&copy; 2016 Federico Marani. All rights reserved. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+		</footer>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47493827-1', 'flagzeta.org');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+

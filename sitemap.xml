@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://flagzeta.org/</loc>
+    <lastmod>2016-05-01T20:43:48+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/yc-interview/</loc>
+    <lastmod>2016-05-01T20:43:48+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/assessing-software-quality/</loc>
+    <lastmod>2015-11-15T12:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/comprotempo/</loc>
+    <lastmod>2015-03-11T12:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/monitoring-with-munin/</loc>
+    <lastmod>2015-01-16T12:51:25+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/working-with-memcache/</loc>
+    <lastmod>2015-01-14T11:45:46+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/scaling-with-ansible/</loc>
+    <lastmod>2014-07-27T12:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/give-everyone-one-vm/</loc>
+    <lastmod>2014-02-11T22:45:08+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/why-my-first-startup-failed/</loc>
+    <lastmod>2014-01-26T15:24:59+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/devops-with-ansible-presentation/</loc>
+    <lastmod>2013-12-02T13:13:47+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/spatial-search-on-multiple-points-in-solr/</loc>
+    <lastmod>2013-07-31T12:09:43+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/transifex-for-your-django-projects/</loc>
+    <lastmod>2013-01-31T15:39:37+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/technology-behind-toolsseogadgetcouk/</loc>
+    <lastmod>2012-11-25T17:30:21+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/basic-things-to-do-and-not-in-django/</loc>
+    <lastmod>2012-09-23T19:33:30+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/from-idea-to-a-product/</loc>
+    <lastmod>2012-05-17T00:28:34+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/ubuntu-on-ec2-the-simple-way/</loc>
+    <lastmod>2012-05-06T11:39:37+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/text-classification-in-python/</loc>
+    <lastmod>2012-03-21T22:44:23+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/why-soa-in-a-startup-sucks/</loc>
+    <lastmod>2012-01-22T21:49:33+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/passion-and-pragmatism-in-it/</loc>
+    <lastmod>2011-11-03T14:49:36+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/logging/</loc>
+    <lastmod>2011-04-08T01:00:10+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/how-small-websites-become-big/</loc>
+    <lastmod>2011-03-30T00:42:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/functional-programming-ideas-in-oop/</loc>
+    <lastmod>2011-03-27T13:29:33+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/cdn-optimizations/</loc>
+    <lastmod>2010-10-17T13:55:49+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/dbunit-testing/</loc>
+    <lastmod>2010-10-17T13:09:26+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/limonade/</loc>
+    <lastmod>2010-10-11T00:56:07+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/making-complex-software-not-complicated/</loc>
+    <lastmod>2010-10-05T20:32:05+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/scala/</loc>
+    <lastmod>2010-10-05T20:01:04+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/nginx-rocks/</loc>
+    <lastmod>2010-10-03T16:09:47+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/tag-based-routing-in-laconica/</loc>
+    <lastmod>2009-04-02T23:15:09+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/about-the-use-of-queues-and-pubsub-in-laconica/</loc>
+    <lastmod>2009-03-15T19:57:51+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/blog/why-this-blog/</loc>
+    <lastmod>2009-03-15T18:39:48+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/about/</loc>
+  </url>
+  
+  <url>
+    <loc>http://flagzeta.org/projects/</loc>
+  </url>
+  
+</urlset>
