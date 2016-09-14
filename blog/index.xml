@@ -7,8 +7,82 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 01 May 2016 20:43:48 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 14 Sep 2016 17:04:43 +0200</lastBuildDate>
     <atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Rebuilding my site with Hugo (and IPFS)</title>
+      <link>/blog/hugo-and-ipfs/</link>
+      <pubDate>Wed, 14 Sep 2016 17:04:43 +0200</pubDate>
+      
+      <guid>/blog/hugo-and-ipfs/</guid>
+      <description>
+
+&lt;h2 id=&#34;hugo&#34;&gt;Hugo&lt;/h2&gt;
+
+&lt;p&gt;This site was using Django and, given the very simple content model that it had (and almost never changed), I decided to rebuild it in Hugo. I also was getting fed up of mantaining yet another dynamic site, along with runtime and databases. I picked Hugo because it is written in Go, therefore very easy to get going (one file to install) and it works on any platform.&lt;/p&gt;
+
+&lt;p&gt;There are 2 steps for this conversion:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Convert the Django template files to Go template files. Converting any simple logic into either Go template logic or JS if needs to be evaluated every time.&lt;/li&gt;
+&lt;li&gt;Cycle over all posts, convert them into files. Write them in a directory (under content) that uses names from the current URLs.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There might be more steps in your setup. In mine, I had to transfer some media files, and define another archetype for normal pages. You can see that at &lt;a href=&#34;https://github.com/fmarani/blog&#34;&gt;my repo&lt;/a&gt;. If you can deal with the Go template language, Hugo is a very nice software.&lt;/p&gt;
+
+&lt;h2 id=&#34;github-pages&#34;&gt;Github pages&lt;/h2&gt;
+
+&lt;p&gt;At this point, the setup was already much simpler. But I wanted to get rid of the hassle of hosting it. Github pages is free and works pretty well (S3 could also be an option). While I was in the process of following their tutorials, the only slightly obscure step was that I needed two repositories, one for the original Hugo site, and another one for the compiled version. Forget all the tutorials that tell you to create a &lt;code&gt;gh-pages&lt;/code&gt; branch, those are for project sites, not user sites.&lt;/p&gt;
+
+&lt;p&gt;I ended up with:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/fmarani/blog&#34;&gt;the original repo&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/fmarani/fmarani.github.io&#34;&gt;the compiled repo&lt;/a&gt;. Please note the name of the repo, that&amp;rsquo;s how Github needs it.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The only additional step after all this was to make my domain point to Github, you can find some instructions on their site for that.&lt;/p&gt;
+
+&lt;h2 id=&#34;ipfs&#34;&gt;IPFS&lt;/h2&gt;
+
+&lt;p&gt;Given that all the content is static, it lends itself very well to be distributed rather than just staying on a central server. I installed IPFS on a machine I had available, configured it and let it run as a daemon (quite easy, plenty of docs online). In case Github is down, you can also find this site on IPFS.&lt;/p&gt;
+
+&lt;p&gt;You can either use the &lt;a href=&#34;gateway.ipfs.io/ipns/QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3/&#34;&gt;gateway&lt;/a&gt; or use the IPNS directly (QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3).&lt;/p&gt;
+
+&lt;p&gt;The only caveat I would like to underline here is that you have to use &lt;code&gt;relativeurls = true&lt;/code&gt; in your Hugo configuration, otherwise absolute URLs will not work well with the IPFS gateway.&lt;/p&gt;
+
+&lt;h2 id=&#34;glue-everything-together&#34;&gt;Glue everything together&lt;/h2&gt;
+
+&lt;p&gt;I created this simple deploy script:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+
+# Build the project.
+hugo
+
+echo -e &amp;quot;\033[0;32mDeploying updates to Github pages...\033[0m&amp;quot;
+
+cd public
+git add -A
+msg=&amp;quot;rebuilding site `date`&amp;quot;
+if [ $# -eq 1 ]
+  then msg=&amp;quot;$1&amp;quot;
+fi
+git commit -m &amp;quot;$msg&amp;quot;
+git push origin master
+cd ..
+
+echo -e &amp;quot;\033[0;32mDeploying updates to IPFS...\033[0m&amp;quot;
+
+scp -r public/ USER@HOST:repo
+hash=`ssh USER@HOST ipfs add -r -q repo | tail -1`
+ssh USER@HOST ipfs name publish $hash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Just change the USER@HOST part with your IPFS server. If you run it locally, no need to ssh.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>YCombinator interview</title>
@@ -505,62 +579,6 @@ Once you know these techniques, actually what we do is pretty simple, take known
 &lt;p&gt;&lt;img src=&#34;../attachments/growthintelligence-com-map.png&#34; alt=&#34;map&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;../attachments/growthintelligence-com-insert-company.png&#34; alt=&#34;insert company&#34; /&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Ubuntu on EC2, the simple way.</title>
-      <link>/blog/ubuntu-on-ec2-the-simple-way/</link>
-      <pubDate>Sun, 06 May 2012 11:39:37 +0000</pubDate>
-      
-      <guid>/blog/ubuntu-on-ec2-the-simple-way/</guid>
-      <description>
-
-&lt;h2 id=&#34;problem&#34;&gt;Problem&lt;/h2&gt;
-
-&lt;p&gt;Sometime ago I had to run a statistical software on some data, the computation was really expensive, it was impractical to run it on my small laptop as it would hung for hours waiting for a result to come up. I thought about running it on Amazon.&lt;/p&gt;
-
-&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
-
-&lt;p&gt;Amazon EC2 is a virtual machine hosting service, also known as IaaS. Quite similar to Linode or Rackspace. Payment here is per hour, differently from Linode&amp;hellip; slightly on the expensive side i might add, but top-end VMs are quite powerful.&lt;/p&gt;
-
-&lt;p&gt;First step is to go through the setup procedure in order to have ec2 tools setup on your machine. I run ubuntu on my laptop and i applied the steps described &lt;a href=&#34;https://help.ubuntu.com/community/EC2StartersGuide&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;After having installed the api tools and having put all EC2 environment variables in your .bashrc file, type:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ec2-describe-images -o amazon
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You should see the list of public AMIs from amazon. If you don&amp;rsquo;t there are problems with your configuration.&lt;/p&gt;
-
-&lt;p&gt;By default the firewall blocks every access to every port, you have to explicitly enable access in the security group that is associated to your machine (or in the default security group).&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;ec2-authorize default -p 22&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;This enables the ssh port. Next thing is to create the machine, i used ubuntu 11.10 64bit EBS-backed. It&amp;rsquo;s ami code is ami-895069fd. It is possible to bootstrap this specific image with a bootstrap script:&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;ec2-run-instances ami-895069fd -t m1.large &amp;ndash;user-data-file ~/ec2/bootstrap.sh&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;This is an example bootstrap file:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;#!/bin/bash
-
-set -e -x
-export DEBIAN_FRONTEND=noninteractive
-apt-get update &amp;amp;&amp;amp; apt-get upgrade -y
-
-apt-get install -y xorg
-apt-get install -y fluxbox
-apt-get install -y vnc4server
-
-wget --user=&amp;quot;YOURUSER&amp;quot; --password=&amp;quot;YOURPASS&amp;quot; -O /tmp/vnc-conf.tgz https://server/vnc-bootstrap.tgz
-cd /home/ubuntu &amp;amp;&amp;amp; tar xfvz /tmp/vnc-conf.tgz &amp;amp;&amp;amp; chmod -R 700 .vnc
-
-chmod 755 /etc/X11/xinit/xinitrc
-su -c vnc4server ubuntu
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In this script, i install all the packages i need and i download some initial data. For anything more serious than this i advise you to look into Puppet or Chef.&lt;/p&gt;
 </description>
     </item>
     

@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta name="generator" content="Hugo 0.16" />
-        <title>Functional Programming ideas in OOP</title>
+        <title>Rebuilding my site with Hugo (and IPFS)</title>
         <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
         <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
@@ -107,31 +107,80 @@
 
 <article>
     <div class="post-stamp">
-        27 Mar 2011
+        14 Sep 2016
         <span class="taglist">&middot;
-            development functional programming scala 
+            
         </span>
     </div>
-	<h1 class="post-title">Functional Programming ideas in OOP</h1>
+	<h1 class="post-title">Rebuilding my site with Hugo (and IPFS)</h1>
         <div class="blogpost-old" style="display: none">
             This post is quite old... Technologies and techniques described here might not apply anymore.
         </div>
-	<p>About a year and half ago I started to be interested in Scala. Scala is a hybrid between an Object Oriented language and a Functional Language, and while i was using it i learnt to appreciate more and more the Functional part. I will not hide that the most difficult part in learning Scala was because of that.</p>
+	
 
-<p>The mindset when solving problems using FP is different because it forces you to think in terms of mapping transformations rather than step-by-step algorithms. Type systems are also very strong, more than the OOP i know.</p>
+<h2 id="hugo">Hugo</h2>
 
-<p>Without getting the rant go too far, I found that my OOP style is now really influenced by the functional thinking:</p>
+<p>This site was using Django and, given the very simple content model that it had (and almost never changed), I decided to rebuild it in Hugo. I also was getting fed up of mantaining yet another dynamic site, along with runtime and databases. I picked Hugo because it is written in Go, therefore very easy to get going (one file to install) and it works on any platform.</p>
 
-<ul>
-<li>lots of small functions, generally short, with strict behaviour.</li>
-<li>functional style is usually more testable because by definition there is no side effect in the code. The code does only one thing and function application to a state A always returns state B. This links to <a href="http://en.wikipedia.org/wiki/Referential_transparency_%28computer_science%29">Referential Transparency</a>.</li>
-<li>state is partly responsible for exponential increase of complexity when stacking up code. Inheritance, composition, whatever technique you use. An object variable that changes state inside a nested object is usually quite difficult to follow. I am not going to say all variables need to be read-only, but limiting the scope in which variables are written and overwritten is good.</li>
-<li>if you can choose between stateless and stateful implementations and you are working on the business domain but still do not know it well, go stateless. Stateless implementations are easier to change.</li>
-<li>type systems initially are a pain, but they enforce you to write safe code and ultimately produce better code. Generally i found that there are not many cases in which you want automatic casting to happen. It also clashes with the rule &ldquo;fail fast&rdquo;, which is really high in my priorities. Type inference at pre-run time is generally what you want, not changing types.</li>
-<li>i found FP use of types leads to more specific code. For instance, I would rather use a &ldquo;Currency&rdquo; type than a float type. Being specific is good, less space for doubt. This is not an unquestionable rule, if performance is crucial and compiler does not optimize this code, that is a big mistake..</li>
-</ul>
+<p>There are 2 steps for this conversion:</p>
 
-<p>I am sure there is a lot more about FP, but this is it for now. These are personal opinions, i am not a language theorist. I am interested in practical consequences, and this is what is happening to my way of working.</p>
+<ol>
+<li>Convert the Django template files to Go template files. Converting any simple logic into either Go template logic or JS if needs to be evaluated every time.</li>
+<li>Cycle over all posts, convert them into files. Write them in a directory (under content) that uses names from the current URLs.</li>
+</ol>
+
+<p>There might be more steps in your setup. In mine, I had to transfer some media files, and define another archetype for normal pages. You can see that at <a href="https://github.com/fmarani/blog">my repo</a>. If you can deal with the Go template language, Hugo is a very nice software.</p>
+
+<h2 id="github-pages">Github pages</h2>
+
+<p>At this point, the setup was already much simpler. But I wanted to get rid of the hassle of hosting it. Github pages is free and works pretty well (S3 could also be an option). While I was in the process of following their tutorials, the only slightly obscure step was that I needed two repositories, one for the original Hugo site, and another one for the compiled version. Forget all the tutorials that tell you to create a <code>gh-pages</code> branch, those are for project sites, not user sites.</p>
+
+<p>I ended up with:</p>
+
+<ol>
+<li><a href="https://github.com/fmarani/blog">the original repo</a>.</li>
+<li><a href="https://github.com/fmarani/fmarani.github.io">the compiled repo</a>. Please note the name of the repo, that&rsquo;s how Github needs it.</li>
+</ol>
+
+<p>The only additional step after all this was to make my domain point to Github, you can find some instructions on their site for that.</p>
+
+<h2 id="ipfs">IPFS</h2>
+
+<p>Given that all the content is static, it lends itself very well to be distributed rather than just staying on a central server. I installed IPFS on a machine I had available, configured it and let it run as a daemon (quite easy, plenty of docs online). In case Github is down, you can also find this site on IPFS.</p>
+
+<p>You can either use the <a href="gateway.ipfs.io/ipns/QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3/">gateway</a> or use the IPNS directly (QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3).</p>
+
+<p>The only caveat I would like to underline here is that you have to use <code>relativeurls = true</code> in your Hugo configuration, otherwise absolute URLs will not work well with the IPFS gateway.</p>
+
+<h2 id="glue-everything-together">Glue everything together</h2>
+
+<p>I created this simple deploy script:</p>
+
+<pre><code>#!/bin/bash
+
+# Build the project.
+hugo
+
+echo -e &quot;\033[0;32mDeploying updates to Github pages...\033[0m&quot;
+
+cd public
+git add -A
+msg=&quot;rebuilding site `date`&quot;
+if [ $# -eq 1 ]
+  then msg=&quot;$1&quot;
+fi
+git commit -m &quot;$msg&quot;
+git push origin master
+cd ..
+
+echo -e &quot;\033[0;32mDeploying updates to IPFS...\033[0m&quot;
+
+scp -r public/ USER@HOST:repo
+hash=`ssh USER@HOST ipfs add -r -q repo | tail -1`
+ssh USER@HOST ipfs name publish $hash
+</code></pre>
+
+<p>Just change the USER@HOST part with your IPFS server. If you run it locally, no need to ssh.</p>
 
      <div id="disqus_thread"></div>
     <script type="text/javascript">
@@ -150,7 +199,7 @@
 </article>  
 <script type="text/javascript" charset="utf-8">
 var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
-var postTime = new Date("2011-03-27T13:29:33Z").getTime();
+var postTime = new Date("2016-09-14T17:04:43+02:00").getTime();
 if (postTime < cutoffTime) {
     $(".blogpost-old").show();
 }
