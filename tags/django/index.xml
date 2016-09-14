@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Django on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/django/</link>
+    <link>/tags/django/</link>
     <description>Recent content in Django on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Wed, 31 Jul 2013 12:09:43 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/django/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/django/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Spatial search on multiple points in Solr</title>
-      <link>http://flagzeta.org/blog/spatial-search-on-multiple-points-in-solr/</link>
+      <link>/blog/spatial-search-on-multiple-points-in-solr/</link>
       <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/spatial-search-on-multiple-points-in-solr/</guid>
+      <guid>/blog/spatial-search-on-multiple-points-in-solr/</guid>
       <description>&lt;p&gt;At TrialReach we deal with clinical trials data, which contain a lot of spatial information. Tipically, clinical trials treat a certain set of conditions and they happen in various locations globally.
 If you are a patient then searching across clinical trials becomes really spatial sensitive: you are only interested in the closest location to you.&lt;/p&gt;
 
@@ -86,10 +86,10 @@ solr.add(solr_data)
     
     <item>
       <title>Technology behind tools.seogadget.co.uk</title>
-      <link>http://flagzeta.org/blog/technology-behind-toolsseogadgetcouk/</link>
+      <link>/blog/technology-behind-toolsseogadgetcouk/</link>
       <pubDate>Sun, 25 Nov 2012 17:30:21 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/technology-behind-toolsseogadgetcouk/</guid>
+      <guid>/blog/technology-behind-toolsseogadgetcouk/</guid>
       <description>&lt;p&gt;Scalability was one of the primary concerns when we started building the tool. Essentially, the tool gathers numbers about links you post, it is quite straightforward. To gather these numbers, our tool uses many external APIs and in a way acts as a sort of proxy between the user and many other 3rd party API providers, on top of which some internal indicators are derived. Many tools allow you to do that, but, regarding scalability, some ways are better than others. Much better actually. Gathering information for 1000 urls a day is different than doing it on 1 million, lots of challenges came in the way.
 &lt;h2&gt;TECHNOLOGY&lt;/h2&gt;
 Deciding on which platform to use, we ended up using the well-known combo Python-Django-Celery. It is the one i have most experience with, and the task is really I/O bound therefore it is not one of those cases in which writing everything in C makes a big difference. This combo also allows us to code things pretty quickly, testing various methods and combinations. The real complexity is in the Celery backend, which is where the data gathering takes place.
@@ -108,10 +108,10 @@ There has been some thought about improving the &amp;ldquo;spam&amp;rdquo; flag 
     
     <item>
       <title>Basic things to do and not in Django</title>
-      <link>http://flagzeta.org/blog/basic-things-to-do-and-not-in-django/</link>
+      <link>/blog/basic-things-to-do-and-not-in-django/</link>
       <pubDate>Sun, 23 Sep 2012 19:33:30 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/basic-things-to-do-and-not-in-django/</guid>
+      <guid>/blog/basic-things-to-do-and-not-in-django/</guid>
       <description>&lt;p&gt;Make software dependent on absolute paths: One of the projects i was working on had all module imports including the project main folder name. That in turn made impossible to have the same project installed 2 times in the same folder with 2 distinct names. (e.g. 2 versions of the staging site). Sometime is even worse than this, when you have a full path in the code. These should always be in configuration files which are changeable at deployment.&lt;/p&gt;
 
 &lt;p&gt;Massive views.py file: It is probably time to split the project in separate applications. Also try to remove the code which is not directly view related and separate it in different files. Django has a very good form validation framework, if you use it your views.py file will shrink considerably.&lt;/p&gt;

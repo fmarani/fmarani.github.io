@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Monitoring on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/monitoring/</link>
+    <link>/tags/monitoring/</link>
     <description>Recent content in Monitoring on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Fri, 16 Jan 2015 12:51:25 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/monitoring/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/monitoring/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Monitoring servers with Munin</title>
-      <link>http://flagzeta.org/blog/monitoring-with-munin/</link>
+      <link>/blog/monitoring-with-munin/</link>
       <pubDate>Fri, 16 Jan 2015 12:51:25 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/monitoring-with-munin/</guid>
+      <guid>/blog/monitoring-with-munin/</guid>
       <description>&lt;p&gt;I normally use Munin for server monitoring, it is very easy to install and the kind of tool with not much setup. It may not be the best tool when you have many servers, due to static graph generation. Munin 2, released recently, has a few changes in that regard, they might have improved that.&lt;/p&gt;
 
 &lt;p&gt;Munin is mainly a resource usage graph tool, which monitors many metrics from a pool of servers (called nodes). When set up, the monitoring server connects to every node (specified in its configuration) and then asks for a list of current values for all monitored metrics, through a simple text-based protocol. Every node has a list of enabled &amp;ldquo;plugins&amp;rdquo; which will be run everytime the server connects to the node. Many plugins come installed by default with Munin, and many additional plugins are available online with an open source license (or public domain). Those plugins have default parameters in it, but much can be customized in the munin-node configuration file.&lt;/p&gt;

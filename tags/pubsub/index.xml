@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pubsub on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/pubsub/</link>
+    <link>/tags/pubsub/</link>
     <description>Recent content in Pubsub on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Thu, 02 Apr 2009 23:15:09 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/pubsub/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/pubsub/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Tag-based routing in laconi.ca</title>
-      <link>http://flagzeta.org/blog/tag-based-routing-in-laconica/</link>
+      <link>/blog/tag-based-routing-in-laconica/</link>
       <pubDate>Thu, 02 Apr 2009 23:15:09 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/tag-based-routing-in-laconica/</guid>
+      <guid>/blog/tag-based-routing-in-laconica/</guid>
       <description>
 
 &lt;p&gt;Following the last article, i have been experimenting again on laconica and pubsub, this time on the idea of &amp;ldquo;&lt;a href=&#34;http://metajack.im/2009/01/22/filtering-the-real-time-web/&#34; target=&#34;_blank&#34;&gt;filtering the real time web&lt;/a&gt;&amp;rdquo;.&lt;/p&gt;
@@ -113,10 +113,10 @@ $con-&amp;gt;disconnect();
     
     <item>
       <title>About the use of queues and pubsub in Laconi.ca</title>
-      <link>http://flagzeta.org/blog/about-the-use-of-queues-and-pubsub-in-laconica/</link>
+      <link>/blog/about-the-use-of-queues-and-pubsub-in-laconica/</link>
       <pubDate>Sun, 15 Mar 2009 19:57:51 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/about-the-use-of-queues-and-pubsub-in-laconica/</guid>
+      <guid>/blog/about-the-use-of-queues-and-pubsub-in-laconica/</guid>
       <description>
 
 &lt;p&gt;Lately i have been working on the idea of queues and pubsub mechanisms and how it is possible to integrate them in a microblogging service. I am fascinated by messaging protocols and event pushing!&lt;/p&gt;

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Talentrank on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/talentrank/</link>
+    <link>/tags/talentrank/</link>
     <description>Recent content in Talentrank on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 01 May 2016 20:43:48 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/talentrank/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/talentrank/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>YCombinator interview</title>
-      <link>http://flagzeta.org/blog/yc-interview/</link>
+      <link>/blog/yc-interview/</link>
       <pubDate>Sun, 01 May 2016 20:43:48 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/yc-interview/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/ycombinator.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
+      <guid>/blog/yc-interview/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;../../attachments/ycombinator.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;A month ago me and my co-founder did an application for YC, and last week we were lucky enough to be selected for an interview, along with other startups. We got called all the way to California with not even a week of notice, everything paid&amp;hellip; definitely a bit more serious than a phone call.&lt;/p&gt;
 

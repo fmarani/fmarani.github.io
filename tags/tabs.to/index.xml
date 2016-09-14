@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tabs.To on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/tabs/index.to/</link>
+    <link>/tags/tabs/index.to/</link>
     <description>Recent content in Tabs.To on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 26 Jan 2014 15:24:59 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/tabs.to/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/tabs.to/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Why my first startup failed - tabs.to</title>
-      <link>http://flagzeta.org/blog/why-my-first-startup-failed/</link>
+      <link>/blog/why-my-first-startup-failed/</link>
       <pubDate>Sun, 26 Jan 2014 15:24:59 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/why-my-first-startup-failed/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/logo.png&#34; alt=&#34;logo&#34; title=&#34;Tabs.to&#34; /&gt;&lt;/p&gt;
+      <guid>/blog/why-my-first-startup-failed/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;../../attachments/logo.png&#34; alt=&#34;logo&#34; title=&#34;Tabs.to&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Tabs.to was a url shortener, but with a twist, it could support multiple urls and it was displaying them with a sort of tabbed interface which you could use to switch between pages. The use case I was seeing was sending multiple links via twitter, and by doing so you would have saved space. In hindsight, it seems pretty short-sighted but that was the problem I had. This was in 2010, 4 years ago.&lt;/p&gt;
 

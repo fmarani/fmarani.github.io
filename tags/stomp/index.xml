@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Stomp on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/stomp/</link>
+    <link>/tags/stomp/</link>
     <description>Recent content in Stomp on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 15 Mar 2009 19:57:51 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/stomp/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/stomp/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>About the use of queues and pubsub in Laconi.ca</title>
-      <link>http://flagzeta.org/blog/about-the-use-of-queues-and-pubsub-in-laconica/</link>
+      <link>/blog/about-the-use-of-queues-and-pubsub-in-laconica/</link>
       <pubDate>Sun, 15 Mar 2009 19:57:51 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/about-the-use-of-queues-and-pubsub-in-laconica/</guid>
+      <guid>/blog/about-the-use-of-queues-and-pubsub-in-laconica/</guid>
       <description>
 
 &lt;p&gt;Lately i have been working on the idea of queues and pubsub mechanisms and how it is possible to integrate them in a microblogging service. I am fascinated by messaging protocols and event pushing!&lt;/p&gt;

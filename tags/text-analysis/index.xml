@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Text Analysis on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/text-analysis/</link>
+    <link>/tags/text-analysis/</link>
     <description>Recent content in Text Analysis on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Wed, 21 Mar 2012 22:44:23 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/text-analysis/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/text-analysis/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Text classification in Python</title>
-      <link>http://flagzeta.org/blog/text-classification-in-python/</link>
+      <link>/blog/text-classification-in-python/</link>
       <pubDate>Wed, 21 Mar 2012 22:44:23 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/text-classification-in-python/</guid>
+      <guid>/blog/text-classification-in-python/</guid>
       <description>&lt;p&gt;Python and NLTK form quite a good platform to do text analysis. There is a lot of information on Internet, nevertheless i have not found a clean and simple example of a classifier. Text classifiers come from techniques such as Natural Language Processing and Machine Learning, in fact i think they are exactly in the middle of these.&lt;/p&gt;
 
 &lt;p&gt;Bearing in mind that building a good classifier is only possible when you have a training set that represents reality quite well, and certainly longer than the one in this example, here a first stab at it:&lt;/p&gt;

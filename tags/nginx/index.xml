@@ -2,36 +2,36 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Nginx on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/nginx/</link>
+    <link>/tags/nginx/</link>
     <description>Recent content in Nginx on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 17 Oct 2010 13:55:49 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>CDN Optimizations</title>
-      <link>http://flagzeta.org/blog/cdn-optimizations/</link>
+      <link>/blog/cdn-optimizations/</link>
       <pubDate>Sun, 17 Oct 2010 13:55:49 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/cdn-optimizations/</guid>
+      <guid>/blog/cdn-optimizations/</guid>
       <description>&lt;p&gt;One of our most trafficked website is on average sustaining 300000 page views per day. Each page has normally a considerable amount of JavaScript, some of it activated only after the whole DOM has been loaded.&lt;/p&gt;
 
 &lt;p&gt;Considering that every page has on average 20-30 images coming from our image server, every small optimization to it has an avalanche effect on all the other parts of the system.&lt;/p&gt;
 
 &lt;p&gt;I already described the infrastructure in the Nginx post. What i changed from that configuration is all I/O related, trying to minimize writes on the disk and internal connections to Apache, but the biggest change is the duration of nginx cache which is now 6 hours instead of one hour. The impact on the main site has been remarkable.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/nginx-1-to-6h-caching.jpg&#34; alt=&#34;nginx graph&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/nginx-1-to-6h-caching.jpg&#34; alt=&#34;nginx graph&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>Nginx rocks</title>
-      <link>http://flagzeta.org/blog/nginx-rocks/</link>
+      <link>/blog/nginx-rocks/</link>
       <pubDate>Sun, 03 Oct 2010 16:09:47 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/nginx-rocks/</guid>
+      <guid>/blog/nginx-rocks/</guid>
       <description>&lt;p&gt;I have installed Nginx some time ago on one of our busiest servers on our partner&amp;rsquo;s networks, i promised i would have blogged about this and now it&amp;rsquo;s about time. This server only serves images of products sold thorugh our e-commerce site. The first configuration was only a simple web server which was serving already resized images directly, due to the massive amount of images and the cleaning of it which was taking days, i decided to use Nginx in reverse proxy mode. I have to say i am still impressed, after 6-7 months, about this software. I&amp;rsquo;ve never had to restart it one time except for little configuration tweaks.&lt;/p&gt;
 
 &lt;p&gt;This software is so good that we decided to put images that compose emails on this server as well. This is kind of critical because, after the nightly mail-out, there are 5-6 hours in the morning with constants spikes of traffic. Again, absolutely no side-effects, Nginx relentlessly serves gigabytes and gigabytes of images as if nothing happened.&lt;/p&gt;

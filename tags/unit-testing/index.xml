@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Unit Testing on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/unit-testing/</link>
+    <link>/tags/unit-testing/</link>
     <description>Recent content in Unit Testing on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 17 Oct 2010 13:09:26 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/unit-testing/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/unit-testing/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Dbunit testing</title>
-      <link>http://flagzeta.org/blog/dbunit-testing/</link>
+      <link>/blog/dbunit-testing/</link>
       <pubDate>Sun, 17 Oct 2010 13:09:26 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/dbunit-testing/</guid>
+      <guid>/blog/dbunit-testing/</guid>
       <description>&lt;p&gt;This article is about PHPUnit used in conjunction with DBUnit to test PHP code that interacts with a database server.&lt;/p&gt;
 
 &lt;p&gt;Please note that DBUnit is able to load and unload sets of data to the db but does not handle table creation and queries that alter structures. This is responsibility of an ORM or an initial sql script that creates/rebases the initial environment.&lt;/p&gt;
@@ -218,10 +218,10 @@ CREATE TABLE Addresses (
     
     <item>
       <title>Making complex software not complicated</title>
-      <link>http://flagzeta.org/blog/making-complex-software-not-complicated/</link>
+      <link>/blog/making-complex-software-not-complicated/</link>
       <pubDate>Tue, 05 Oct 2010 20:32:05 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/making-complex-software-not-complicated/</guid>
+      <guid>/blog/making-complex-software-not-complicated/</guid>
       <description>&lt;p&gt;I&amp;rsquo;d like to share my thoughts with you about approaching difficult problems in software development. This is pretty much what i came to realize after many years of development.&lt;/p&gt;
 
 &lt;p&gt;A difficult problem is usually divisible in several simple problems, but when developing software you stack up problems and every problem relies on the solution of the sub-problem.&lt;/p&gt;

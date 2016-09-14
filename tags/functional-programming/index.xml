@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Functional Programming on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/functional-programming/</link>
+    <link>/tags/functional-programming/</link>
     <description>Recent content in Functional Programming on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 27 Mar 2011 13:29:33 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/functional-programming/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/functional-programming/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Functional Programming ideas in OOP</title>
-      <link>http://flagzeta.org/blog/functional-programming-ideas-in-oop/</link>
+      <link>/blog/functional-programming-ideas-in-oop/</link>
       <pubDate>Sun, 27 Mar 2011 13:29:33 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/functional-programming-ideas-in-oop/</guid>
+      <guid>/blog/functional-programming-ideas-in-oop/</guid>
       <description>&lt;p&gt;About a year and half ago I started to be interested in Scala. Scala is a hybrid between an Object Oriented language and a Functional Language, and while i was using it i learnt to appreciate more and more the Functional part. I will not hide that the most difficult part in learning Scala was because of that.&lt;/p&gt;
 
 &lt;p&gt;The mindset when solving problems using FP is different because it forces you to think in terms of mapping transformations rather than step-by-step algorithms. Type systems are also very strong, more than the OOP i know.&lt;/p&gt;

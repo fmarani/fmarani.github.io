@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Machine Learning on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/machine-learning/</link>
+    <link>/tags/machine-learning/</link>
     <description>Recent content in Machine Learning on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Thu, 17 May 2012 00:28:34 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>From idea to a product</title>
-      <link>http://flagzeta.org/blog/from-idea-to-a-product/</link>
+      <link>/blog/from-idea-to-a-product/</link>
       <pubDate>Thu, 17 May 2012 00:28:34 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/from-idea-to-a-product/</guid>
+      <guid>/blog/from-idea-to-a-product/</guid>
       <description>
 
 &lt;p&gt;This is my history in one of the first startups I worked for, very small, but nevertheless a very good learning experience.&lt;/p&gt;
@@ -62,17 +62,17 @@ Once you know these techniques, actually what we do is pretty simple, take known
 
 &lt;p&gt;We delivered our first version of the product a couple of weeks ago&amp;hellip; Some screenshots:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-company-list-plus-filter.png&#34; alt=&#34;company list&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-company-list-plus-filter.png&#34; alt=&#34;company list&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-company-detail.png&#34; alt=&#34;company detail&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-company-detail.png&#34; alt=&#34;company detail&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-building-list.png&#34; alt=&#34;building list&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-building-list.png&#34; alt=&#34;building list&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-building-detail.png&#34; alt=&#34;building detail&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-building-detail.png&#34; alt=&#34;building detail&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-map.png&#34; alt=&#34;map&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-map.png&#34; alt=&#34;map&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-insert-company.png&#34; alt=&#34;insert company&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-insert-company.png&#34; alt=&#34;insert company&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     

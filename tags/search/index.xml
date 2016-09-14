@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Search on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/search/</link>
+    <link>/tags/search/</link>
     <description>Recent content in Search on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Wed, 31 Jul 2013 12:09:43 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/search/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/search/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Spatial search on multiple points in Solr</title>
-      <link>http://flagzeta.org/blog/spatial-search-on-multiple-points-in-solr/</link>
+      <link>/blog/spatial-search-on-multiple-points-in-solr/</link>
       <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/spatial-search-on-multiple-points-in-solr/</guid>
+      <guid>/blog/spatial-search-on-multiple-points-in-solr/</guid>
       <description>&lt;p&gt;At TrialReach we deal with clinical trials data, which contain a lot of spatial information. Tipically, clinical trials treat a certain set of conditions and they happen in various locations globally.
 If you are a patient then searching across clinical trials becomes really spatial sensitive: you are only interested in the closest location to you.&lt;/p&gt;
 

@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Amazon Ec2 on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/amazon-ec2/</link>
+    <link>/tags/amazon-ec2/</link>
     <description>Recent content in Amazon Ec2 on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 06 May 2012 11:39:37 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/amazon-ec2/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/amazon-ec2/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Ubuntu on EC2, the simple way.</title>
-      <link>http://flagzeta.org/blog/ubuntu-on-ec2-the-simple-way/</link>
+      <link>/blog/ubuntu-on-ec2-the-simple-way/</link>
       <pubDate>Sun, 06 May 2012 11:39:37 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/ubuntu-on-ec2-the-simple-way/</guid>
+      <guid>/blog/ubuntu-on-ec2-the-simple-way/</guid>
       <description>
 
 &lt;h2 id=&#34;problem&#34;&gt;Problem&lt;/h2&gt;

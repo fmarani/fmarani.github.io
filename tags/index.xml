@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/</link>
+    <link>/tags/</link>
     <description>Recent content on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 15 Mar 2009 18:39:48 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Why this blog?</title>
-      <link>http://flagzeta.org/blog/why-this-blog/</link>
+      <link>/blog/why-this-blog/</link>
       <pubDate>Sun, 15 Mar 2009 18:39:48 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/why-this-blog/</guid>
+      <guid>/blog/why-this-blog/</guid>
       <description>&lt;p&gt;Humans need interaction. Web 2.0 has been, and still is, all about human interaction. Wikis, blogs, microblogs are all a wonderful way to organize information but, more important, are methods to empower the interaction with the other internet users. The web however is still far from &amp;ldquo;human&amp;rdquo; interactions&amp;hellip; why we have to go to Facebook to see if there&amp;rsquo;s new content from friends?? Why the web can&amp;rsquo;t just say to me.. &amp;ldquo;Your friend has a new photoalbum&amp;rdquo;. Another example is the news.. Why i can&amp;rsquo;t go on the website of my preferite news agency and tell them that i want to be notified when an event with tag=X happens? Isn&amp;rsquo;t this more &amp;ldquo;human&amp;rdquo;??&lt;/p&gt;
 
 &lt;p&gt;Web 2.5 is perhaps a bit provocative as a blog title, but I really think that before any Semantic Web 3.0 something has to be laid down to provide a more human version of the web.&lt;/p&gt;

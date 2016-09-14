@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Scalability on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/scalability/</link>
+    <link>/tags/scalability/</link>
     <description>Recent content in Scalability on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 25 Nov 2012 17:30:21 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/scalability/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/scalability/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Technology behind tools.seogadget.co.uk</title>
-      <link>http://flagzeta.org/blog/technology-behind-toolsseogadgetcouk/</link>
+      <link>/blog/technology-behind-toolsseogadgetcouk/</link>
       <pubDate>Sun, 25 Nov 2012 17:30:21 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/technology-behind-toolsseogadgetcouk/</guid>
+      <guid>/blog/technology-behind-toolsseogadgetcouk/</guid>
       <description>&lt;p&gt;Scalability was one of the primary concerns when we started building the tool. Essentially, the tool gathers numbers about links you post, it is quite straightforward. To gather these numbers, our tool uses many external APIs and in a way acts as a sort of proxy between the user and many other 3rd party API providers, on top of which some internal indicators are derived. Many tools allow you to do that, but, regarding scalability, some ways are better than others. Much better actually. Gathering information for 1000 urls a day is different than doing it on 1 million, lots of challenges came in the way.
 &lt;h2&gt;TECHNOLOGY&lt;/h2&gt;
 Deciding on which platform to use, we ended up using the well-known combo Python-Django-Celery. It is the one i have most experience with, and the task is really I/O bound therefore it is not one of those cases in which writing everything in C makes a big difference. This combo also allows us to code things pretty quickly, testing various methods and combinations. The real complexity is in the Celery backend, which is where the data gathering takes place.
@@ -34,10 +34,10 @@ There has been some thought about improving the &amp;ldquo;spam&amp;rdquo; flag 
     
     <item>
       <title>How small websites become big</title>
-      <link>http://flagzeta.org/blog/how-small-websites-become-big/</link>
+      <link>/blog/how-small-websites-become-big/</link>
       <pubDate>Wed, 30 Mar 2011 00:42:56 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/how-small-websites-become-big/</guid>
+      <guid>/blog/how-small-websites-become-big/</guid>
       <description>&lt;p&gt;There is no secret recipe, there is no list of check boxes to tick&amp;hellip; just some guidelines. Part of these lessons have been learned in the hard way, part because i have been always taught that if you want to be the best, you have to copy the best. There is plenty of literature on Internet about this&amp;hellip; read, understand and copy.&lt;/p&gt;
 
 &lt;p&gt;I think the art of building high-traffic websites is part about the code, but mostly about your web architecture and the tools you use. Here some points, from basic to advanced.

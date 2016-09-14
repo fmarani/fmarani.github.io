@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Development on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/development/</link>
+    <link>/tags/development/</link>
     <description>Recent content in Development on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Thu, 03 Nov 2011 14:49:36 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/development/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/development/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Passion and Pragmatism in IT</title>
-      <link>http://flagzeta.org/blog/passion-and-pragmatism-in-it/</link>
+      <link>/blog/passion-and-pragmatism-in-it/</link>
       <pubDate>Thu, 03 Nov 2011 14:49:36 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/passion-and-pragmatism-in-it/</guid>
+      <guid>/blog/passion-and-pragmatism-in-it/</guid>
       <description>&lt;p&gt;Do what you love is what, for instance, Steve Jobs said. It does not get more true than that. Hacking has been labeled as a negative word, but for me has a positive meaning, which is the impulse of people to open things, learn how they work and change it to make it better. Hacking for me is a passion, something I always do with pleasure.&lt;/p&gt;
 
 &lt;p&gt;Having this attitude in IT is important, only experimenting with stuff pushes your skills forward. Courses are not what gives you the ability to do things, they are just a kickstart for your hacking. Learning is one of the things i believe i am good at, it is something i find myself doing without realizing it.&lt;/p&gt;
@@ -32,10 +32,10 @@
     
     <item>
       <title>Functional Programming ideas in OOP</title>
-      <link>http://flagzeta.org/blog/functional-programming-ideas-in-oop/</link>
+      <link>/blog/functional-programming-ideas-in-oop/</link>
       <pubDate>Sun, 27 Mar 2011 13:29:33 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/functional-programming-ideas-in-oop/</guid>
+      <guid>/blog/functional-programming-ideas-in-oop/</guid>
       <description>&lt;p&gt;About a year and half ago I started to be interested in Scala. Scala is a hybrid between an Object Oriented language and a Functional Language, and while i was using it i learnt to appreciate more and more the Functional part. I will not hide that the most difficult part in learning Scala was because of that.&lt;/p&gt;
 
 &lt;p&gt;The mindset when solving problems using FP is different because it forces you to think in terms of mapping transformations rather than step-by-step algorithms. Type systems are also very strong, more than the OOP i know.&lt;/p&gt;

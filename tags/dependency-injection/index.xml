@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Dependency Injection on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/dependency-injection/</link>
+    <link>/tags/dependency-injection/</link>
     <description>Recent content in Dependency Injection on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Tue, 05 Oct 2010 20:32:05 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/dependency-injection/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/dependency-injection/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Making complex software not complicated</title>
-      <link>http://flagzeta.org/blog/making-complex-software-not-complicated/</link>
+      <link>/blog/making-complex-software-not-complicated/</link>
       <pubDate>Tue, 05 Oct 2010 20:32:05 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/making-complex-software-not-complicated/</guid>
+      <guid>/blog/making-complex-software-not-complicated/</guid>
       <description>&lt;p&gt;I&amp;rsquo;d like to share my thoughts with you about approaching difficult problems in software development. This is pretty much what i came to realize after many years of development.&lt;/p&gt;
 
 &lt;p&gt;A difficult problem is usually divisible in several simple problems, but when developing software you stack up problems and every problem relies on the solution of the sub-problem.&lt;/p&gt;

@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Comprotempo on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/comprotempo/</link>
+    <link>/tags/comprotempo/</link>
     <description>Recent content in Comprotempo on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Wed, 11 Mar 2015 12:00:00 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/comprotempo/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/comprotempo/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Another failure, another lesson - comprotempo.it</title>
-      <link>http://flagzeta.org/blog/comprotempo/</link>
+      <link>/blog/comprotempo/</link>
       <pubDate>Wed, 11 Mar 2015 12:00:00 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/comprotempo/</guid>
+      <guid>/blog/comprotempo/</guid>
       <description>&lt;p&gt;When it came out, I was fashinated by TaskRabbit. I thought that a generic marketplace for handymen was the perfect tool for this decade. We have lots of young unemployment in Italy and there were also middle-class people willing to pay for someone doing chores for them. The idea was simple: putting both sides in touch by agreeing location, type of task and price. The advantages for handymen were money for work, the advantages for the committant is to &amp;ldquo;buy&amp;rdquo; someone else&amp;rsquo;s time (hence the &amp;ldquo;comprotempo&amp;rdquo; name)&lt;/p&gt;
 
 &lt;p&gt;In 2012, I set out to replicate the idea and find a good team of people to work with. I am an engineer, it is easy for us to &amp;ldquo;over-build&amp;rdquo; the product, or &amp;ldquo;over-engineer&amp;rdquo; a product feature, so I only built what I thought was the minimum product. Everybody is biased in some ways, working in a team is the only way to keep these biases in check. Once I built it, 2-3 months later, it was about spreading the word: Facebook page, Twitter account, PPC on various channels, writing content, reaching out to people, etc&amp;hellip;&lt;/p&gt;

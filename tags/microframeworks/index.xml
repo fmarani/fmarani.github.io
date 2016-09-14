@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Microframeworks on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/microframeworks/</link>
+    <link>/tags/microframeworks/</link>
     <description>Recent content in Microframeworks on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Mon, 11 Oct 2010 00:56:07 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/microframeworks/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/microframeworks/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Limonade</title>
-      <link>http://flagzeta.org/blog/limonade/</link>
+      <link>/blog/limonade/</link>
       <pubDate>Mon, 11 Oct 2010 00:56:07 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/limonade/</guid>
+      <guid>/blog/limonade/</guid>
       <description>&lt;p&gt;The idea of microframeworks is an interesting new idea which appeared over the internet quite recently. The number of web frameworks available on internet is massive and many times i found myself puzzled about which one is the best one to use. Of course there are the ones i believe are the &amp;ldquo;classics&amp;rdquo; (django and ruby on rails) plus many minor ones. The first famous microframework was Sinatra, followed now by others.&lt;/p&gt;
 
 &lt;p&gt;Lately i&amp;rsquo;ve been coding a little project on my own and i wanted a framework which offers its services but stands out of the way as much as possible. Microframeworks were ideal: i still wanted to have a base infrastructure to work on, but it needed to be simple. I wanted APIs simple enough to be self-explanatory. I did not want any configuration files in any format. I needed something that can be deployed as soon as possible.&lt;/p&gt;

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blogs on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/blog/</link>
+    <link>/blog/</link>
     <description>Recent content in Blogs on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 01 May 2016 20:43:48 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/blog/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>YCombinator interview</title>
-      <link>http://flagzeta.org/blog/yc-interview/</link>
+      <link>/blog/yc-interview/</link>
       <pubDate>Sun, 01 May 2016 20:43:48 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/yc-interview/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/ycombinator.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
+      <guid>/blog/yc-interview/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;../attachments/ycombinator.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;A month ago me and my co-founder did an application for YC, and last week we were lucky enough to be selected for an interview, along with other startups. We got called all the way to California with not even a week of notice, everything paid&amp;hellip; definitely a bit more serious than a phone call.&lt;/p&gt;
 
@@ -32,10 +32,10 @@
     
     <item>
       <title>Assessing quality by functionality mapping</title>
-      <link>http://flagzeta.org/blog/assessing-software-quality/</link>
+      <link>/blog/assessing-software-quality/</link>
       <pubDate>Sun, 15 Nov 2015 12:00:00 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/assessing-software-quality/</guid>
+      <guid>/blog/assessing-software-quality/</guid>
       <description>&lt;p&gt;This post is about measuring how the technology supports your current product, that being a single marketable entity. If we accept that the definition of quality is having as less bugs as possible, and the more code you write the more bugs you insert, you will have to accept the fact that the more code you write the less quality you will be able to get out of it. A good software project has the right amount of code to support the features that your product strategy dictates. That I think is independent of the paradigm you adopt, monolith or microservice, functional or not, etc. This post is really about the product.&lt;/p&gt;
 
 &lt;p&gt;A web product is made of pages and hyperlinks that bring you to other pages, all this resulting in user journeys. Your product strategy tells you what are the journeys your product needs, ux and marketing are more concerned about the how these steps are presented. Technology is influenced by both the what and the how, so we need to map both. These are some ideas on how to map out softwares based on various system architectures.&lt;/p&gt;
@@ -91,10 +91,10 @@
     
     <item>
       <title>Another failure, another lesson - comprotempo.it</title>
-      <link>http://flagzeta.org/blog/comprotempo/</link>
+      <link>/blog/comprotempo/</link>
       <pubDate>Wed, 11 Mar 2015 12:00:00 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/comprotempo/</guid>
+      <guid>/blog/comprotempo/</guid>
       <description>&lt;p&gt;When it came out, I was fashinated by TaskRabbit. I thought that a generic marketplace for handymen was the perfect tool for this decade. We have lots of young unemployment in Italy and there were also middle-class people willing to pay for someone doing chores for them. The idea was simple: putting both sides in touch by agreeing location, type of task and price. The advantages for handymen were money for work, the advantages for the committant is to &amp;ldquo;buy&amp;rdquo; someone else&amp;rsquo;s time (hence the &amp;ldquo;comprotempo&amp;rdquo; name)&lt;/p&gt;
 
 &lt;p&gt;In 2012, I set out to replicate the idea and find a good team of people to work with. I am an engineer, it is easy for us to &amp;ldquo;over-build&amp;rdquo; the product, or &amp;ldquo;over-engineer&amp;rdquo; a product feature, so I only built what I thought was the minimum product. Everybody is biased in some ways, working in a team is the only way to keep these biases in check. Once I built it, 2-3 months later, it was about spreading the word: Facebook page, Twitter account, PPC on various channels, writing content, reaching out to people, etc&amp;hellip;&lt;/p&gt;
@@ -113,10 +113,10 @@
     
     <item>
       <title>Monitoring servers with Munin</title>
-      <link>http://flagzeta.org/blog/monitoring-with-munin/</link>
+      <link>/blog/monitoring-with-munin/</link>
       <pubDate>Fri, 16 Jan 2015 12:51:25 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/monitoring-with-munin/</guid>
+      <guid>/blog/monitoring-with-munin/</guid>
       <description>&lt;p&gt;I normally use Munin for server monitoring, it is very easy to install and the kind of tool with not much setup. It may not be the best tool when you have many servers, due to static graph generation. Munin 2, released recently, has a few changes in that regard, they might have improved that.&lt;/p&gt;
 
 &lt;p&gt;Munin is mainly a resource usage graph tool, which monitors many metrics from a pool of servers (called nodes). When set up, the monitoring server connects to every node (specified in its configuration) and then asks for a list of current values for all monitored metrics, through a simple text-based protocol. Every node has a list of enabled &amp;ldquo;plugins&amp;rdquo; which will be run everytime the server connects to the node. Many plugins come installed by default with Munin, and many additional plugins are available online with an open source license (or public domain). Those plugins have default parameters in it, but much can be customized in the munin-node configuration file.&lt;/p&gt;
@@ -131,10 +131,10 @@
     
     <item>
       <title>Working with caches and Memcache</title>
-      <link>http://flagzeta.org/blog/working-with-memcache/</link>
+      <link>/blog/working-with-memcache/</link>
       <pubDate>Wed, 14 Jan 2015 11:45:46 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/working-with-memcache/</guid>
+      <guid>/blog/working-with-memcache/</guid>
       <description>&lt;p&gt;The traditional use of Memcache is to cache things like computations that take some time or result coming from external system with limited throughput. Examples of these may be database queries (sometimes long to compute), search queries coming from dedicated search services or simply feeds from other sites that don&amp;rsquo;t change often.&lt;/p&gt;
 
 &lt;p&gt;Memcache is both a cache system and a separate component in your system architecture, so it is very important to understand the implications. There are many negatives: it is another dependency, which adds complexity to the system, it potentially contains stale data, and it is a potential point of failure. Please consider all these things before inserting a cache in your app, many annoying and hard to find bugs in software development are related to cache.&lt;/p&gt;
@@ -155,10 +155,10 @@
     
     <item>
       <title>Scaling with Ansible (Europython 2014)</title>
-      <link>http://flagzeta.org/blog/scaling-with-ansible/</link>
+      <link>/blog/scaling-with-ansible/</link>
       <pubDate>Sun, 27 Jul 2014 12:00:00 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/scaling-with-ansible/</guid>
+      <guid>/blog/scaling-with-ansible/</guid>
       <description>&lt;p&gt;The presentation I gave at Europython 2014 in Berlin. Again it is about how TrialReach uses Ansible to manage its own infrastructure and some tips and tricks about our use of Ansible.&lt;/p&gt;
 
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;38a6f0d0f48f01318f29762c3a3e275b&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
@@ -171,10 +171,10 @@
     
     <item>
       <title>Give everyone one (public) VM</title>
-      <link>http://flagzeta.org/blog/give-everyone-one-vm/</link>
+      <link>/blog/give-everyone-one-vm/</link>
       <pubDate>Tue, 11 Feb 2014 22:45:08 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/give-everyone-one-vm/</guid>
+      <guid>/blog/give-everyone-one-vm/</guid>
       <description>&lt;p&gt;At TrialReach we want to be always able to deploy clean versions of our code online. This allows us to show our work more quickly internally (and externally) and get feedback from people as early as possible, without having to wait release dates. This also give us the opportunity to test more frequently our server provisioning procedures, and having the ability to push something live anytime is a really empowering feeling.&lt;/p&gt;
 
 &lt;p&gt;We started using Ansible as our main DevOps tool, which recently we extended to also take care of DigitalOcean VM creation. DigitalOcean has very easy APIs and is well integrated with Ansible. While we use EC2 for production/staging environments, for these throw-away environments DigitalOcean offer a good price/performance trade-off.&lt;/p&gt;
@@ -238,11 +238,11 @@
     
     <item>
       <title>Why my first startup failed - tabs.to</title>
-      <link>http://flagzeta.org/blog/why-my-first-startup-failed/</link>
+      <link>/blog/why-my-first-startup-failed/</link>
       <pubDate>Sun, 26 Jan 2014 15:24:59 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/why-my-first-startup-failed/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/logo.png&#34; alt=&#34;logo&#34; title=&#34;Tabs.to&#34; /&gt;&lt;/p&gt;
+      <guid>/blog/why-my-first-startup-failed/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;../attachments/logo.png&#34; alt=&#34;logo&#34; title=&#34;Tabs.to&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Tabs.to was a url shortener, but with a twist, it could support multiple urls and it was displaying them with a sort of tabbed interface which you could use to switch between pages. The use case I was seeing was sending multiple links via twitter, and by doing so you would have saved space. In hindsight, it seems pretty short-sighted but that was the problem I had. This was in 2010, 4 years ago.&lt;/p&gt;
 
@@ -266,10 +266,10 @@
     
     <item>
       <title>DevOps with Ansible presentation</title>
-      <link>http://flagzeta.org/blog/devops-with-ansible-presentation/</link>
+      <link>/blog/devops-with-ansible-presentation/</link>
       <pubDate>Mon, 02 Dec 2013 13:13:47 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/devops-with-ansible-presentation/</guid>
+      <guid>/blog/devops-with-ansible-presentation/</guid>
       <description>&lt;p&gt;Presentation I gave at DJUGL in September 2013 about how TrialReach uses Ansible to automate server provisioning.&lt;/p&gt;
 
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;cf5216a0021b013147b94e9ac2870296&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
@@ -278,10 +278,10 @@
     
     <item>
       <title>Spatial search on multiple points in Solr</title>
-      <link>http://flagzeta.org/blog/spatial-search-on-multiple-points-in-solr/</link>
+      <link>/blog/spatial-search-on-multiple-points-in-solr/</link>
       <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/spatial-search-on-multiple-points-in-solr/</guid>
+      <guid>/blog/spatial-search-on-multiple-points-in-solr/</guid>
       <description>&lt;p&gt;At TrialReach we deal with clinical trials data, which contain a lot of spatial information. Tipically, clinical trials treat a certain set of conditions and they happen in various locations globally.
 If you are a patient then searching across clinical trials becomes really spatial sensitive: you are only interested in the closest location to you.&lt;/p&gt;
 
@@ -352,10 +352,10 @@ solr.add(solr_data)
     
     <item>
       <title>Transifex for your Django projects</title>
-      <link>http://flagzeta.org/blog/transifex-for-your-django-projects/</link>
+      <link>/blog/transifex-for-your-django-projects/</link>
       <pubDate>Thu, 31 Jan 2013 15:39:37 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/transifex-for-your-django-projects/</guid>
+      <guid>/blog/transifex-for-your-django-projects/</guid>
       <description>&lt;p&gt;I am assuming you already created a project on Transifex (in this example is TxProject), either on the hosted version or on the downloadable version, and all the users you need are on there (just one to start is enough). I am also assuming i18n is already setup and you have at least 2 languages already in your project.&lt;/p&gt;
 
 &lt;p&gt;The aim of integrating Transifex libraries into your code is to make it really easy to push/pull translations of a project to their web front-end.&lt;/p&gt;
@@ -388,10 +388,10 @@ solr.add(solr_data)
     
     <item>
       <title>Technology behind tools.seogadget.co.uk</title>
-      <link>http://flagzeta.org/blog/technology-behind-toolsseogadgetcouk/</link>
+      <link>/blog/technology-behind-toolsseogadgetcouk/</link>
       <pubDate>Sun, 25 Nov 2012 17:30:21 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/technology-behind-toolsseogadgetcouk/</guid>
+      <guid>/blog/technology-behind-toolsseogadgetcouk/</guid>
       <description>&lt;p&gt;Scalability was one of the primary concerns when we started building the tool. Essentially, the tool gathers numbers about links you post, it is quite straightforward. To gather these numbers, our tool uses many external APIs and in a way acts as a sort of proxy between the user and many other 3rd party API providers, on top of which some internal indicators are derived. Many tools allow you to do that, but, regarding scalability, some ways are better than others. Much better actually. Gathering information for 1000 urls a day is different than doing it on 1 million, lots of challenges came in the way.
 &lt;h2&gt;TECHNOLOGY&lt;/h2&gt;
 Deciding on which platform to use, we ended up using the well-known combo Python-Django-Celery. It is the one i have most experience with, and the task is really I/O bound therefore it is not one of those cases in which writing everything in C makes a big difference. This combo also allows us to code things pretty quickly, testing various methods and combinations. The real complexity is in the Celery backend, which is where the data gathering takes place.
@@ -410,10 +410,10 @@ There has been some thought about improving the &amp;ldquo;spam&amp;rdquo; flag 
     
     <item>
       <title>Basic things to do and not in Django</title>
-      <link>http://flagzeta.org/blog/basic-things-to-do-and-not-in-django/</link>
+      <link>/blog/basic-things-to-do-and-not-in-django/</link>
       <pubDate>Sun, 23 Sep 2012 19:33:30 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/basic-things-to-do-and-not-in-django/</guid>
+      <guid>/blog/basic-things-to-do-and-not-in-django/</guid>
       <description>&lt;p&gt;Make software dependent on absolute paths: One of the projects i was working on had all module imports including the project main folder name. That in turn made impossible to have the same project installed 2 times in the same folder with 2 distinct names. (e.g. 2 versions of the staging site). Sometime is even worse than this, when you have a full path in the code. These should always be in configuration files which are changeable at deployment.&lt;/p&gt;
 
 &lt;p&gt;Massive views.py file: It is probably time to split the project in separate applications. Also try to remove the code which is not directly view related and separate it in different files. Django has a very good form validation framework, if you use it your views.py file will shrink considerably.&lt;/p&gt;
@@ -444,10 +444,10 @@ There has been some thought about improving the &amp;ldquo;spam&amp;rdquo; flag 
     
     <item>
       <title>From idea to a product</title>
-      <link>http://flagzeta.org/blog/from-idea-to-a-product/</link>
+      <link>/blog/from-idea-to-a-product/</link>
       <pubDate>Thu, 17 May 2012 00:28:34 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/from-idea-to-a-product/</guid>
+      <guid>/blog/from-idea-to-a-product/</guid>
       <description>
 
 &lt;p&gt;This is my history in one of the first startups I worked for, very small, but nevertheless a very good learning experience.&lt;/p&gt;
@@ -494,26 +494,26 @@ Once you know these techniques, actually what we do is pretty simple, take known
 
 &lt;p&gt;We delivered our first version of the product a couple of weeks ago&amp;hellip; Some screenshots:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-company-list-plus-filter.png&#34; alt=&#34;company list&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../attachments/growthintelligence-com-company-list-plus-filter.png&#34; alt=&#34;company list&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-company-detail.png&#34; alt=&#34;company detail&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../attachments/growthintelligence-com-company-detail.png&#34; alt=&#34;company detail&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-building-list.png&#34; alt=&#34;building list&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../attachments/growthintelligence-com-building-list.png&#34; alt=&#34;building list&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-building-detail.png&#34; alt=&#34;building detail&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../attachments/growthintelligence-com-building-detail.png&#34; alt=&#34;building detail&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-map.png&#34; alt=&#34;map&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../attachments/growthintelligence-com-map.png&#34; alt=&#34;map&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-insert-company.png&#34; alt=&#34;insert company&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../attachments/growthintelligence-com-insert-company.png&#34; alt=&#34;insert company&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>Ubuntu on EC2, the simple way.</title>
-      <link>http://flagzeta.org/blog/ubuntu-on-ec2-the-simple-way/</link>
+      <link>/blog/ubuntu-on-ec2-the-simple-way/</link>
       <pubDate>Sun, 06 May 2012 11:39:37 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/ubuntu-on-ec2-the-simple-way/</guid>
+      <guid>/blog/ubuntu-on-ec2-the-simple-way/</guid>
       <description>
 
 &lt;h2 id=&#34;problem&#34;&gt;Problem&lt;/h2&gt;

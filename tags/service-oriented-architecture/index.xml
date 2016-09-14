@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Service Oriented Architecture on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/service-oriented-architecture/</link>
+    <link>/tags/service-oriented-architecture/</link>
     <description>Recent content in Service Oriented Architecture on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 22 Jan 2012 21:49:33 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/service-oriented-architecture/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/service-oriented-architecture/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Why SOA in a startup sucks</title>
-      <link>http://flagzeta.org/blog/why-soa-in-a-startup-sucks/</link>
+      <link>/blog/why-soa-in-a-startup-sucks/</link>
       <pubDate>Sun, 22 Jan 2012 21:49:33 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/why-soa-in-a-startup-sucks/</guid>
+      <guid>/blog/why-soa-in-a-startup-sucks/</guid>
       <description>&lt;p&gt;Service Oriented Architectures as i intend are architectures where each component is deployable and usable separately from others. Take as example Amazon, much of their software stack is offered as a service, mainly through an HTTP interface, and marketed as SaaS.&lt;/p&gt;
 
 &lt;p&gt;There are tons of reasons why you would want to think to your system as a series of components deployable separately&amp;hellip; flexibility, being able to choose the right tools for each component, etc.. i will not talk about the advantages.&lt;/p&gt;

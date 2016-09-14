@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Startup on Blog | Federico Marani</title>
-    <link>http://flagzeta.org/tags/startup/</link>
+    <link>/tags/startup/</link>
     <description>Recent content in Startup on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Sun, 26 Jan 2014 15:24:59 +0000</lastBuildDate>
-    <atom:link href="http://flagzeta.org/tags/startup/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/startup/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Why my first startup failed - tabs.to</title>
-      <link>http://flagzeta.org/blog/why-my-first-startup-failed/</link>
+      <link>/blog/why-my-first-startup-failed/</link>
       <pubDate>Sun, 26 Jan 2014 15:24:59 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/why-my-first-startup-failed/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/logo.png&#34; alt=&#34;logo&#34; title=&#34;Tabs.to&#34; /&gt;&lt;/p&gt;
+      <guid>/blog/why-my-first-startup-failed/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;../../attachments/logo.png&#34; alt=&#34;logo&#34; title=&#34;Tabs.to&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Tabs.to was a url shortener, but with a twist, it could support multiple urls and it was displaying them with a sort of tabbed interface which you could use to switch between pages. The use case I was seeing was sending multiple links via twitter, and by doing so you would have saved space. In hindsight, it seems pretty short-sighted but that was the problem I had. This was in 2010, 4 years ago.&lt;/p&gt;
 
@@ -40,10 +40,10 @@
     
     <item>
       <title>From idea to a product</title>
-      <link>http://flagzeta.org/blog/from-idea-to-a-product/</link>
+      <link>/blog/from-idea-to-a-product/</link>
       <pubDate>Thu, 17 May 2012 00:28:34 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/from-idea-to-a-product/</guid>
+      <guid>/blog/from-idea-to-a-product/</guid>
       <description>
 
 &lt;p&gt;This is my history in one of the first startups I worked for, very small, but nevertheless a very good learning experience.&lt;/p&gt;
@@ -90,26 +90,26 @@ Once you know these techniques, actually what we do is pretty simple, take known
 
 &lt;p&gt;We delivered our first version of the product a couple of weeks ago&amp;hellip; Some screenshots:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-company-list-plus-filter.png&#34; alt=&#34;company list&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-company-list-plus-filter.png&#34; alt=&#34;company list&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-company-detail.png&#34; alt=&#34;company detail&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-company-detail.png&#34; alt=&#34;company detail&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-building-list.png&#34; alt=&#34;building list&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-building-list.png&#34; alt=&#34;building list&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-building-detail.png&#34; alt=&#34;building detail&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-building-detail.png&#34; alt=&#34;building detail&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-map.png&#34; alt=&#34;map&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-map.png&#34; alt=&#34;map&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://flagzeta.org/attachments/growthintelligence-com-insert-company.png&#34; alt=&#34;insert company&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-insert-company.png&#34; alt=&#34;insert company&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>Why SOA in a startup sucks</title>
-      <link>http://flagzeta.org/blog/why-soa-in-a-startup-sucks/</link>
+      <link>/blog/why-soa-in-a-startup-sucks/</link>
       <pubDate>Sun, 22 Jan 2012 21:49:33 +0000</pubDate>
       
-      <guid>http://flagzeta.org/blog/why-soa-in-a-startup-sucks/</guid>
+      <guid>/blog/why-soa-in-a-startup-sucks/</guid>
       <description>&lt;p&gt;Service Oriented Architectures as i intend are architectures where each component is deployable and usable separately from others. Take as example Amazon, much of their software stack is offered as a service, mainly through an HTTP interface, and marketed as SaaS.&lt;/p&gt;
 
 &lt;p&gt;There are tons of reasons why you would want to think to your system as a series of components deployable separately&amp;hellip; flexibility, being able to choose the right tools for each component, etc.. i will not talk about the advantages.&lt;/p&gt;
