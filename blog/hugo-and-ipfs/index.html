@@ -120,7 +120,7 @@
 
 <h2 id="hugo">Hugo</h2>
 
-<p>This site was using Django and, given the very simple content model that it had (and almost never changed), I decided to rebuild it in Hugo. I also was getting fed up of mantaining yet another dynamic site, along with runtime and databases. I picked Hugo because it is written in Go, therefore very easy to get going (one file to install) and it works on any platform.</p>
+<p>This site was built using Django and, given the very simple content model that it had (and almost never changed), I decided to rebuild it in <a href="http://gohugo.io">Hugo</a>. I also was getting fed up of mantaining yet another dynamic site, along with runtime and databases. I picked Hugo because it is written in Go, therefore very easy to get going (one file to install) and it works on any platform.</p>
 
 <p>There are 2 steps for this conversion:</p>
 
@@ -133,7 +133,7 @@
 
 <h2 id="github-pages">Github pages</h2>
 
-<p>At this point, the setup was already much simpler. But I wanted to get rid of the hassle of hosting it. Github pages is free and works pretty well (S3 could also be an option). While I was in the process of following their tutorials, the only slightly obscure step was that I needed two repositories, one for the original Hugo site, and another one for the compiled version. Forget all the tutorials that tell you to create a <code>gh-pages</code> branch, those are for project sites, not user sites.</p>
+<p>At this point, the architecture was already much simpler. But I wanted to get rid of the hassle of hosting it. Github pages is free and works pretty well (S3 could also be an option). While I was in the process of following their tutorials, the only slightly obscure step was that I needed two repositories, one for the original Hugo site, and another one for the compiled version. Forget all the tutorials that tell you to create a <code>gh-pages</code> branch, those are for project sites, not user sites.</p>
 
 <p>I ended up with:</p>
 
@@ -148,7 +148,7 @@
 
 <p>Given that all the content is static, it lends itself very well to be distributed rather than just staying on a central server. I installed IPFS on a machine I had available, configured it and let it run as a daemon (quite easy, plenty of docs online). In case Github is down, you can also find this site on IPFS.</p>
 
-<p>You can either use the <a href="gateway.ipfs.io/ipns/QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3/">gateway</a> or use the IPNS directly (QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3).</p>
+<p>You can either use the <a href="http://gateway.ipfs.io/ipns/QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3/">gateway</a> or use the IPNS directly (QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3).</p>
 
 <p>The only caveat I would like to underline here is that you have to use <code>relativeurls = true</code> in your Hugo configuration, otherwise absolute URLs will not work well with the IPFS gateway.</p>
 
