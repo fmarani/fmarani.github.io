@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta name="generator" content="Hugo 0.16" />
-        <title>Another failure, another lesson - comprotempo.it</title>
+        <title>Do not use HTTPS and basic auth</title>
         <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
         <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
@@ -109,28 +109,33 @@
 
 <article>
     <div class="post-stamp">
-        11 Mar 2015
+        15 Sep 2016
         <span class="taglist">&middot;
-            startups  comprotempo 
+            security 
         </span>
     </div>
-	<h1 class="post-title">Another failure, another lesson - comprotempo.it</h1>
+	<h1 class="post-title">Do not use HTTPS and basic auth</h1>
         <div class="blogpost-old" style="display: none">
             This post is quite old... Technologies and techniques described here might not apply anymore.
         </div>
-	<p>When it came out, I was fashinated by TaskRabbit. I thought that a generic marketplace for handymen was the perfect tool for this decade. We have lots of young unemployment in Italy and there were also middle-class people willing to pay for someone doing chores for them. The idea was simple: putting both sides in touch by agreeing location, type of task and price. The advantages for handymen were money for work, the advantages for the committant is to &ldquo;buy&rdquo; someone else&rsquo;s time (hence the &ldquo;comprotempo&rdquo; name)</p>
+	<p>Security is a difficult topic, the discipline is very &ldquo;deep&rdquo;, therefore it is easy to make mistakes if you do not dig deep enough. Unfortunately many people misjudge perceived security with real security, on the basis of &ldquo;it makes sense&rdquo;.</p>
 
-<p>In 2012, I set out to replicate the idea and find a good team of people to work with. I am an engineer, it is easy for us to &ldquo;over-build&rdquo; the product, or &ldquo;over-engineer&rdquo; a product feature, so I only built what I thought was the minimum product. Everybody is biased in some ways, working in a team is the only way to keep these biases in check. Once I built it, 2-3 months later, it was about spreading the word: Facebook page, Twitter account, PPC on various channels, writing content, reaching out to people, etc&hellip;</p>
+<p>HTTPS is a wonderful protocol, it gives you encryption therefore you cannot see what is going on at L7 (urls, http headers, http verbs, app data). This level of obscurity may be enough for simple apps. The fact that your app knows your private REST api structure is already a (weak) client authentication proof. <strong>Basic auth does not give you any extra security on top of that</strong>, because if you can read the REST urls (with a MITM attack), you can read the password hash, and if you know the password hash, you can send requests as the original client. You can reuse the hash to reauthenticate yourself.</p>
 
-<p>Turns out building a Marketplace is very hard. You have now to convince two types of customers which may have a completely different set of concerns and motivations. The money incentive is always very strong, in fact we had a lot of users registered as handymen for a very broad set of tasks. On the other hand, feeding the system with tasks has proven to be very challenging.</p>
+<p>In most cases, it is enough for your app to <strong>verify the server SSL certificate</strong>. When you do that, it gets almost impossible to hack the connection and read data from it.</p>
 
-<p>Because we started with handling a broad set of tasks, we had a problem with audience addressability: people likely to buy services on our site were not very addressable, distinguishable from the crowd. For instance, how do you target people willing to pay for lawn mowing, and willing to trust an online service for it? Not easy. We had to do that for every type of service the site was offering, so it was hardly marketing scalable. Some of these services were by nature recurrent, most of them were not though.</p>
+<p>If you want some extra security, you could:</p>
 
-<p>We were also doing a bad job at keeping people&rsquo;s attention on the site. The homepage was generic on purpose, and I don&rsquo;t think people were understanding the relevance to their problem. Also they were very likely to be busy people, I think we were wasting their attention timespan. Posting an ad for a task also required filling a lot of information about the task before-hand, in order to receive good money quotes for it. People don&rsquo;t like long forms.</p>
+<ol>
+<li>Introduce API keys and passwords for app users. It is going to be application dependent, so up to you to build the verification for this. <strong>This is not a strong authentication model</strong>, but because they are User-specific, if they are compromised, these credentials can be easily revoked and reset. Many SaaS use this method, because it is very easy to deploy at scale and to understand.</li>
+<li>Use HTTP Digest auth, or something with a randomized pre-shared nonce. Differently from all the previous ones, this is not vulnerable to replay attacks, therefore it is more secure.</li>
+<li>Have some mechanism to sign HTTP requests. This is not an authentication mechanism, but it protects against data tampering. If an hacker sees that you are protected against replay attacks, the next logical step is modify existing requests on the fly. If the request is signed, this will be much harder.</li>
+<li>Use HTTPS Client certificates, that the server authenticates. This is a bit harder to put in place and theoretically offers maximum protection.</li>
+</ol>
 
-<p>Most of all, I think we had done a very bad job at building trust as a community. We had a rating system for handymen, but with no user-generated ratings it was not helpful. It is a bit of a chicken-and-egg problem sometimes, communities are not self-sustaining from the start. Building brand reputation is just really long and hard.</p>
+<p>Security is not an immutable thing in time. Things that were secure 5 years ago might not be considered secure today. Security is also not an absolute, there is no 100% secure. Your only option is to defend yourself down every level of your stack, hoping that whoever wants to hack you either loses interest in you or runs out of hacking ideas.</p>
 
-<p>At the end, we also had problems with the team. With internal divisions, you just cannot focus your energies anymore. I can&rsquo;t stress this enough, problems with founding team are just incredibly hard to deal with. They ripple out into everything else. That was the end for us.</p>
+<p>All the above options can be used in combination, because they offer different benefits. Evaluating the right combination is up to you. This is a run-through all possible options, focusing only on security at transport level. There is a lot more to say about security of the device. If an attacker is able to get access to the application code, the surface of attack becomes bigger.</p>
 
 </article>  
      <div id="disqus_thread"></div>
@@ -150,7 +155,7 @@
 
 <script type="text/javascript" charset="utf-8">
 var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
-var postTime = new Date("2015-03-11T12:00:00Z").getTime();
+var postTime = new Date("2016-09-15T12:23:07+02:00").getTime();
 if (postTime < cutoffTime) {
     $(".blogpost-old").show();
 }

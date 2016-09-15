@@ -7,8 +7,35 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 14 Sep 2016 17:04:43 +0200</lastBuildDate>
+    <lastBuildDate>Thu, 15 Sep 2016 12:23:07 +0200</lastBuildDate>
     <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Do not use HTTPS and basic auth</title>
+      <link>/blog/do-not-use-https-and-basic-auth/</link>
+      <pubDate>Thu, 15 Sep 2016 12:23:07 +0200</pubDate>
+      
+      <guid>/blog/do-not-use-https-and-basic-auth/</guid>
+      <description>&lt;p&gt;Security is a difficult topic, the discipline is very &amp;ldquo;deep&amp;rdquo;, therefore it is easy to make mistakes if you do not dig deep enough. Unfortunately many people misjudge perceived security with real security, on the basis of &amp;ldquo;it makes sense&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;HTTPS is a wonderful protocol, it gives you encryption therefore you cannot see what is going on at L7 (urls, http headers, http verbs, app data). This level of obscurity may be enough for simple apps. The fact that your app knows your private REST api structure is already a (weak) client authentication proof. &lt;strong&gt;Basic auth does not give you any extra security on top of that&lt;/strong&gt;, because if you can read the REST urls (with a MITM attack), you can read the password hash, and if you know the password hash, you can send requests as the original client. You can reuse the hash to reauthenticate yourself.&lt;/p&gt;
+
+&lt;p&gt;In most cases, it is enough for your app to &lt;strong&gt;verify the server SSL certificate&lt;/strong&gt;. When you do that, it gets almost impossible to hack the connection and read data from it.&lt;/p&gt;
+
+&lt;p&gt;If you want some extra security, you could:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Introduce API keys and passwords for app users. It is going to be application dependent, so up to you to build the verification for this. &lt;strong&gt;This is not a strong authentication model&lt;/strong&gt;, but because they are User-specific, if they are compromised, these credentials can be easily revoked and reset. Many SaaS use this method, because it is very easy to deploy at scale and to understand.&lt;/li&gt;
+&lt;li&gt;Use HTTP Digest auth, or something with a randomized pre-shared nonce. Differently from all the previous ones, this is not vulnerable to replay attacks, therefore it is more secure.&lt;/li&gt;
+&lt;li&gt;Have some mechanism to sign HTTP requests. This is not an authentication mechanism, but it protects against data tampering. If an hacker sees that you are protected against replay attacks, the next logical step is modify existing requests on the fly. If the request is signed, this will be much harder.&lt;/li&gt;
+&lt;li&gt;Use HTTPS Client certificates, that the server authenticates. This is a bit harder to put in place and theoretically offers maximum protection.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Security is not an immutable thing in time. Things that were secure 5 years ago might not be considered secure today. Security is also not an absolute, there is no 100% secure. Your only option is to defend yourself down every level of your stack, hoping that whoever wants to hack you either loses interest in you or runs out of hacking ideas.&lt;/p&gt;
+
+&lt;p&gt;All the above options can be used in combination, because they offer different benefits. Evaluating the right combination is up to you. This is a run-through all possible options, focusing only on security at transport level. There is a lot more to say about security of the device. If an attacker is able to get access to the application code, the surface of attack becomes bigger.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Rebuilding my site with Hugo (and IPFS)</title>
@@ -513,72 +540,6 @@ There has been some thought about improving the &amp;ldquo;spam&amp;rdquo; flag 
 &lt;p&gt;Always use RequestContext and STATIC_URL for rendering templates: In that case you do not hard-code links to your static media. It&amp;rsquo;s one of those things easy to do and will make your life easier when you will have a separate static server or serve files through a CDN.&lt;/p&gt;
 
 &lt;p&gt; &lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>From idea to a product</title>
-      <link>/blog/from-idea-to-a-product/</link>
-      <pubDate>Thu, 17 May 2012 00:28:34 +0000</pubDate>
-      
-      <guid>/blog/from-idea-to-a-product/</guid>
-      <description>
-
-&lt;p&gt;This is my history in one of the first startups I worked for, very small, but nevertheless a very good learning experience.&lt;/p&gt;
-
-&lt;h2 id=&#34;selling-the-idea&#34;&gt;Selling the idea&lt;/h2&gt;
-
-&lt;p&gt;We had the vision, and we sold our vision in the way a lean startup would do: sell the vision, receive funding for the project, deliver the product. Turns out it is extremely hard to sell something that does not exist, but we did it. After a while we found our first customer, which believed in us and was the right kind of customer. We worked for about a month alongside them, formalized the vision into a product, writing schemas, functional specifications, project plans, time estimates, wireframes. I think they were quite supportive and not too pretentious. They also saw a lot of value in what we were delivering. We also won a TSB grant, which helped us to go through initial stages and eventually hire our second developer.&lt;/p&gt;
-
-&lt;h2 id=&#34;studying-the-idea&#34;&gt;Studying the idea&lt;/h2&gt;
-
-&lt;p&gt;How to realize what we had in mind went through many iterations. Nobody of us had the complete knowledge to realize what we sold, the company did not have the expertise in house and the possibility to afford anyone who had it, so we had to learn a lot. I am not talking about frameworks and libraries but algorithms.
-Luckily enough, all the stanford classes of the past year introduced us to the techniques that we ended up using&amp;hellip; machine learning and nlp most of all.
-Our original idea was to be able to estimate how much a company is making in terms of revenue, estimating it with an acceptable margin of error, starting from data available publicly. There is a lot of data available publicly, some from Companies house, some from other financial institutes, some from the social sphere, some from search engines. Some information is also given away by the companies themselves on their site (e.g. testimonials, press releases, etc&amp;hellip;). Some other from press releases of investors such as VCs. If you dig deep enough you will see there is a LOT of data, but the problem is that there is always noise, would this noise have compromised our efforts?&lt;/p&gt;
-
-&lt;h2 id=&#34;machine-learning&#34;&gt;Machine learning&lt;/h2&gt;
-
-&lt;p&gt;Turns out ML is a very vast field, much of it unexplored. Neural networks are not the only method to instruct a machine to take decisions like humans&amp;hellip; there are many others. Human brain can fine tune automatically, but in a machine you have to pick the right algorithm: SVM, kNN, Naive bayes, NN, linear-logistic regression..
-Once you know these techniques, actually what we do is pretty simple, take known connections between data and revenue, train the system and use it to predict revenue when we do not have it. In the real-world though, there is a lot of work to do on data.. smoothing, make sure it is time-overlapping, make sure features you chose represent well the reality, etc.&lt;/p&gt;
-
-&lt;h2 id=&#34;choosing-the-technology&#34;&gt;Choosing the technology&lt;/h2&gt;
-
-&lt;p&gt;Python was the perfect choice for me. The one i have most experience with, and a very good language for prototyping ideas. I had previous experience in a startup using Scala and I was not able to reach the same development speed. I think slow development is absolutely to be avoided in a startup, it is a motivation killer&amp;hellip; Generally in a startup you should use things you know well, it cuts development time. Forget all the cool techs you always wanted to try, try them in a personal project, not a serious startup. I know it is a blow, but you have to accept it, it is a matter of life or death. We used Mysql, not Cassandra. I knew Mysql very well already and, to be honest, how many Mysql experts can you find on the market? and how many Cassandra experts?&lt;/p&gt;
-
-&lt;h2 id=&#34;building-the-team&#34;&gt;Building the team&lt;/h2&gt;
-
-&lt;p&gt;When i joined, it was just me and the CEO. It is a pretty exciting time to join a company, i had to give a direction to everything in terms of software development. We needed a team, but i was not sure exactly what kind of person.. senior, junior, contractor? Our budget was limited, therefore the best choice turned out to be someone junior-mid level with potential to grow quickly in the organization. Which skills did we require in a developer? Initialy i thought we need someone that knew Python but having thought about it.. what we really needed is someone interested in what we do and in the algorithms we use. Python is such an easy language you can pick it up in a couple of weeks, and if you don&amp;rsquo;t, you are probably not the right kind of developer for us anyway.&lt;/p&gt;
-
-&lt;h2 id=&#34;stay-lean&#34;&gt;Stay lean&lt;/h2&gt;
-
-&lt;p&gt;All we needed is a shared folder for docs, a code repository, a virtual machine and a whiteboard with lots of post-it notes. No need for issue tracking or CI server when you start, but that is not an excuse to get sloppy with unit-tests. I like 5-10 minutes stand-ups in the morning, you get a sense of what the team is up to and you can offer solutions to problems pretty quickly. There is not really time for documenting code either, at the start it is all in the heads of people. I am a fan of writing code like a prose, that is the best way to write docs.&lt;/p&gt;
-
-&lt;h2 id=&#34;lesson-learnt&#34;&gt;Lesson learnt&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;You are in a startup usually because you are incentivized by the idea, team or equity in the company, not because you have a good salary. Make sure you understand this.&lt;/li&gt;
-&lt;li&gt;Team is the most important thing. Much better if you have the same level of experience but specialize in different things.&lt;/li&gt;
-&lt;li&gt;Use what you already know, learn quickly what you don&amp;rsquo;t.&lt;/li&gt;
-&lt;li&gt;Identify a market and clients before starting. Call them and sell them the product, before, during and after you build it.&lt;/li&gt;
-&lt;li&gt;You have to tackle issues, not wait for somebody else.&lt;/li&gt;
-&lt;li&gt;Write down the rules of the game before joining.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;launch&#34;&gt;Launch!&lt;/h2&gt;
-
-&lt;p&gt;We delivered our first version of the product a couple of weeks ago&amp;hellip; Some screenshots:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/growthintelligence-com-company-list-plus-filter.png&#34; alt=&#34;company list&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/growthintelligence-com-company-detail.png&#34; alt=&#34;company detail&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/growthintelligence-com-building-list.png&#34; alt=&#34;building list&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/growthintelligence-com-building-detail.png&#34; alt=&#34;building detail&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/growthintelligence-com-map.png&#34; alt=&#34;map&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/growthintelligence-com-insert-company.png&#34; alt=&#34;insert company&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     

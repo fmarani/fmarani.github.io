@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hugo on Blog | Federico Marani</title>
+    <link>/tags/hugo/</link>
+    <description>Recent content in Hugo on Blog | Federico Marani</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 14 Sep 2016 17:04:43 +0200</lastBuildDate>
+    <atom:link href="/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Rebuilding my site with Hugo (and IPFS)</title>
+      <link>/blog/hugo-and-ipfs/</link>
+      <pubDate>Wed, 14 Sep 2016 17:04:43 +0200</pubDate>
+      
+      <guid>/blog/hugo-and-ipfs/</guid>
+      <description>
+
+&lt;h2 id=&#34;hugo&#34;&gt;Hugo&lt;/h2&gt;
+
+&lt;p&gt;This site was built using Django and, given the very simple content model that it had (and almost never changed), I decided to rebuild it in &lt;a href=&#34;http://gohugo.io&#34;&gt;Hugo&lt;/a&gt;. I also was getting fed up of mantaining yet another dynamic site, along with runtime and databases. I picked Hugo because it is written in Go, therefore very easy to get going (one file to install) and it works on any platform.&lt;/p&gt;
+
+&lt;p&gt;There are 2 steps for this conversion:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Convert the Django template files to Go template files. Converting any simple logic into either Go template logic or JS if needs to be evaluated every time.&lt;/li&gt;
+&lt;li&gt;Cycle over all posts, convert them into files. Write them in a directory (under content) that uses names from the current URLs.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There might be more steps in your setup. In mine, I had to transfer some media files, and define another archetype for normal pages. You can see that at &lt;a href=&#34;https://github.com/fmarani/blog&#34;&gt;my repo&lt;/a&gt;. If you can deal with the Go template language, Hugo is a very nice software.&lt;/p&gt;
+
+&lt;h2 id=&#34;github-pages&#34;&gt;Github pages&lt;/h2&gt;
+
+&lt;p&gt;At this point, the architecture was already much simpler. But I wanted to get rid of the hassle of hosting it. Github pages is free and works pretty well (S3 could also be an option). While I was in the process of following their tutorials, the only slightly obscure step was that I needed two repositories, one for the original Hugo site, and another one for the compiled version. Forget all the tutorials that tell you to create a &lt;code&gt;gh-pages&lt;/code&gt; branch, those are for project sites, not user sites.&lt;/p&gt;
+
+&lt;p&gt;I ended up with:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/fmarani/blog&#34;&gt;the original repo&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/fmarani/fmarani.github.io&#34;&gt;the compiled repo&lt;/a&gt;. Please note the name of the repo, that&amp;rsquo;s how Github needs it.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The only additional step after all this was to make my domain point to Github, you can find some instructions on their site for that.&lt;/p&gt;
+
+&lt;h2 id=&#34;ipfs&#34;&gt;IPFS&lt;/h2&gt;
+
+&lt;p&gt;Given that all the content is static, it lends itself very well to be distributed rather than just staying on a central server. I installed IPFS on a machine I had available, configured it and let it run as a daemon (quite easy, plenty of docs online). In case Github is down, you can also find this site on IPFS.&lt;/p&gt;
+
+&lt;p&gt;You can either use the &lt;a href=&#34;http://gateway.ipfs.io/ipns/QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3/&#34;&gt;gateway&lt;/a&gt; or use the IPNS directly (QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3).&lt;/p&gt;
+
+&lt;p&gt;The only caveat I would like to underline here is that you have to use &lt;code&gt;relativeurls = true&lt;/code&gt; in your Hugo configuration, otherwise absolute URLs will not work well with the IPFS gateway.&lt;/p&gt;
+
+&lt;h2 id=&#34;glue-everything-together&#34;&gt;Glue everything together&lt;/h2&gt;
+
+&lt;p&gt;I created this simple deploy script:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+
+# Build the project.
+hugo
+
+echo -e &amp;quot;\033[0;32mDeploying updates to Github pages...\033[0m&amp;quot;
+
+cd public
+git add -A
+msg=&amp;quot;rebuilding site `date`&amp;quot;
+if [ $# -eq 1 ]
+  then msg=&amp;quot;$1&amp;quot;
+fi
+git commit -m &amp;quot;$msg&amp;quot;
+git push origin master
+cd ..
+
+echo -e &amp;quot;\033[0;32mDeploying updates to IPFS...\033[0m&amp;quot;
+
+scp -r public/ USER@HOST:repo
+hash=`ssh USER@HOST ipfs add -r -q repo | tail -1`
+ssh USER@HOST ipfs name publish $hash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Just change the USER@HOST part with your IPFS server. If you run it locally, no need to ssh.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
