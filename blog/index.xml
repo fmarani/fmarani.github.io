@@ -7,8 +7,306 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 15 Sep 2016 12:23:07 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 24 Sep 2016 23:16:56 +0200</lastBuildDate>
     <atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>A Python microservice stack</title>
+      <link>/blog/a-python-microservice-stack/</link>
+      <pubDate>Sat, 24 Sep 2016 23:16:56 +0200</pubDate>
+      
+      <guid>/blog/a-python-microservice-stack/</guid>
+      <description>
+
+&lt;p&gt;First of all, let me say the word &amp;ldquo;microservice&amp;rdquo; is incredibly inflated these days, but some of the original reasons to use them still hold true. Part of its definition comes from SOA, with some added considerations:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Services roughly map to business functions&lt;/li&gt;
+&lt;li&gt;Services are autonomous (shared nothing architecture)&lt;/li&gt;
+&lt;li&gt;Boundaries are explicit&lt;/li&gt;
+&lt;li&gt;Services declare schemas and interfaces&lt;/li&gt;
+&lt;li&gt;Company policy defines version compatibility&lt;/li&gt;
+&lt;li&gt;Services are deployed separately&lt;/li&gt;
+&lt;li&gt;Services are manageable by different teams&lt;/li&gt;
+&lt;li&gt;Service unavailability is handled gracefully&lt;/li&gt;
+&lt;li&gt;Service call stack is broad rather than deep&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Recently I worked with a company that needed to scale product/engineering to 50+ people, which makes the investment towards this methodology justifiable. There is a cost in managing all this, but people&amp;rsquo;s autonomy pays this off quickly. In the future this cost might change, but I doubt it is going to be zero. Consider that it is much harder to change a microservice ecosystem than to change the layers of a monolithic software, because of its distributed nature.&lt;/p&gt;
+
+&lt;p&gt;Regarding the tools for this, I put together a proof of concept of a microservice stack. It is focused on Python to start with, but I picked tools that can be used from any language. In these environments you also do not need a generic framework like Django anymore, you can pick something more lightweight if the current service allows it.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;GRPC&lt;/li&gt;
+&lt;li&gt;Consul&lt;/li&gt;
+&lt;li&gt;StatsD&lt;/li&gt;
+&lt;li&gt;Kafka&lt;/li&gt;
+&lt;li&gt;SQLAlchemy/Alembic (Python specific)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;All these tools together allowed me to put together a simplified version of a service they had in production already.&lt;/p&gt;
+
+&lt;p&gt;GRPC is a modern RPC library based on HTTP/2 and Protocol Buffers. The reason why I picked this instead of REST or a messaging queue is that it makes schemas and interfaces explicit. One could argue that Swagger (or similar) can be used for the same purpose, but in reality I have seen these files get out of date quickly because people forget.&lt;/p&gt;
+
+&lt;p&gt;GPRC forces you to generate client/server code out of &amp;ldquo;documentation&amp;rdquo; files, which makes them always be up to date. It is also an RPC protocol, which is inherently more flexible than a REST system. In addition to this, HTTP/2 is a multiplexed protocol, which finally means we are not forced to fit everything in one response, just because the frontend team wants performance.&lt;/p&gt;
+
+&lt;p&gt;Consul allows you to do mainly 2 things, service discovery and configuration storage. Service discovery is useful in case you want to stop thinking about servers as reference point for your architecture: your service should not rely on always be on the same server(s). Location may change in case servers get rebuilt and IPs change. This tool gives you a lot more flexibility in modifying your server infrastructure. Consul has also integrated healthcheck, which works with GRPC, so in case servers go down, you are redirected to a working copy on a different server.&lt;/p&gt;
+
+&lt;p&gt;Consul configuration storage is something that you may not decide to use it if you already have a highly available database, but what makes Consul stand out is the ability to watch for changes to selected keys, and trigger microservice restarts. There is a nice utility built by Hashicorp called envconsul, which copies values from Consul to environment variables, and restarts services, which is for instance the behaviour of Heroku.&lt;/p&gt;
+
+&lt;p&gt;Logging and monitoring are critical in distributed environments. StatsD and Kafka are both suitable for high-traffic environments, due to being battle-tested tech, and having asynchronous client libraries helps with this. Even though in theory you could base your monitoring on your logging system, I found that when you have high-throughput logging, the system tends to drop logging packets, and you do not get the full numbers. That is why I like separation between logging and monitoring.&lt;/p&gt;
+
+&lt;p&gt;Kafka seems to be all the craze these days. It is a messaging queue system unlike any other. It is not based on ack-ing messages (queues) or simple pub-sub (topics) but on a form of pub-sub with the ability to go back in time by specifying different starting offsets. It is an ideal setting for many applications, such as logging data processing. That is because it saves complexity server-side (explicit message marking) and client bandwidth (ack transmission), with the cost of mantaining more state on the client (offsets) and potentially a big storage buffer on the server.&lt;/p&gt;
+
+&lt;p&gt;Kafka allows you to process all messages, have at-least-once or at-most-once delivery, and a performant system, given that you are able to recover from client crash pretty quickly. If the time to recover is within the retention period of your Kafka queues, you will not have lost any message.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-code&#34;&gt;The code&lt;/h2&gt;
+
+&lt;p&gt;Here is a very simple client/server implementation of a search service by geometry and/or name.&lt;/p&gt;
+
+&lt;h3 id=&#34;proto-file&#34;&gt;Proto file&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;syntax = &amp;quot;proto3&amp;quot;;
+
+import &amp;quot;google/protobuf/empty.proto&amp;quot;;
+
+message SearchRequest {
+  string query = 1;
+  float lat = 4;
+  float lng = 5;
+  int32 page_number = 2;
+  int32 result_per_page = 3;
+}
+
+message SearchResponses {
+    repeated SearchResponse responses = 1;
+}
+
+message SearchResponse {
+    string response = 1;
+}
+
+message MonitorResponse {
+    int32 n_things = 1;
+}
+
+service Search {
+    rpc monitor(google.protobuf.Empty) returns (MonitorResponse) {}
+    rpc search(SearchRequest) returns (SearchResponses) {}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can then generate the server code and stub client code with this command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python -m grpc.tools.protoc -I. --python_out=. --grpc_python_out=. search.proto
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;At this point you should get a file you can import in both client and server code. The client code is almost ready to use, while the server code gives you an abstract server class with empty methods that you would need to implement. In my version of GRPC, the file is called &lt;code&gt;search_pb2.py&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;server&#34;&gt;Server&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;import time
+import sys
+import consul
+import logging
+import statsd
+import random
+import os
+
+import search_pb2
+from models import session, Thing, func
+
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter(&#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;)
+ch.setFormatter(formatter)
+log.addHandler(ch)
+
+
+_ONE_DAY_IN_SECONDS = 60 * 60 * 24
+
+port = random.randint(50000, 59000)
+stat = statsd.StatsClient(&#39;localhost&#39;, 8125)
+
+class SearchServicer(search_pb2.SearchServicer):
+    @stat.timer(&amp;quot;search&amp;quot;)
+    def search(self, request, context):
+        stat.incr(&amp;quot;search_count&amp;quot;)
+        log.info(&amp;quot;search request: &amp;quot; + str(request))
+        query = session.query(Thing).filter(
+                func.ST_Contains(Thing.geom, &#39;POINT({} {})&#39;.format(request.lat, request.lng)))
+        responses = [search_pb2.SearchResponse(response=rec.name) for rec in query]
+        log.info(&amp;quot;search responses: &amp;quot; + str(responses))
+        return search_pb2.SearchResponses(responses=responses)
+
+    @stat.timer(&amp;quot;monitor&amp;quot;)
+    def monitor(self, request, context):
+        stat.incr(&amp;quot;monitor_count&amp;quot;)
+        n_things = session.query(Thing).count()
+        return search_pb2.MonitorResponse(n_things=n_things)
+
+def register():
+    log.info(&amp;quot;register started&amp;quot;)
+    c = consul.Consul()
+    check = consul.Check.tcp(&amp;quot;127.0.0.1&amp;quot;, port, &amp;quot;30s&amp;quot;)
+    c.agent.service.register(&amp;quot;search-service&amp;quot;, &amp;quot;search-service-%d&amp;quot; % port, address=&amp;quot;127.0.0.1&amp;quot;, port=port, check=check)
+    log.info(&amp;quot;services: &amp;quot; + str(c.agent.services()))
+
+def unregister():
+    log.info(&amp;quot;unregister started&amp;quot;)
+    c = consul.Consul()
+    c.agent.service.deregister(&amp;quot;search-service-%d&amp;quot; % port)
+    log.info(&amp;quot;services: &amp;quot; + str(c.agent.services()))
+
+def serve():
+  server = search_pb2.beta_create_Search_server(SearchServicer())
+  server.add_insecure_port(&#39;[::]:&#39; + str(port))
+  server.start()
+  log.info(&amp;quot;server started&amp;quot;)
+  try:
+    while True:
+      time.sleep(_ONE_DAY_IN_SECONDS)
+  except KeyboardInterrupt:
+    server.stop(0)
+
+
+if __name__ == &#39;__main__&#39;:
+    register()
+    serve()
+    unregister()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Along with the required models:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from sqlalchemy import create_engine, func
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
+from geoalchemy2 import Geometry
+from sqlalchemy.orm import sessionmaker
+
+
+engine = create_engine(&amp;quot;postgresql://user:password@localhost:5434/test&amp;quot;)
+Base = declarative_base()
+
+class Thing(Base):
+    __tablename__ = &amp;quot;thing&amp;quot;
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    geom = Column(Geometry(&#39;POLYGON&#39;))
+
+Session = sessionmaker(bind=engine)
+session = Session()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this very simple API server, you can see GRPC, Consul, statsD and SqlAlchemy all blended together, as a proof of concept. The server responds to 2 functions, one is the search function and another called monitor that returns some internal stats around the service.&lt;/p&gt;
+
+&lt;p&gt;Once you populated Postgresql with some data, you should be able to query the service with the client.&lt;/p&gt;
+
+&lt;h3 id=&#34;client&#34;&gt;Client&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;import grpc
+import sys
+import logging
+from dns import resolver
+
+import search_pb2
+
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter(&#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;)
+ch.setFormatter(formatter)
+log.addHandler(ch)
+
+consul_resolver = resolver.Resolver()
+consul_resolver.port = 8600
+consul_resolver.nameservers = [&amp;quot;127.0.0.1&amp;quot;]
+
+dnsanswer = consul_resolver.query(&amp;quot;search-service.service.consul&amp;quot;, &#39;A&#39;)
+ip = str(dnsanswer[0])
+dnsanswer_srv = consul_resolver.query(&amp;quot;search-service.service.consul&amp;quot;, &#39;SRV&#39;)
+port = int(str(dnsanswer_srv[0]).split()[2])
+
+log.info(&amp;quot;creating grpc client based on consul data: ip=%s port=%d&amp;quot; % (ip, port))
+channel = grpc.insecure_channel(&#39;%s:%d&#39; % (ip, port))
+stub = search_pb2.SearchStub(channel)
+
+if len(sys.argv) == 1 and sys.argv[1] == &amp;quot;--monitor&amp;quot;:
+    monitresp = stub.monitor(search_pb2.google_dot_protobuf_dot_empty__pb2.Empty())
+    log.debug(&amp;quot;monitor response: {}&amp;quot;.format(monitresp))
+else:
+    req = search_pb2.SearchRequest(
+        query=&amp;quot;queryabc&amp;quot;,
+        lat=float(sys.argv[1]),
+        lng=float(sys.argv[2]),
+        result_per_page=10)
+    log.debug(&amp;quot;sending request: {}&amp;quot;.format(req))
+    resp = stub.search(req)
+    log.debug(&amp;quot;received response: {}&amp;quot;.format(resp))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The client is querying Consul DNS service to find the microservice, using the dnspython library.&lt;/p&gt;
+
+&lt;h2 id=&#34;underlying-services&#34;&gt;Underlying services&lt;/h2&gt;
+
+&lt;h3 id=&#34;consul&#34;&gt;Consul&lt;/h3&gt;
+
+&lt;p&gt;As the code is written above, Consul is not optional. In order to quickly test the setup above, you can use Docker. Please consider that the following command does not start Consul with failover or any option that you would want to use in production.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run --net=host consul agent -server -ui -bootstrap -bind=127.0.0.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With Consul, you are free to have multiple copies of the API server running on multiple nodes, and requests will be resolved with Round Robin. The healthcheck will take a copy of the service off the DNS list if it becomes unresponsive. You can also stop the service and before exiting, it will deregister itself.&lt;/p&gt;
+
+&lt;p&gt;In order to get the benefits of centralized configuration management, you can start the service with envconsul:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./envconsul -consul localhost:8500 -prefix search-service python search_server.py
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can then add variables through the Consul UI and the service will be restarted automatically.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../attachments/consulkv.png&#34; alt=&#34;consul&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;statsd&#34;&gt;StatsD&lt;/h3&gt;
+
+&lt;p&gt;Again, you can use Docker to get running pretty quickly. Let&amp;rsquo;s start Graphite on port 8002 and StatsD on 8125.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -p 8002:80 -p 8125:8125/udp -d samsaffron/graphite
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The use we do here is quite basic, but it is enough to get an idea of the load on the service. With this data you can do estimates whether you have to run this on additional servers, or do some additional optimizations to the code.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../attachments/graphite.png&#34; alt=&#34;graphite&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;kafka&#34;&gt;Kafka&lt;/h3&gt;
+
+&lt;p&gt;This component is optional in the above setup. If you run the code as it is, all logging goes to stdout. I find this very valuable when you are developing on your local machine. But on staging/production environments, you may want to stream the logs, and that is when you pick a tool like Kafka.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../attachments/grpc-server.png&#34; alt=&#34;grpc-server&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start a copy of Kafka by using the Docker image created by Spotify&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST=127.0.0.1 --env ADVERTISED_PORT=9092 spotify/kafka
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After Kafka has succcessfully started, you can modify the envconsul command above to pipe all output to Kafka.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./envconsul -consul localhost:8500 -prefix search-service python search_server.py | kafkacat -P -b localhost -t search-service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And see all output back using kafkacat again:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kafkacat -b localhost -t search-service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This use of Kafka is quite basic, but it offers already enough to do a distributed &amp;ldquo;tail -f&amp;rdquo; of a service, regardless of its location. I will blog a bit more about a more advanced use of Kafka, for now that is all.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Do not use HTTPS and basic auth</title>
@@ -506,40 +804,6 @@ Requests could come in through API or through the Web interface. Web interface i
 Heroku has allowed us to build something quickly, although we had to switch to an hybrid EC2 - Heroku, mainly because of heavy use of RabbitMQ. The advantage of Heroku is that you can scale the number of instances pretty quickly if there is a lot of traffic. We distribute the background tasks using RabbitMQ which has gone through some configuration changes. Some of the more interesting tweaks have gone into the configuration of Celery, especially on setting expiration limits for every single external API call to 3rd party systems. We do not want 3rd party APIs failure to bring down our service. All this has been wrapped up in a quite minimal interface, using Twitter Bootstrap as a CSS framework. Very easy to use.
 &lt;h2&gt;IDEAS FOR THE FUTURE&lt;/h2&gt;
 There has been some thought about improving the &amp;ldquo;spam&amp;rdquo; flag with something which can learn and adapt to new types of spam. What features to take into account when deciding about spammy links is also under review. There is also a lot of enhancements we can do on the APIs, such as different tiers, perhaps a tier with a different priority (e.g. reduced response time) or different limits which will be a paid option. There is also always room for speed improvements such as bulk queries, result caching, etc&amp;hellip; what is the feature you would like to see in this tool?&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Basic things to do and not in Django</title>
-      <link>/blog/basic-things-to-do-and-not-in-django/</link>
-      <pubDate>Sun, 23 Sep 2012 19:33:30 +0000</pubDate>
-      
-      <guid>/blog/basic-things-to-do-and-not-in-django/</guid>
-      <description>&lt;p&gt;Make software dependent on absolute paths: One of the projects i was working on had all module imports including the project main folder name. That in turn made impossible to have the same project installed 2 times in the same folder with 2 distinct names. (e.g. 2 versions of the staging site). Sometime is even worse than this, when you have a full path in the code. These should always be in configuration files which are changeable at deployment.&lt;/p&gt;
-
-&lt;p&gt;Massive views.py file: It is probably time to split the project in separate applications. Also try to remove the code which is not directly view related and separate it in different files. Django has a very good form validation framework, if you use it your views.py file will shrink considerably.&lt;/p&gt;
-
-&lt;p&gt;Please no grammatical mistakes: This is very bad and means you did not care about the project enough, plus not everyone is using IDEs so you should make the effort to write function names properly.&lt;/p&gt;
-
-&lt;p&gt;Don&amp;rsquo;t throw everything in the database: I hate when applications are dependent on huge models, models should be lean and you should be able to recreate them easily enough with fixtures. For the sake of forensics, you really should make good use of logging and perhaps keep a backup of the imported feeds. Not all data needs to be in the database, only the one your project uses.&lt;/p&gt;
-
-&lt;p&gt;Make all a varchar: Relational databases are strongly typed and this is the reason why they can do all the things they do&amp;hellip; if you want more flexibility, use mongodb.&lt;/p&gt;
-
-&lt;p&gt;Always have automated deployments: Even if all you do is rsync to a server, you should have that command in a bash or fabric script.&lt;/p&gt;
-
-&lt;p&gt;Not reinvent Django features: Unless there is no way to solve your problem with existing tools&amp;hellip; usually Django modules are pretty extensible and rock-solid.&lt;/p&gt;
-
-&lt;p&gt;Use django-extensions and Django debug toolbar: It&amp;rsquo;s like going camping and not having the swiss army knife. My favourite parts are the graph models extensions which makes you an image representing all models and connections between them, and the runserver_plus which uses the Werkzeug debugger to run your code&amp;hellip; very handy the debugger. Regarding the debug toolbar, makes it really easy to diagnose what&amp;rsquo;s gone wrong when rendering a page: are all variables included in the template, some bad value coming back from the db, etc&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;Include everything needed for the project in the repository: No files laying around the server should exist unless they are checked in the repo, this includes apache conf files&amp;hellip; unless you have a separate repository for them.&lt;/p&gt;
-
-&lt;p&gt;Always use virtualenv: Really, projects without virtualenv are a thing of the past, and using it is trivial. Another thing to do is always have a requirements.txt in the repository, so you can recreate the virtualenv easily.&lt;/p&gt;
-
-&lt;p&gt;Keep the project clean: Which means remove old features when they are not required anymore, just like you would clean your room from time to time. Keep in mind that all code on the site need to be maintained, and if it&amp;rsquo;s not worth maintaining it anymore, it&amp;rsquo;s time to get rid of it.&lt;/p&gt;
-
-&lt;p&gt;Always use RequestContext and STATIC_URL for rendering templates: In that case you do not hard-code links to your static media. It&amp;rsquo;s one of those things easy to do and will make your life easier when you will have a separate static server or serve files through a CDN.&lt;/p&gt;
-
-&lt;p&gt; &lt;/p&gt;
 </description>
     </item>
     

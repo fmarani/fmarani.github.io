@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="generator" content="Hugo 0.16" />
+        <title>A Python microservice stack</title>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/crisp.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="keywords" content="code,python,django,it,software architecture,technical architecture">
+        <meta name="author" content="Federico Marani">
+        
+    </head>
+    <body>
+
+<header id="header">
+    <a id="logo" href="../../"><img src="../../img/me.png" alt="me" /></a>
+    <a href=""><h1>Blog | Federico Marani</h1></a>
+    <p>Senior Engineer/Architect, open-source enthusiast, Linux addict. Former Head of Engineering @TrialReach, CTO at TalentRank. </p>
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ"><i class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani"><i class="fa fa-linkedin-square fa-2x"></i></a>
+        <a href="http://github.com/fmarani"><i class="fa fa-github-square fa-2x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-rss-square fa-2x"></i></a> 
+    </div>                                                                  
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <h6><a href="../../about/">About me</a></h6>
+        
+    
+        
+        <h6><a href="../../projects/">Side Projects</a></h6>
+        
+    
+</header>
+
+
+<article>
+    <div class="post-stamp">
+        24 Sep 2016
+        <span class="taglist">&middot;
+            microservices soa python architecture 
+        </span>
+    </div>
+	<h1 class="post-title">A Python microservice stack</h1>
+        <div class="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+	
+
+<p>First of all, let me say the word &ldquo;microservice&rdquo; is incredibly inflated these days, but some of the original reasons to use them still hold true. Part of its definition comes from SOA, with some added considerations:</p>
+
+<ul>
+<li>Services roughly map to business functions</li>
+<li>Services are autonomous (shared nothing architecture)</li>
+<li>Boundaries are explicit</li>
+<li>Services declare schemas and interfaces</li>
+<li>Company policy defines version compatibility</li>
+<li>Services are deployed separately</li>
+<li>Services are manageable by different teams</li>
+<li>Service unavailability is handled gracefully</li>
+<li>Service call stack is broad rather than deep</li>
+</ul>
+
+<p>Recently I worked with a company that needed to scale product/engineering to 50+ people, which makes the investment towards this methodology justifiable. There is a cost in managing all this, but people&rsquo;s autonomy pays this off quickly. In the future this cost might change, but I doubt it is going to be zero. Consider that it is much harder to change a microservice ecosystem than to change the layers of a monolithic software, because of its distributed nature.</p>
+
+<p>Regarding the tools for this, I put together a proof of concept of a microservice stack. It is focused on Python to start with, but I picked tools that can be used from any language. In these environments you also do not need a generic framework like Django anymore, you can pick something more lightweight if the current service allows it.</p>
+
+<ul>
+<li>GRPC</li>
+<li>Consul</li>
+<li>StatsD</li>
+<li>Kafka</li>
+<li>SQLAlchemy/Alembic (Python specific)</li>
+</ul>
+
+<p>All these tools together allowed me to put together a simplified version of a service they had in production already.</p>
+
+<p>GRPC is a modern RPC library based on HTTP/2 and Protocol Buffers. The reason why I picked this instead of REST or a messaging queue is that it makes schemas and interfaces explicit. One could argue that Swagger (or similar) can be used for the same purpose, but in reality I have seen these files get out of date quickly because people forget.</p>
+
+<p>GPRC forces you to generate client/server code out of &ldquo;documentation&rdquo; files, which makes them always be up to date. It is also an RPC protocol, which is inherently more flexible than a REST system. In addition to this, HTTP/2 is a multiplexed protocol, which finally means we are not forced to fit everything in one response, just because the frontend team wants performance.</p>
+
+<p>Consul allows you to do mainly 2 things, service discovery and configuration storage. Service discovery is useful in case you want to stop thinking about servers as reference point for your architecture: your service should not rely on always be on the same server(s). Location may change in case servers get rebuilt and IPs change. This tool gives you a lot more flexibility in modifying your server infrastructure. Consul has also integrated healthcheck, which works with GRPC, so in case servers go down, you are redirected to a working copy on a different server.</p>
+
+<p>Consul configuration storage is something that you may not decide to use it if you already have a highly available database, but what makes Consul stand out is the ability to watch for changes to selected keys, and trigger microservice restarts. There is a nice utility built by Hashicorp called envconsul, which copies values from Consul to environment variables, and restarts services, which is for instance the behaviour of Heroku.</p>
+
+<p>Logging and monitoring are critical in distributed environments. StatsD and Kafka are both suitable for high-traffic environments, due to being battle-tested tech, and having asynchronous client libraries helps with this. Even though in theory you could base your monitoring on your logging system, I found that when you have high-throughput logging, the system tends to drop logging packets, and you do not get the full numbers. That is why I like separation between logging and monitoring.</p>
+
+<p>Kafka seems to be all the craze these days. It is a messaging queue system unlike any other. It is not based on ack-ing messages (queues) or simple pub-sub (topics) but on a form of pub-sub with the ability to go back in time by specifying different starting offsets. It is an ideal setting for many applications, such as logging data processing. That is because it saves complexity server-side (explicit message marking) and client bandwidth (ack transmission), with the cost of mantaining more state on the client (offsets) and potentially a big storage buffer on the server.</p>
+
+<p>Kafka allows you to process all messages, have at-least-once or at-most-once delivery, and a performant system, given that you are able to recover from client crash pretty quickly. If the time to recover is within the retention period of your Kafka queues, you will not have lost any message.</p>
+
+<h2 id="the-code">The code</h2>
+
+<p>Here is a very simple client/server implementation of a search service by geometry and/or name.</p>
+
+<h3 id="proto-file">Proto file</h3>
+
+<pre><code>syntax = &quot;proto3&quot;;
+
+import &quot;google/protobuf/empty.proto&quot;;
+
+message SearchRequest {
+  string query = 1;
+  float lat = 4;
+  float lng = 5;
+  int32 page_number = 2;
+  int32 result_per_page = 3;
+}
+
+message SearchResponses {
+    repeated SearchResponse responses = 1;
+}
+
+message SearchResponse {
+    string response = 1;
+}
+
+message MonitorResponse {
+    int32 n_things = 1;
+}
+
+service Search {
+    rpc monitor(google.protobuf.Empty) returns (MonitorResponse) {}
+    rpc search(SearchRequest) returns (SearchResponses) {}
+}
+</code></pre>
+
+<p>You can then generate the server code and stub client code with this command:</p>
+
+<pre><code>python -m grpc.tools.protoc -I. --python_out=. --grpc_python_out=. search.proto
+</code></pre>
+
+<p>At this point you should get a file you can import in both client and server code. The client code is almost ready to use, while the server code gives you an abstract server class with empty methods that you would need to implement. In my version of GRPC, the file is called <code>search_pb2.py</code>.</p>
+
+<h3 id="server">Server</h3>
+
+<pre><code>import time
+import sys
+import consul
+import logging
+import statsd
+import random
+import os
+
+import search_pb2
+from models import session, Thing, func
+
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+log.addHandler(ch)
+
+
+_ONE_DAY_IN_SECONDS = 60 * 60 * 24
+
+port = random.randint(50000, 59000)
+stat = statsd.StatsClient('localhost', 8125)
+
+class SearchServicer(search_pb2.SearchServicer):
+    @stat.timer(&quot;search&quot;)
+    def search(self, request, context):
+        stat.incr(&quot;search_count&quot;)
+        log.info(&quot;search request: &quot; + str(request))
+        query = session.query(Thing).filter(
+                func.ST_Contains(Thing.geom, 'POINT({} {})'.format(request.lat, request.lng)))
+        responses = [search_pb2.SearchResponse(response=rec.name) for rec in query]
+        log.info(&quot;search responses: &quot; + str(responses))
+        return search_pb2.SearchResponses(responses=responses)
+
+    @stat.timer(&quot;monitor&quot;)
+    def monitor(self, request, context):
+        stat.incr(&quot;monitor_count&quot;)
+        n_things = session.query(Thing).count()
+        return search_pb2.MonitorResponse(n_things=n_things)
+
+def register():
+    log.info(&quot;register started&quot;)
+    c = consul.Consul()
+    check = consul.Check.tcp(&quot;127.0.0.1&quot;, port, &quot;30s&quot;)
+    c.agent.service.register(&quot;search-service&quot;, &quot;search-service-%d&quot; % port, address=&quot;127.0.0.1&quot;, port=port, check=check)
+    log.info(&quot;services: &quot; + str(c.agent.services()))
+
+def unregister():
+    log.info(&quot;unregister started&quot;)
+    c = consul.Consul()
+    c.agent.service.deregister(&quot;search-service-%d&quot; % port)
+    log.info(&quot;services: &quot; + str(c.agent.services()))
+
+def serve():
+  server = search_pb2.beta_create_Search_server(SearchServicer())
+  server.add_insecure_port('[::]:' + str(port))
+  server.start()
+  log.info(&quot;server started&quot;)
+  try:
+    while True:
+      time.sleep(_ONE_DAY_IN_SECONDS)
+  except KeyboardInterrupt:
+    server.stop(0)
+
+
+if __name__ == '__main__':
+    register()
+    serve()
+    unregister()
+</code></pre>
+
+<p>Along with the required models:</p>
+
+<pre><code>from sqlalchemy import create_engine, func
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
+from geoalchemy2 import Geometry
+from sqlalchemy.orm import sessionmaker
+
+
+engine = create_engine(&quot;postgresql://user:password@localhost:5434/test&quot;)
+Base = declarative_base()
+
+class Thing(Base):
+    __tablename__ = &quot;thing&quot;
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    geom = Column(Geometry('POLYGON'))
+
+Session = sessionmaker(bind=engine)
+session = Session()
+</code></pre>
+
+<p>In this very simple API server, you can see GRPC, Consul, statsD and SqlAlchemy all blended together, as a proof of concept. The server responds to 2 functions, one is the search function and another called monitor that returns some internal stats around the service.</p>
+
+<p>Once you populated Postgresql with some data, you should be able to query the service with the client.</p>
+
+<h3 id="client">Client</h3>
+
+<pre><code>import grpc
+import sys
+import logging
+from dns import resolver
+
+import search_pb2
+
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+log.addHandler(ch)
+
+consul_resolver = resolver.Resolver()
+consul_resolver.port = 8600
+consul_resolver.nameservers = [&quot;127.0.0.1&quot;]
+
+dnsanswer = consul_resolver.query(&quot;search-service.service.consul&quot;, 'A')
+ip = str(dnsanswer[0])
+dnsanswer_srv = consul_resolver.query(&quot;search-service.service.consul&quot;, 'SRV')
+port = int(str(dnsanswer_srv[0]).split()[2])
+
+log.info(&quot;creating grpc client based on consul data: ip=%s port=%d&quot; % (ip, port))
+channel = grpc.insecure_channel('%s:%d' % (ip, port))
+stub = search_pb2.SearchStub(channel)
+
+if len(sys.argv) == 1 and sys.argv[1] == &quot;--monitor&quot;:
+    monitresp = stub.monitor(search_pb2.google_dot_protobuf_dot_empty__pb2.Empty())
+    log.debug(&quot;monitor response: {}&quot;.format(monitresp))
+else:
+    req = search_pb2.SearchRequest(
+        query=&quot;queryabc&quot;,
+        lat=float(sys.argv[1]),
+        lng=float(sys.argv[2]),
+        result_per_page=10)
+    log.debug(&quot;sending request: {}&quot;.format(req))
+    resp = stub.search(req)
+    log.debug(&quot;received response: {}&quot;.format(resp))
+</code></pre>
+
+<p>The client is querying Consul DNS service to find the microservice, using the dnspython library.</p>
+
+<h2 id="underlying-services">Underlying services</h2>
+
+<h3 id="consul">Consul</h3>
+
+<p>As the code is written above, Consul is not optional. In order to quickly test the setup above, you can use Docker. Please consider that the following command does not start Consul with failover or any option that you would want to use in production.</p>
+
+<pre><code>docker run --net=host consul agent -server -ui -bootstrap -bind=127.0.0.1
+</code></pre>
+
+<p>With Consul, you are free to have multiple copies of the API server running on multiple nodes, and requests will be resolved with Round Robin. The healthcheck will take a copy of the service off the DNS list if it becomes unresponsive. You can also stop the service and before exiting, it will deregister itself.</p>
+
+<p>In order to get the benefits of centralized configuration management, you can start the service with envconsul:</p>
+
+<pre><code>./envconsul -consul localhost:8500 -prefix search-service python search_server.py
+</code></pre>
+
+<p>You can then add variables through the Consul UI and the service will be restarted automatically.</p>
+
+<p><img src="../../attachments/consulkv.png" alt="consul" /></p>
+
+<h3 id="statsd">StatsD</h3>
+
+<p>Again, you can use Docker to get running pretty quickly. Let&rsquo;s start Graphite on port 8002 and StatsD on 8125.</p>
+
+<pre><code>docker run -p 8002:80 -p 8125:8125/udp -d samsaffron/graphite
+</code></pre>
+
+<p>The use we do here is quite basic, but it is enough to get an idea of the load on the service. With this data you can do estimates whether you have to run this on additional servers, or do some additional optimizations to the code.</p>
+
+<p><img src="../../attachments/graphite.png" alt="graphite" /></p>
+
+<h3 id="kafka">Kafka</h3>
+
+<p>This component is optional in the above setup. If you run the code as it is, all logging goes to stdout. I find this very valuable when you are developing on your local machine. But on staging/production environments, you may want to stream the logs, and that is when you pick a tool like Kafka.</p>
+
+<p><img src="../../attachments/grpc-server.png" alt="grpc-server" /></p>
+
+<p>Let&rsquo;s start a copy of Kafka by using the Docker image created by Spotify</p>
+
+<pre><code>docker run -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST=127.0.0.1 --env ADVERTISED_PORT=9092 spotify/kafka
+</code></pre>
+
+<p>After Kafka has succcessfully started, you can modify the envconsul command above to pipe all output to Kafka.</p>
+
+<pre><code>./envconsul -consul localhost:8500 -prefix search-service python search_server.py | kafkacat -P -b localhost -t search-service
+</code></pre>
+
+<p>And see all output back using kafkacat again:</p>
+
+<pre><code>kafkacat -b localhost -t search-service
+</code></pre>
+
+<p>This use of Kafka is quite basic, but it offers already enough to do a distributed &ldquo;tail -f&rdquo; of a service, regardless of its location. I will blog a bit more about a more advanced use of Kafka, for now that is all.</p>
+
+</article>  
+     <div id="disqus_thread"></div>
+    <script type="text/javascript">
+         
+        var disqus_shortname = 'flagzeta'; 
+
+         
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2016-09-24T23:16:56+02:00").getTime();
+if (postTime < cutoffTime) {
+    $(".blogpost-old").show();
+}
+</script>
+
+		<footer id="footer">
+<section id="footer-message">&copy; 2016 Federico Marani. All rights reserved. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+		</footer>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47493827-1', 'flagzeta.org');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+
