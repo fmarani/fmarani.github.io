@@ -39,10 +39,10 @@
     }
 
     protected function getConnection()
-    {
-        $pdo = getPdo(); // replace this code
-        return $this-&amp;gt;createDefaultDBConnection($pdo, &#39;testdb&#39;);
-    }
+	{
+		$pdo = getPdo(); // replace this code
+		return $this-&amp;gt;createDefaultDBConnection($pdo, &#39;testdb&#39;);
+	}
 
     protected function getDataSet()
     {
@@ -62,10 +62,10 @@
         $mapper = new address_Mapper();
         $address = $mapper-&amp;gt;findById($this-&amp;gt;fixture_addressId);
         $address-&amp;gt;addressLine3 = &amp;quot;London&amp;quot;;
-        $mapper-&amp;gt;save($address);
-        unset($address);
+    	$mapper-&amp;gt;save($address);
+    	unset($address);
         $address = $mapper-&amp;gt;findById($this-&amp;gt;fixture_addressId);
-        $this-&amp;gt;assertEquals(&amp;quot;London&amp;quot;, $address-&amp;gt;addressLine3);
+    	$this-&amp;gt;assertEquals(&amp;quot;London&amp;quot;, $address-&amp;gt;addressLine3);
     }
 }
 &lt;/code&gt;&lt;/pre&gt;
@@ -76,23 +76,23 @@
 
 &lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;class Address extends Model
 {
-    public function __construct()
-    {
-        parent::__construct(&#39;addressId&#39;);
-        $this-&amp;gt;setFieldNames(array(
-            &#39;addressId&#39;,
-            &#39;firstName&#39;,
-            &#39;lastName&#39;,
-            &#39;addressLine1&#39;,
-            &#39;addressLine2&#39;,
-            &#39;addressLine3&#39;,
-            &#39;addressLine4&#39;,
-            &#39;state&#39;,
-            &#39;postCode&#39;,
-            &#39;country&#39;,
-            &#39;createdDate&#39;
-            ));
-    }
+	public function __construct()
+	{
+		parent::__construct(&#39;addressId&#39;);
+		$this-&amp;gt;setFieldNames(array(
+			&#39;addressId&#39;,
+			&#39;firstName&#39;,
+			&#39;lastName&#39;,
+			&#39;addressLine1&#39;,
+			&#39;addressLine2&#39;,
+			&#39;addressLine3&#39;,
+			&#39;addressLine4&#39;,
+			&#39;state&#39;,
+			&#39;postCode&#39;,
+			&#39;country&#39;,
+			&#39;createdDate&#39;
+			));
+	}
 }
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -102,12 +102,12 @@
 
 &lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;class address_Mapper extends Mapper
 {
-    const STORAGE_NAME = &#39;Addresses&#39;; // table name
+	const STORAGE_NAME = &#39;Addresses&#39;; // table name
 
-    public function __construct()
-    {
-        parent::__construct(getPdo(), self::STORAGE_NAME, &#39;addressId&#39;);
-    }
+	public function __construct()
+	{
+		parent::__construct(getPdo(), self::STORAGE_NAME, &#39;addressId&#39;);
+	}
 
     public function findById($addressId)
     {

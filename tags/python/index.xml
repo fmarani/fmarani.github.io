@@ -356,8 +356,8 @@ for record in records:
                 &amp;quot;title&amp;quot;: record.title,
                 &amp;quot;condition&amp;quot;: [c.name for c in record.conditions.all()],
                 &amp;quot;location&amp;quot;: [&amp;quot;{1} {0}&amp;quot;.format(l.point.coords[0], l.point.coords[1]) for l in record.locations.all()],
-        # &amp;quot;point&amp;quot; is a Point GeoDjango type
-        # SOLR FORMAT is &amp;quot;long lat&amp;quot;, separated by a space
+		# &amp;quot;point&amp;quot; is a Point GeoDjango type
+		# SOLR FORMAT is &amp;quot;long lat&amp;quot;, separated by a space
             }
     solr_data.append(solr_dict)
 solr.add(solr_data)

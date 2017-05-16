@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta name="generator" content="Hugo 0.16" />
-        <title>Monitoring servers with Munin</title>
+        <title>Introduction to Apache Airflow</title>
         <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
         <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
@@ -115,24 +115,50 @@
 
 <article>
     <div class="post-stamp">
-        16 Jan 2015
+        16 May 2017
         <span class="taglist">&middot;
-            monitoring 
+            data big data etl 
         </span>
     </div>
-	<h1 class="post-title">Monitoring servers with Munin</h1>
+	<h1 class="post-title">Introduction to Apache Airflow</h1>
         <div class="blogpost-old" style="display: none">
             This post is quite old... Technologies and techniques described here might not apply anymore.
         </div>
-	<p>I normally use Munin for server monitoring, it is very easy to install and the kind of tool with not much setup. It may not be the best tool when you have many servers, due to static graph generation. Munin 2, released recently, has a few changes in that regard, they might have improved that.</p>
+	
 
-<p>Munin is mainly a resource usage graph tool, which monitors many metrics from a pool of servers (called nodes). When set up, the monitoring server connects to every node (specified in its configuration) and then asks for a list of current values for all monitored metrics, through a simple text-based protocol. Every node has a list of enabled &ldquo;plugins&rdquo; which will be run everytime the server connects to the node. Many plugins come installed by default with Munin, and many additional plugins are available online with an open source license (or public domain). Those plugins have default parameters in it, but much can be customized in the munin-node configuration file.</p>
+<p><img src="../../attachments/workflow.jpg" alt="YC" /></p>
 
-<p>These &ldquo;plugins&rdquo; define the metrics, then the server will render any metrics the node send, without any a priori knowledge. The security model is IP whitelisting: each node has a list of IPs allowed to ask for metrics. The server, by default, will connect to every host every 5 minutes and add all collected metrics to its database. Every hour all the html and graphs are generated and put in a folder where Nginx is able to serve these.</p>
+<h2 id="background">Background</h2>
 
-<p>Munin can also be configured to trigger alerts in case a metric changes state between OK, Warning and Critical. Alerts via email are easy to setup and normally enough for basic error reporting. These thresholds can be changed if needed, but the values defined by the plugins are normally good enough. Alerts for specific plugins can be disabled if needed, see <a href="http://serverfault.com/questions/532319/i-have-setup-munin-how-do-i-set-up-alerts-for-specific-parameters" title="here">http://serverfault.com/questions/532319/i-have-setup-munin-how-do-i-set-up-alerts-for-specific-parameters</a>.</p>
+<p>Apache Airflow is a tool to work with complex and recurring workflows. Workflows is a more formal term to describe scripts like cronjobs. Scripts constitute of a series of tasks, sometimes with retry mechanism attached to it.</p>
 
-<p>The only daemon in the Munin architecture is munin-node, which runs on every monitored server. On the monitoring server side, everything is managed through cron. Munin is written in Perl and its core modules are quite battle-tested.</p>
+<p>A tool like this is used in data-intensive environments with background jobs that need to run everyday. These background scripts do extraction, enrichment and other transformations to a dataset. Most workflow software gives you a structure to use when writing your scripts, so they are able to distinguish between steps and manage their interdependencies. It is a very handy feature because it allows Airflow to run only the steps that are needed.</p>
+
+<p>It is a powerful concept those of tasks dependencies: if you have a workflow that starts with a common task and then branches out in two parallel sequence of tasks, a failure in one of the branches can be recovered without running the initial tasks. Generally, if a task depends on another task that has already been run successfully, it will not be re-run again. It is literally a time-saver.</p>
+
+<p>In data processing there are two kinds of architecture: batch processing and streaming. Generally it is easier to reason in terms of batch processing, and advisable to do so, unless there are near real-time requirements. In batch processing, workflow tasks are started and terminated when they are needed rather than daemonized and kept in the background. The processing happens in &ldquo;batches&rdquo; of data, rather than streamed in through a message queue.</p>
+
+<p>Apache Airflow comes from the experience of Maxime Beauchemin that worked both at Facebook and Airbnb. When you use it, you realize it covers a lot of use cases and many levels of sophistication. It is the only open source workflow management tool as far as i know that covers both scheduling and workflow management.</p>
+
+<p>The core concepts are quite simple: workflows are called DAGs, workflow steps are called tasks. Tasks are instances of Operators. There are many types of Operators in Airflow, PythonOperator runs Python code, BashOperator runs shell commands&hellip; you get the idea.</p>
+
+<h2 id="what-you-get">What you get</h2>
+
+<p>Airflow offers a web UI and most operations are done from there. One of the most helpful web views is the tree view, although slightly harder to read than the graph view. It is a matrix where rows represent tasks and columns represent the time intervals. If your workflow is made up of 3 tasks and runs daily, columns will be days and the 3 rows will be the 3 tasks. Each cell will then represent the task run status.</p>
+
+<p>In the example below, upload_to_s3 is a step that depends on frontend_generate_report step, which in turns depend on reset_output_folder, which in turn depends on latest_only. That is how it is read.</p>
+
+<p><img src="../../attachments/airflow-treeview.png" alt="YC" /></p>
+
+<p>For each task run there are a bunch of useful operations that can be done through the UI. View its logging (Airflow creates a log file per task run), and clear/mark done its status. I found these last options very useful when fixing bugs: if you clear a task run, it will be rescheduled and rerun by the system. Marking it done will allow Airflow to schedule the next dependent task, it is useful when you want to skip some steps.</p>
+
+<p><img src="../../attachments/airflow-taskrunpopup.png" alt="YC" /></p>
+
+<p>Another view that is interesting to look at is task duration. It&rsquo;s about how long each tasks take from start to end. Useful if you want to make sure they run within a certain amount of time.</p>
+
+<p><img src="../../attachments/airflow-taskduration.png" alt="YC" /></p>
+
+<p>I will write an article with a more in-depth view of the tool sometimes soon. Stay tuned!</p>
 
 </article>  
 <p>
@@ -142,7 +168,7 @@
 
 <script type="text/javascript" charset="utf-8">
 var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
-var postTime = new Date("2015-01-16T12:51:25Z").getTime();
+var postTime = new Date("2017-05-16T10:17:15+01:00").getTime();
 if (postTime < cutoffTime) {
     $(".blogpost-old").show();
 }

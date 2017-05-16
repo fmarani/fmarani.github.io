@@ -101,6 +101,8 @@
         
     
         
+    
+        
         <h6><a href="../../about/">About me</a></h6>
         
     
@@ -145,10 +147,10 @@
     }
 
     protected function getConnection()
-    {
-        $pdo = getPdo(); // replace this code
-        return $this-&gt;createDefaultDBConnection($pdo, 'testdb');
-    }
+	{
+		$pdo = getPdo(); // replace this code
+		return $this-&gt;createDefaultDBConnection($pdo, 'testdb');
+	}
 
     protected function getDataSet()
     {
@@ -168,10 +170,10 @@
         $mapper = new address_Mapper();
         $address = $mapper-&gt;findById($this-&gt;fixture_addressId);
         $address-&gt;addressLine3 = &quot;London&quot;;
-        $mapper-&gt;save($address);
-        unset($address);
+    	$mapper-&gt;save($address);
+    	unset($address);
         $address = $mapper-&gt;findById($this-&gt;fixture_addressId);
-        $this-&gt;assertEquals(&quot;London&quot;, $address-&gt;addressLine3);
+    	$this-&gt;assertEquals(&quot;London&quot;, $address-&gt;addressLine3);
     }
 }
 </code></pre>
@@ -182,23 +184,23 @@
 
 <pre><code class="language-php">class Address extends Model
 {
-    public function __construct()
-    {
-        parent::__construct('addressId');
-        $this-&gt;setFieldNames(array(
-            'addressId',
-            'firstName',
-            'lastName',
-            'addressLine1',
-            'addressLine2',
-            'addressLine3',
-            'addressLine4',
-            'state',
-            'postCode',
-            'country',
-            'createdDate'
-            ));
-    }
+	public function __construct()
+	{
+		parent::__construct('addressId');
+		$this-&gt;setFieldNames(array(
+			'addressId',
+			'firstName',
+			'lastName',
+			'addressLine1',
+			'addressLine2',
+			'addressLine3',
+			'addressLine4',
+			'state',
+			'postCode',
+			'country',
+			'createdDate'
+			));
+	}
 }
 </code></pre>
 
@@ -208,12 +210,12 @@
 
 <pre><code class="language-php">class address_Mapper extends Mapper
 {
-    const STORAGE_NAME = 'Addresses'; // table name
+	const STORAGE_NAME = 'Addresses'; // table name
 
-    public function __construct()
-    {
-        parent::__construct(getPdo(), self::STORAGE_NAME, 'addressId');
-    }
+	public function __construct()
+	{
+		parent::__construct(getPdo(), self::STORAGE_NAME, 'addressId');
+	}
 
     public function findById($addressId)
     {

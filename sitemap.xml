@@ -3,7 +3,12 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2017-03-18T16:30:28+00:00</lastmod>
+    <lastmod>2017-05-16T10:17:15+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/intro-to-apache-airflow/</loc>
+    <lastmod>2017-05-16T10:17:15+01:00</lastmod>
   </url>
   
   <url>

@@ -101,6 +101,8 @@
         
     
         
+    
+        
         <h6><a href="../../about/">About me</a></h6>
         
     
@@ -164,8 +166,8 @@ for record in records:
                 &quot;title&quot;: record.title,
                 &quot;condition&quot;: [c.name for c in record.conditions.all()],
                 &quot;location&quot;: [&quot;{1} {0}&quot;.format(l.point.coords[0], l.point.coords[1]) for l in record.locations.all()],
-        # &quot;point&quot; is a Point GeoDjango type
-        # SOLR FORMAT is &quot;long lat&quot;, separated by a space
+		# &quot;point&quot; is a Point GeoDjango type
+		# SOLR FORMAT is &quot;long lat&quot;, separated by a space
             }
     solr_data.append(solr_dict)
 solr.add(solr_data)
