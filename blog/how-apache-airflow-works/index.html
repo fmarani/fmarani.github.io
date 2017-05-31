@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="generator" content="Hugo 0.16" />
+        <title>How Apache Airflow works</title>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/crisp.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="keywords" content="code,python,django,it,software architecture,technical architecture">
+        <meta name="author" content="Federico Marani">
+        
+    </head>
+    <body>
+
+<header id="header">
+    <a id="logo" href="../../"><img src="../../img/me.png" alt="me" /></a>
+    <a href=""><h1>Blog | Federico Marani</h1></a>
+    <p>Freelance Engineer/Architect. Former VP Engineering @TrialReach &amp; CTO at TalentRank. MSc Business Psychology.</p>
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ"><i class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani"><i class="fa fa-linkedin-square fa-2x"></i></a>
+        <a href="http://github.com/fmarani"><i class="fa fa-github-square fa-2x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-rss-square fa-2x"></i></a> 
+    </div>                                                                  
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <h6><a href="../../about/">About me</a></h6>
+        
+    
+        
+        <h6><a href="../../projects/">Side Projects</a></h6>
+        
+    
+</header>
+
+
+<article>
+    <div class="post-stamp">
+        31 May 2017
+        <span class="taglist">&middot;
+            data big data etl 
+        </span>
+    </div>
+	<h1 class="post-title">How Apache Airflow works</h1>
+        <div class="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+	
+
+<p>(continuing from a <a href="../../blog/intro-to-apache-airflow/">previous article</a>)</p>
+
+<h2 id="scheduler">Scheduler</h2>
+
+<p>Airflow is made up of mainly two components: webserver and scheduler. The webserver is the main way to interact with Airflow, although some commands can be issued from the command line, such as setting variables or connection credentials. The scheduler is the component that is in charge of executing whatever needs to be executed at a specific time and using a configurable strategy.</p>
+
+<p><img src="../../attachments/airflow-scheduler.png" alt="Airflow scheduler CLI" /></p>
+
+<p>When creating DAGs, you specify an interval (daily/hourly/etc) and in doing so the scheduler knows that a DagRun need to be created at a specific recurring time. DagRuns are a database model and they represent a run of a DAG at a set execution date. For instance, if we generate a report every day, at midnight of each day a new DagRun is created. These will then get collected by a scheduler &ldquo;executor&rdquo; for execution. In addition to this, a DagRun can be created by manually triggering a Dag, with the command <code>trigger_dag</code> available from the command line.</p>
+
+<p>In the previous post it was mentioned that DAG are composed by many Tasks. In a parallel way, DagRuns, during execution, get connected to many TaskInstances, which represent the execution of a specific task in the context of a Dag run at a specific time. Task instances have several data points that are saved in the Airflow database, therefore can be analyzed afterwards for spotting problems with task duration, launch time, execution environment, etc. Every instance also has all log information coming from executing its code written to a log file automatically managed by Airflow.</p>
+
+<p>The normal behaviour of Dag execution is that tasks are executed in a dependency order and only in case the previous task has terminated successfully. This behaviour can be changed to activate regardless of exit status or only in case of failure of the previous task. I never had to change this. If you think you should add an error triggering task, be aware that Airflow comes with its own error reporting facilities, although quite basic. Dependencies between tasks can be declared in both ways, as in &ldquo;is-dependent-from&rdquo; and &ldquo;depends-on&rdquo;. Airflow will automatically make the correct graph out of this and traverse it accordingly.</p>
+
+<h2 id="executors">Executors</h2>
+
+<p>The actual execution of the task happens somewhat separately from the scheduler process. There are 3 strategies included in Airflow: local, sequential, Celery and Mesos executor. Sequential is the default and good for development, but it will not get you far. Local executor is the one I have seen used the most, and it is based on a pre-fork model: a number of workers are forked from the main scheduler and polling from an IPC queue tasks to run. When a task is taken from the queue, another fork happens and a new process is wrapping the actual execution of the task. There are no external dependencies needed here, and it scales up well until all resources on the server are used.</p>
+
+<p><img src="../../attachments/airflow-processhierarchy.png" alt="Airflow processes" /></p>
+
+<p>If you want to scale out to multiple servers, you can use the Celery executor. Celery executor uses Celery (and a messaging queue server) to distribute the load on a pool of workers. It is quite a common pattern used in the Django/RoR world. This is a more complex setup, and it requires the code to be in sync with all machines.</p>
+
+<h2 id="retries-and-idempotency">Retries and Idempotency</h2>
+
+<p>An important concept is idempotency: any task could be executed potentially any number of time (although ideally not many more than one), therefore it is important that this is taken into account, either by bringing it to a known state every time it starts or some other specific way. If you are not familiar with the term, it is a term that is frequently used in messaging systems, where at-least-once delivery is common. Most background jobs queue implement this.</p>
+
+<p>If for any reason the task that is being run fails, Airflow, if configured to do so, will try to re-run it after a time delay. This behaviour is helpful in case systems are temporarily unavailable. The number of retries can be configured at DAG-level and at Task-level. Once all the possible runs have been exhausted and the system continuously failed, the task is marked as failed and, depending on the DAG configuration, the whole DAG may be marked as failed.</p>
+
+<h2 id="miscellaneous">Miscellaneous</h2>
+
+<p>Worth mentioning are the Hooks (Connections in the UI) and Variables. This is a non-core but quite useful part of Airflow. It allows you to manage all connection details and configuration variables of your DAGs and your scripts directly from the Airflow Web UI. Given that all this data is read at runtime, it is quite convenient if you need to update these without restarting Airflow and all its running processes with it. Besides this, they do not offer anything more that you would not get by deploying a configuration file.</p>
+
+<p><img src="../../attachments/airflow-connections.png" alt="Airflow Hooks" /></p>
+
+<p>One last thing is XCom. The architecture of Airflow is built in a way that tasks have complete separation from any other tasks in the same DAG. The only truth that you can assert is that all tasks that the current task depends on are guaranteed to be executed. Besides that, there is no implicit way to pass dynamic data between tasks at execution time of the DAG. If you want to do so, you need to use XCom. XCom is a simple key/value store API that uses the Airflow DB, and it&rsquo;s available for querying when a task is being executed. It is generally helpful if, for instance, you generate temporary files/dirs and you want the following tasks to use the dynamically generated file paths.</p>
+
+<p>In the next blog post I will write about backfills and how they work. It is an advanced, and complex, topic and it deserves to be treated on its own. Stay tuned!</p>
+
+</article>  
+<p>
+<a href="https://news.ycombinator.com/submit" class="hn-button">Vote on Hacker News</a>
+</p>
+<script type="text/javascript">var HN=[];HN.factory=function(e){return function(){HN.push([e].concat(Array.prototype.slice.call(arguments,0)))};},HN.on=HN.factory("on"),HN.once=HN.factory("once"),HN.off=HN.factory("off"),HN.emit=HN.factory("emit"),HN.load=function(){var e="hn-button.js";if(document.getElementById(e))return;var t=document.createElement("script");t.id=e,t.src="//hn-button.herokuapp.com/hn-button.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n)},HN.load();</script>
+
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2017-05-31T10:17:15+01:00").getTime();
+if (postTime < cutoffTime) {
+    $(".blogpost-old").show();
+}
+</script>
+
+		<footer id="footer">
+<section id="footer-message">&copy; 2017 Federico Marani. All rights reserved. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+		</footer>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47493827-1', 'flagzeta.org');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+

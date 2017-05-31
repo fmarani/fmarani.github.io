@@ -7,8 +7,56 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 16 May 2017 10:17:15 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 31 May 2017 10:17:15 +0100</lastBuildDate>
     <atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>How Apache Airflow works</title>
+      <link>/blog/how-apache-airflow-works/</link>
+      <pubDate>Wed, 31 May 2017 10:17:15 +0100</pubDate>
+      
+      <guid>/blog/how-apache-airflow-works/</guid>
+      <description>
+
+&lt;p&gt;(continuing from a &lt;a href=&#34;../blog/intro-to-apache-airflow/&#34;&gt;previous article&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h2 id=&#34;scheduler&#34;&gt;Scheduler&lt;/h2&gt;
+
+&lt;p&gt;Airflow is made up of mainly two components: webserver and scheduler. The webserver is the main way to interact with Airflow, although some commands can be issued from the command line, such as setting variables or connection credentials. The scheduler is the component that is in charge of executing whatever needs to be executed at a specific time and using a configurable strategy.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../attachments/airflow-scheduler.png&#34; alt=&#34;Airflow scheduler CLI&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;When creating DAGs, you specify an interval (daily/hourly/etc) and in doing so the scheduler knows that a DagRun need to be created at a specific recurring time. DagRuns are a database model and they represent a run of a DAG at a set execution date. For instance, if we generate a report every day, at midnight of each day a new DagRun is created. These will then get collected by a scheduler &amp;ldquo;executor&amp;rdquo; for execution. In addition to this, a DagRun can be created by manually triggering a Dag, with the command &lt;code&gt;trigger_dag&lt;/code&gt; available from the command line.&lt;/p&gt;
+
+&lt;p&gt;In the previous post it was mentioned that DAG are composed by many Tasks. In a parallel way, DagRuns, during execution, get connected to many TaskInstances, which represent the execution of a specific task in the context of a Dag run at a specific time. Task instances have several data points that are saved in the Airflow database, therefore can be analyzed afterwards for spotting problems with task duration, launch time, execution environment, etc. Every instance also has all log information coming from executing its code written to a log file automatically managed by Airflow.&lt;/p&gt;
+
+&lt;p&gt;The normal behaviour of Dag execution is that tasks are executed in a dependency order and only in case the previous task has terminated successfully. This behaviour can be changed to activate regardless of exit status or only in case of failure of the previous task. I never had to change this. If you think you should add an error triggering task, be aware that Airflow comes with its own error reporting facilities, although quite basic. Dependencies between tasks can be declared in both ways, as in &amp;ldquo;is-dependent-from&amp;rdquo; and &amp;ldquo;depends-on&amp;rdquo;. Airflow will automatically make the correct graph out of this and traverse it accordingly.&lt;/p&gt;
+
+&lt;h2 id=&#34;executors&#34;&gt;Executors&lt;/h2&gt;
+
+&lt;p&gt;The actual execution of the task happens somewhat separately from the scheduler process. There are 3 strategies included in Airflow: local, sequential, Celery and Mesos executor. Sequential is the default and good for development, but it will not get you far. Local executor is the one I have seen used the most, and it is based on a pre-fork model: a number of workers are forked from the main scheduler and polling from an IPC queue tasks to run. When a task is taken from the queue, another fork happens and a new process is wrapping the actual execution of the task. There are no external dependencies needed here, and it scales up well until all resources on the server are used.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../attachments/airflow-processhierarchy.png&#34; alt=&#34;Airflow processes&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you want to scale out to multiple servers, you can use the Celery executor. Celery executor uses Celery (and a messaging queue server) to distribute the load on a pool of workers. It is quite a common pattern used in the Django/RoR world. This is a more complex setup, and it requires the code to be in sync with all machines.&lt;/p&gt;
+
+&lt;h2 id=&#34;retries-and-idempotency&#34;&gt;Retries and Idempotency&lt;/h2&gt;
+
+&lt;p&gt;An important concept is idempotency: any task could be executed potentially any number of time (although ideally not many more than one), therefore it is important that this is taken into account, either by bringing it to a known state every time it starts or some other specific way. If you are not familiar with the term, it is a term that is frequently used in messaging systems, where at-least-once delivery is common. Most background jobs queue implement this.&lt;/p&gt;
+
+&lt;p&gt;If for any reason the task that is being run fails, Airflow, if configured to do so, will try to re-run it after a time delay. This behaviour is helpful in case systems are temporarily unavailable. The number of retries can be configured at DAG-level and at Task-level. Once all the possible runs have been exhausted and the system continuously failed, the task is marked as failed and, depending on the DAG configuration, the whole DAG may be marked as failed.&lt;/p&gt;
+
+&lt;h2 id=&#34;miscellaneous&#34;&gt;Miscellaneous&lt;/h2&gt;
+
+&lt;p&gt;Worth mentioning are the Hooks (Connections in the UI) and Variables. This is a non-core but quite useful part of Airflow. It allows you to manage all connection details and configuration variables of your DAGs and your scripts directly from the Airflow Web UI. Given that all this data is read at runtime, it is quite convenient if you need to update these without restarting Airflow and all its running processes with it. Besides this, they do not offer anything more that you would not get by deploying a configuration file.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../attachments/airflow-connections.png&#34; alt=&#34;Airflow Hooks&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;One last thing is XCom. The architecture of Airflow is built in a way that tasks have complete separation from any other tasks in the same DAG. The only truth that you can assert is that all tasks that the current task depends on are guaranteed to be executed. Besides that, there is no implicit way to pass dynamic data between tasks at execution time of the DAG. If you want to do so, you need to use XCom. XCom is a simple key/value store API that uses the Airflow DB, and it&amp;rsquo;s available for querying when a task is being executed. It is generally helpful if, for instance, you generate temporary files/dirs and you want the following tasks to use the dynamically generated file paths.&lt;/p&gt;
+
+&lt;p&gt;In the next blog post I will write about backfills and how they work. It is an advanced, and complex, topic and it deserves to be treated on its own. Stay tuned!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Introduction to Apache Airflow</title>
@@ -800,80 +848,6 @@ ssh USER@HOST ipfs name publish $hash
       <description>&lt;p&gt;Presentation I gave at DJUGL in September 2013 about how TrialReach uses Ansible to automate server provisioning.&lt;/p&gt;
 
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;cf5216a0021b013147b94e9ac2870296&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Spatial search on multiple points in Solr</title>
-      <link>/blog/spatial-search-on-multiple-points-in-solr/</link>
-      <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
-      
-      <guid>/blog/spatial-search-on-multiple-points-in-solr/</guid>
-      <description>&lt;p&gt;At TrialReach we deal with clinical trials data, which contain a lot of spatial information. Tipically, clinical trials treat a certain set of conditions and they happen in various locations globally.
-If you are a patient then searching across clinical trials becomes really spatial sensitive: you are only interested in the closest location to you.&lt;/p&gt;
-
-&lt;p&gt;This case might apply to other events as well, but the key point is global distribution. I am not interested in any point in the globe, just the closest to me.&lt;/p&gt;
-
-&lt;p&gt;&lt;h2&gt;Solution&lt;/h2&gt;
-Solr 4 does have support for this with the new spatial field called SpatialRecursivePrefixTreeFieldType, with many caveats though.&lt;/p&gt;
-
-&lt;p&gt;A schema could look this way:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; ?&amp;gt;
-&amp;lt;schema name=&amp;quot;example&amp;quot; version=&amp;quot;1.5&amp;quot;&amp;gt;
- &amp;lt;fields&amp;gt;
-   &amp;lt;field name=&amp;quot;id&amp;quot; type=&amp;quot;string&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot; multiValued=&amp;quot;false&amp;quot; /&amp;gt; 
-   &amp;lt;field name=&amp;quot;title&amp;quot; type=&amp;quot;text_en&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot;/&amp;gt;
-   &amp;lt;field name=&amp;quot;condition&amp;quot; type=&amp;quot;text_en&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot; multiValued=&amp;quot;true&amp;quot;/&amp;gt;
-   &amp;lt;field name=&amp;quot;location&amp;quot; type=&amp;quot;location_rpt&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; multiValued=&amp;quot;true&amp;quot;/&amp;gt;
-   &amp;lt;field name=&amp;quot;_version_&amp;quot; type=&amp;quot;long&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; /&amp;gt;
- &amp;lt;/fields&amp;gt;
- ... 
-  &amp;lt;types&amp;gt;
- ...
-    &amp;lt;fieldType name=&amp;quot;location_rpt&amp;quot; class=&amp;quot;solr.SpatialRecursivePrefixTreeFieldType&amp;quot;
-        geo=&amp;quot;true&amp;quot; distErrPct=&amp;quot;0.025&amp;quot; maxDistErr=&amp;quot;0.000009&amp;quot; units=&amp;quot;degrees&amp;quot; /&amp;gt;
- &amp;lt;/types&amp;gt;
-&amp;lt;/schema&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A sample indexer using GeoDjango and PySolr (Haystack does not support this). It should be quite easy to work out how it works, PySolr is just a very thin wrapper for doing HTTP POST requests to Apache Solr.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pysolr
-
-solr = pysolr.Solr(&amp;quot;http://1.2.3.4:8983/solr/&amp;quot;, timeout=10)
-
-records = models.Study.objects.all()
-solr_data = []
-for record in records:
-    solr_dict = {
-                &amp;quot;id&amp;quot;: str(record.id),
-                &amp;quot;title&amp;quot;: record.title,
-                &amp;quot;condition&amp;quot;: [c.name for c in record.conditions.all()],
-                &amp;quot;location&amp;quot;: [&amp;quot;{1} {0}&amp;quot;.format(l.point.coords[0], l.point.coords[1]) for l in record.locations.all()],
-		# &amp;quot;point&amp;quot; is a Point GeoDjango type
-		# SOLR FORMAT is &amp;quot;long lat&amp;quot;, separated by a space
-            }
-    solr_data.append(solr_dict)
-solr.add(solr_data)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For querying, we use these sort of urls:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;http://1.2.3.4:8983/solr/select/?sort=score+asc&amp;amp;fq=title:lupus+condition:lupus&amp;amp;q={!geofilt score=distance sfield=location pt=LAT,LONG d=KM_RADIUS}&amp;amp;fl=*,score
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;to return the distance you need to use the score, and the only thing you use in the q parameter is the geofilt (otherwise will influence the score), all other filters go in fq&lt;/li&gt;
-&lt;li&gt;if you do not need the distance, loose the score parameter in geofilt (it is inefficient)&lt;/li&gt;
-&lt;li&gt;distance returned is the distance between specified LAT,LONG and the closest LAT,LONG in the SpatialRecursivePrefixTreeFieldType set.&lt;/li&gt;
-&lt;li&gt;score returned is in DEGREES. You have to convert it in Km or miles.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;h2&gt;Shortcomings&lt;/h2&gt;
-- the only way to get the distance is through the score
-- you cannot get the matched point through highlighting or any other way
-- units of measure are a bit confusing&lt;/p&gt;
 </description>
     </item>
     
