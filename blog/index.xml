@@ -7,8 +7,24 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 18 Jun 2017 14:44:35 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 20 Jul 2017 12:00:00 +0000</lastBuildDate>
     <atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Feeding data to Redshift with Airflow (Europython 2017)</title>
+      <link>/blog/feeding-data-to-redshift-with-airflow-presentation/</link>
+      <pubDate>Thu, 20 Jul 2017 12:00:00 +0000</pubDate>
+      
+      <guid>/blog/feeding-data-to-redshift-with-airflow-presentation/</guid>
+      <description>&lt;p&gt;The presentation I gave at Europython 2017 in Rimini. The talk is divided in 3 parts: some guiding principles on architecting data pipelines, an introduction to Apache Airflow and the last part is about specifically working with Amazon Redshift. The experience in these tools comes from building an analytics engine for meetups, where historical reports, trend analysis and data enrichment are critical factors.&lt;/p&gt;
+
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;380d0b967be44504b386b01b34de1fe5&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;And also the video of the presentation: (starts at 3m 45s)&lt;/p&gt;
+
+&lt;iframe width=&#34;1024&#34; height=&#34;576&#34; src=&#34;https://www.youtube.com/embed/QDibKJzS3NQ&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+</description>
+    </item>
     
     <item>
       <title>Moving data in bulk in and out of Postgresql</title>
@@ -137,8 +153,6 @@ SELECT * FROM redshift.latest_load;
 &lt;p&gt;&lt;img src=&#34;../attachments/airflow-connections.png&#34; alt=&#34;Airflow Hooks&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;One last thing is XCom. The architecture of Airflow is built in a way that tasks have complete separation from any other tasks in the same DAG. The only truth that you can assert is that all tasks that the current task depends on are guaranteed to be executed. Besides that, there is no implicit way to pass dynamic data between tasks at execution time of the DAG. If you want to do so, you need to use XCom. XCom is a simple key/value store API that uses the Airflow DB, and it&amp;rsquo;s available for querying when a task is being executed. It is generally helpful if, for instance, you generate temporary files/dirs and you want the following tasks to use the dynamically generated file paths.&lt;/p&gt;
-
-&lt;p&gt;In the next blog post I will write about backfills and how they work. It is an advanced, and complex, topic and it deserves to be treated on its own. Stay tuned!&lt;/p&gt;
 </description>
     </item>
     
@@ -892,34 +906,6 @@ ssh USER@HOST ipfs name publish $hash
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;-e makes sure uses python from your virtualenv, -i forces not to load an inventory file but use localhost directly. This last option is a bit &lt;a href=&#34;https://groups.google.com/forum/#!topic/Ansible-project/RuntoPUvqHM&#34; title=&#34;Ansible mailing-list&#34;&gt;hacky&lt;/a&gt;, hope in the future there are better ways to do this.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Why my first startup failed - tabs.to</title>
-      <link>/blog/why-my-first-startup-failed/</link>
-      <pubDate>Sun, 26 Jan 2014 15:24:59 +0000</pubDate>
-      
-      <guid>/blog/why-my-first-startup-failed/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;../attachments/logo.png&#34; alt=&#34;logo&#34; title=&#34;Tabs.to&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Tabs.to was a url shortener, but with a twist, it could support multiple urls and it was displaying them with a sort of tabbed interface which you could use to switch between pages. The use case I was seeing was sending multiple links via twitter, and by doing so you would have saved space. In hindsight, it seems pretty short-sighted but that was the problem I had. This was in 2010, 4 years ago.&lt;/p&gt;
-
-&lt;p&gt;I really liked the idea, it was simple, easy to explain, easy to pitch. The way I saw this challenge was really a growth problem, more than a revenue problem. After having grown big, we would have had a ton of data about sites, and we could have built a kickass analytics tool on it.&lt;/p&gt;
-
-&lt;p&gt;I am pretty sure the reason why this failed was mainly overengineering, will come back to this later.&lt;/p&gt;
-
-&lt;p&gt;I wanted the site to be accessible through Web and API. I wanted to build this in Scala and MongoDB, two technologies I did not know, for the web-serving part, and Python/RabbitMQ for the offline processing part. I wanted the site to scale to thousands of requests, and it did. It took 6 months of hard work, every day, every weekend, it took an incredible amount of energy. A good friend of mine made me a logo and a design, someone on elance made me the front-end, my other co-founder helped me define the product, do wireframes and prioritize what needed to be done.&lt;/p&gt;
-
-&lt;p&gt;I started talking about this to people, and I also went to Hacker News in London to present this. It was a 20 minute presentation to a lot of people, it was fairly technical because I believed that the idea did not require explanation and technology was what I am passionate about. At the end I have received some good feedback, and I also had some angel investors interested in the product. People offered to mentor me, and I had interesting chats with some of them in the following weeks. We also met a lawyer for possibly patenting parts of this idea.&lt;/p&gt;
-
-&lt;p&gt;People started to use the product, but numbers were low and fundamental problems started to appear in the product. It turns out many websites did not like to be loaded in an frame, either by giving back a white page or escaping the frame. Resolving this was going to be really tricky, to give to the user the same site, I would have had to create a browser extension and use the real browser tabs for that.&lt;/p&gt;
-
-&lt;p&gt;Besides that, because I focused so much on technology and scaling, the energy I invested here was too high and I did not enough of what really matters in a startup, like market research, talking to other companies for integrations, offer content online myself, talking to early adopters.&lt;/p&gt;
-
-&lt;p&gt;People have a limited amount of energy before they burn out. At some point I exhausted mine, all the energy I spent on making the perfect platform turned out to have been misplaced.&lt;/p&gt;
-
-&lt;p&gt;I learned in the hard way from this experience, but it was really good learning. You can be really motivated at something, but motivation is not infinite, needs to be reinforced with success.&lt;/p&gt;
 </description>
     </item>
     

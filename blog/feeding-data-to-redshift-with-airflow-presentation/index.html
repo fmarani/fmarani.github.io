@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta name="generator" content="Hugo 0.16" />
-        <title>Why SOA in a startup sucks</title>
+        <title>Feeding data to Redshift with Airflow (Europython 2017)</title>
         <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
         <link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
@@ -122,28 +122,22 @@
 
 <article>
     <div class="post-stamp">
-        22 Jan 2012
+        20 Jul 2017
         <span class="taglist">&middot;
-            service oriented architecture soa startup 
+            airflow redshift europython presentation 
         </span>
     </div>
-	<h1 class="post-title">Why SOA in a startup sucks</h1>
+	<h1 class="post-title">Feeding data to Redshift with Airflow (Europython 2017)</h1>
         <div class="blogpost-old" style="display: none">
             This post is quite old... Technologies and techniques described here might not apply anymore.
         </div>
-	<p>Service Oriented Architectures as i intend are architectures where each component is deployable and usable separately from others. Take as example Amazon, much of their software stack is offered as a service, mainly through an HTTP interface, and marketed as SaaS.</p>
+	<p>The presentation I gave at Europython 2017 in Rimini. The talk is divided in 3 parts: some guiding principles on architecting data pipelines, an introduction to Apache Airflow and the last part is about specifically working with Amazon Redshift. The experience in these tools comes from building an analytics engine for meetups, where historical reports, trend analysis and data enrichment are critical factors.</p>
 
-<p>There are tons of reasons why you would want to think to your system as a series of components deployable separately&hellip; flexibility, being able to choose the right tools for each component, etc.. i will not talk about the advantages.</p>
+<script async class="speakerdeck-embed" data-id="380d0b967be44504b386b01b34de1fe5" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 
-<p>Sometime their use is convenient, but there&rsquo;s a lot of hype about it and i want to write what i learned (the hard way) about building your system with this architecture in mind.
-<h3>Development cycle is too slow</h3>
-When you need to change/add a functionality that changes more than one component, you need to code the functionality in both components and redesign the interaction. If you are using REST it means you will end up modifying URLs and data they return. To sum up, time to add code in component A, time to add code in component B, time to redesign and code changes in the interaction, time to redeploy them&hellip; it is quite different from &ldquo;everything in one component&rdquo; scenario, the only thing you do is coding.
-<h3>Poor testability</h3>
-Quite difficult to test functionalities that span multiple services, especially when persistency is involved. How do you limit components side-effects? Perhaps a testing flag passed through an HTTP request can be enough, but that can mean quite a few internal changes which you could skip if everything was integrated.
-<h3>Swapping mindsets (and related frustration)</h3>
-This is not a technical reason but practical. When juggling between two different software, you have to change mindset and you have to get up to speed again. This mental effort will cost you time that you could have spent otherwise.</p>
+<p>And also the video of the presentation: (starts at 3m 45s)</p>
 
-<p> </p>
+<iframe width="1024" height="576" src="https://www.youtube.com/embed/QDibKJzS3NQ" frameborder="0" allowfullscreen></iframe>
 
 </article>  
 <p>
@@ -153,7 +147,7 @@ This is not a technical reason but practical. When juggling between two differen
 
 <script type="text/javascript" charset="utf-8">
 var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
-var postTime = new Date("2012-01-22T21:49:33Z").getTime();
+var postTime = new Date("2017-07-20T12:00:00Z").getTime();
 if (postTime < cutoffTime) {
     $(".blogpost-old").show();
 }
