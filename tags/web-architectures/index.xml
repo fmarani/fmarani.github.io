@@ -2,12 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Web Architectures on Blog | Federico Marani</title>
-    <link>/tags/web-architectures/</link>
+    <link>/tags/web-architectures/index.xml</link>
     <description>Recent content in Web Architectures on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 14 Jan 2015 11:45:46 +0000</lastBuildDate>
     <atom:link href="/tags/web-architectures/index.xml" rel="self" type="application/rss+xml" />
     
     <item>

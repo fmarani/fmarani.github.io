@@ -2,12 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Development on Blog | Federico Marani</title>
-    <link>/tags/development/</link>
+    <link>/tags/development/index.xml</link>
     <description>Recent content in Development on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 03 Nov 2011 14:49:36 +0000</lastBuildDate>
     <atom:link href="/tags/development/index.xml" rel="self" type="application/rss+xml" />
     
     <item>

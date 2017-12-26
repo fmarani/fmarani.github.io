@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blog | Federico Marani</title>
-    <link>/</link>
+    <link>/index.xml</link>
     <description>Recent content on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
@@ -20,9 +20,9 @@
 
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;380d0b967be44504b386b01b34de1fe5&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
 
-&lt;p&gt;And also the video of the presentation: (starts at 3m 45s)&lt;/p&gt;
+&lt;p&gt;And also the video of the presentation:&lt;/p&gt;
 
-&lt;iframe width=&#34;1024&#34; height=&#34;576&#34; src=&#34;https://www.youtube.com/embed/QDibKJzS3NQ&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;iframe width=&#34;1024&#34; height=&#34;576&#34; src=&#34;https://www.youtube.com/embed/0s6lmVbvoFo&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
 </description>
     </item>
     

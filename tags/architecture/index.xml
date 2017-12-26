@@ -2,12 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Architecture on Blog | Federico Marani</title>
-    <link>/tags/architecture/</link>
+    <link>/tags/architecture/index.xml</link>
     <description>Recent content in Architecture on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Sat, 24 Sep 2016 23:16:56 +0200</lastBuildDate>
     <atom:link href="/tags/architecture/index.xml" rel="self" type="application/rss+xml" />
     
     <item>

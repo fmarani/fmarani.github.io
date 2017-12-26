@@ -2,12 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Languages on Blog | Federico Marani</title>
-    <link>/tags/languages/</link>
+    <link>/tags/languages/index.xml</link>
     <description>Recent content in Languages on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 05 Oct 2010 20:01:04 +0000</lastBuildDate>
     <atom:link href="/tags/languages/index.xml" rel="self" type="application/rss+xml" />
     
     <item>

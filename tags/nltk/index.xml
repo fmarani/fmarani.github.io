@@ -2,12 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Nltk on Blog | Federico Marani</title>
-    <link>/tags/nltk/</link>
+    <link>/tags/nltk/index.xml</link>
     <description>Recent content in Nltk on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 21 Mar 2012 22:44:23 +0000</lastBuildDate>
     <atom:link href="/tags/nltk/index.xml" rel="self" type="application/rss+xml" />
     
     <item>

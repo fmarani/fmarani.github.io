@@ -2,12 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Celery on Blog | Federico Marani</title>
-    <link>/tags/celery/</link>
+    <link>/tags/celery/index.xml</link>
     <description>Recent content in Celery on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 25 Nov 2012 17:30:21 +0000</lastBuildDate>
     <atom:link href="/tags/celery/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
