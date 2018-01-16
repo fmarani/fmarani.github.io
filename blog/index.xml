@@ -7,8 +7,220 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 20 Jul 2017 12:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 10 Jan 2018 15:41:15 +0000</lastBuildDate>
     <atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Using GRPC with Django</title>
+      <link>/blog/using-grpc-with-django/</link>
+      <pubDate>Wed, 10 Jan 2018 15:41:15 +0000</pubDate>
+      
+      <guid>/blog/using-grpc-with-django/</guid>
+      <description>
+
+&lt;p&gt;GRPC is an implementation of an RPC system, created by Google and Square, that leverages the low-level features of HTTP/2. It has many interesting properties, like bi-directionality, efficiency, and support from many languages. RPC interfaces are declared in a special &amp;ldquo;proto&amp;rdquo; file in a readable way, which makes it, in part, self-documenting. These proto files are then used to generate client and server stubs, which is very convenient.&lt;/p&gt;
+
+&lt;p&gt;GRPC is a good choice for internal and performance-sensitive APIs. It cannot (yet) be used from the browser.&lt;/p&gt;
+
+&lt;p&gt;Here I am using as a reference a system I built for monitoring purposes. It is an internal API that receives a list of sensors everytime a new client is run, followed by sensor activations from every sensor connected to every client when the sensors are triggered. The exact nature of this is not very important, as long as mechanically it is clear.&lt;/p&gt;
+
+&lt;p&gt;When using this system, the generated stubs and the message descriptors need to be shared between client and server projects, therefore for these it is better to create a Python package. Another reason for this is that proto files in turn can have packages and imports, and when the compiler compiles proto files, those concepts are translated into Python modules and imports following the GRPC convention.&lt;/p&gt;
+
+&lt;h1 id=&#34;shared-package&#34;&gt;Shared package&lt;/h1&gt;
+
+&lt;p&gt;I will be using as example a toy project called &lt;code&gt;slimmer&lt;/code&gt;. We will have a client project, a server project and a shared package, which will contain the stubs. To start with, create an empty folder with a minimal &lt;code&gt;setup.py&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from setuptools import setup
+
+setup(name=&#39;slimmer_grpc&#39;,
+      version=&#39;0.1&#39;,
+      description=&#39;Slimmer client/server stubs&#39;,
+      url=&#39;http://github.com/fmarani/slimmer_grpc&#39;,
+      author=&#39;Federico Marani&#39;,
+      author_email=&#39;flagzeta@gmail.com&#39;,
+      license=&#39;MIT&#39;,
+      packages=[&#39;slimmer_grpc&#39;],
+      install_requires=[
+          &#39;grpcio==1.8.3&#39;
+      ],
+      zip_safe=False)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That is the minimum required to make this package installable. It is missing a dependency that is required when you are developing. We will add that through a &lt;code&gt;requirements-dev.txt&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;grpcio-tools==1.8.3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Second step you need to create your proto file. I am using an example which is more sophisticated than an &amp;ldquo;Hello world&amp;rdquo;, hope it is clear anyway.&lt;/p&gt;
+
+&lt;p&gt;I am placing this file inside a special folder called &lt;code&gt;proto&lt;/code&gt; with a folder structure that mirrors the package hierarchy. In this case, that would be &lt;code&gt;proto/slimmer_grpc/main.proto&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;syntax = &amp;quot;proto3&amp;quot;;
+
+package slimmer_grpc;
+
+service Main {
+  rpc ping (Ping) returns (Pong) {}
+  rpc new_system_run (SystemRun) returns (SystemRunResponse) {}
+  rpc new_activation (Activation) returns (ActivationResponse) {}
+}
+
+message Ping {
+  string message = 1;
+}
+
+message Pong {
+  string message = 1;
+}
+
+message SystemEntity {
+  string category = 1;
+  string name = 2;
+  string identity = 3;
+}
+message SystemRun {
+  string system_id = 1;
+  repeated SystemEntity entities = 2;
+}
+message SystemRunResponse {
+  string run_id = 1;
+}
+
+message Activation {
+  string system_id = 1;
+  string run_id = 2;
+  SystemEntity entity = 3;
+}
+message ActivationResponse {
+  bool success = 1;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After you have written all this, now it is time to generate the code. From the folder that contains &lt;code&gt;setup.py&lt;/code&gt;, run the following command.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python -m grpc_tools.protoc -I proto --python_out=./ --grpc_python_out=./ proto/slimmer_grpc/main.proto
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This command will generate a new folder called &lt;code&gt;slimmer_grpc&lt;/code&gt;. This is the folder that we want to distribute.&lt;/p&gt;
+
+&lt;p&gt;There are several methods of distributing packages, some Python specific (e.g. Pypi), some Git specific (e.g. submodules), some more bare-bones (e.g. have it in a folder in the same repo). How you decide to do this is up to you. In the rest of the article we assume the package is in a subfolder of repository. A structure like this will do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/repo/client_project - the python client
+/repo/slimmer_grpc - the shared library
+/repo/slimmer - server code
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;django-server&#34;&gt;Django server&lt;/h1&gt;
+
+&lt;p&gt;First of all, you have to install the package we created above. In order to proceed fast, we can install it in editable mode. Once activated the virtualenv of the server project (in the filesystem structure above it would be &amp;ldquo;slimmer&amp;rdquo;), this is the command to install it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pip install -e ./slimmer_grpc/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next step is to focus on integration with the server. Django is a WSGI application, which is normally run by a WSGI HTTP server like Gunicorn or uWSGI. Both Gunicorn and uWSGI have their own event loop, which are clashing with the GRPC event loop.&lt;/p&gt;
+
+&lt;p&gt;Gevent may be used here to make the two cooperate, but I am reluctant to explore that path. The more complex your Django (or GRPC) stack becomes the easier is to find a piece of software that is not gevent-friendly. Also, I am not a fan of its approach.&lt;/p&gt;
+
+&lt;p&gt;I am choosing a way that is a lot simpler and more basic: have two separate processes, with two event loops. In order to do that, they must be independent. They will listen to different ports, and they will have separate lifecycles (startup/shutdown/etc).&lt;/p&gt;
+
+&lt;p&gt;What we need is a Django management command that instead of entering the WSGI loop, enters in the GRPC loop.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from concurrent import futures
+import time
+import grpc
+from contextlib import contextmanager
+from django.core.management.base import BaseCommand, CommandError
+from slimmer_grpc import main_pb2_grpc, main_pb2
+from main import models
+
+
+class MainServicer(main_pb2_grpc.MainServicer):
+    def ping(self, request, context):
+        return main_pb2.Pong(message=request.message)
+
+    def new_system_run(self, request, context):
+        # your code here
+        return main_pb2.SystemRunResponse(run_id=&amp;quot;your id&amp;quot;)
+
+    def new_activation(self, request, context):
+        # your code here
+        return main_pb2.ActivationResponse(success=True)
+
+
+_ONE_DAY_IN_SECONDS = 60 * 60 * 24
+
+@contextmanager
+def serve_forever():
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    main_pb2_grpc.add_MainServicer_to_server(MainServicer(), server)
+    server.add_insecure_port(&#39;[::]:50051&#39;)
+    server.start()
+    yield
+    server.stop(0)
+
+class Command(BaseCommand):
+    help = &#39;api server&#39;
+
+    def handle(self, *args, **options):
+        with serve_forever():
+            self.stdout.write(self.style.SUCCESS(&#39;Successfully started grpc server &#39;))
+            try:
+                while True:
+                    time.sleep(_ONE_DAY_IN_SECONDS)
+            except KeyboardInterrupt:
+                pass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is enough to start serving GRPC requests!&lt;/p&gt;
+
+&lt;h1 id=&#34;python-client&#34;&gt;Python client&lt;/h1&gt;
+
+&lt;p&gt;Using the client does not require any special treatment. It is just a class that needs to be called. Once installed the shared package in the virtualenv of the client, it is quite straightforward.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from slimmer_grpc import main_pb2_grpc, main_pb2
+import grpc
+
+def get_client():
+    channel = grpc.insecure_channel(&amp;quot;1.2.3.4:50051&amp;quot;)
+    client = main_pb2_grpc.MainStub(channel)
+    response = client.ping(main_pb2.Ping(message=&#39;test&#39;))
+    if response.message == &amp;quot;test&amp;quot;:
+        return client
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That is a starting point. This will need to be extended with exception handling, etc&amp;hellip;&lt;/p&gt;
+
+&lt;h1 id=&#34;production&#34;&gt;Production&lt;/h1&gt;
+
+&lt;p&gt;Whatever system you use to run this:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Highly advised to run the Gunicorn part under Nginx. A similar setup is not necessary for the GRPC server.&lt;/li&gt;
+&lt;li&gt;Both processes need to be run under a supervisor. If you are running this in Heroku, the GRPC server needs to be in a separate dyno.&lt;/li&gt;
+&lt;li&gt;You may be able to use a recent version of Nginx to do virtual hosting + reverse proxying for GRPC.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Delegation</title>
+      <link>/blog/delegation/</link>
+      <pubDate>Wed, 10 Jan 2018 15:27:10 +0000</pubDate>
+      
+      <guid>/blog/delegation/</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;bus factor&lt;/li&gt;
+&lt;li&gt;choose your battles&lt;/li&gt;
+&lt;li&gt;define the standards - design patterns, paradigms, technologies, coding standards&lt;/li&gt;
+&lt;li&gt;problems are on you, not them&lt;/li&gt;
+&lt;li&gt;help them understand what they can do&lt;/li&gt;
+&lt;li&gt;let people do mistakes you can afford to do as a team&lt;/li&gt;
+&lt;li&gt;software design is not a democracy&lt;/li&gt;
+&lt;li&gt;never blame, always ask&lt;/li&gt;
+&lt;li&gt;acknowledge emotions as legitimate&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Feeding data to Redshift with Airflow (Europython 2017)</title>
@@ -823,89 +1035,6 @@ ssh USER@HOST ipfs name publish $hash
 &lt;p&gt;I am generally against systems that automatically cache all database queries: if you have a good schema, you should not need it. We used to cache all Postgresql queries but the speed gain was not noticeable so we removed it, we have a fast network, enough memory for the disk buffer and, honestly, not a great volume of complex queries.&lt;/p&gt;
 
 &lt;p&gt;The setup of Memcache is really simple, you can start by just using the defaults after the installation. The default cache size is 64Mb and when exceeding that it will start to delete keys in least recently used order.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Scaling with Ansible (Europython 2014)</title>
-      <link>/blog/scaling-with-ansible/</link>
-      <pubDate>Sun, 27 Jul 2014 12:00:00 +0000</pubDate>
-      
-      <guid>/blog/scaling-with-ansible/</guid>
-      <description>&lt;p&gt;The presentation I gave at Europython 2014 in Berlin. Again it is about how TrialReach uses Ansible to manage its own infrastructure and some tips and tricks about our use of Ansible.&lt;/p&gt;
-
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;38a6f0d0f48f01318f29762c3a3e275b&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;And also the video of the presentation:&lt;/p&gt;
-
-&lt;iframe width=&#34;560&#34; height=&#34;315&#34; src=&#34;//www.youtube.com/embed/ptc9E24YAcc&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Give everyone one (public) VM</title>
-      <link>/blog/give-everyone-one-vm/</link>
-      <pubDate>Tue, 11 Feb 2014 22:45:08 +0000</pubDate>
-      
-      <guid>/blog/give-everyone-one-vm/</guid>
-      <description>&lt;p&gt;At TrialReach we want to be always able to deploy clean versions of our code online. This allows us to show our work more quickly internally (and externally) and get feedback from people as early as possible, without having to wait release dates. This also give us the opportunity to test more frequently our server provisioning procedures, and having the ability to push something live anytime is a really empowering feeling.&lt;/p&gt;
-
-&lt;p&gt;We started using Ansible as our main DevOps tool, which recently we extended to also take care of DigitalOcean VM creation. DigitalOcean has very easy APIs and is well integrated with Ansible. While we use EC2 for production/staging environments, for these throw-away environments DigitalOcean offer a good price/performance trade-off.&lt;/p&gt;
-
-&lt;p&gt;Enough said, this is a vm creation snippet:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;---
-- name: digitalocean creation
-  hosts: all
-  connection: local
-  vars:
-    - api_key: XXXXX
-    - client_id: XXXX
-  tasks: 
-    - name: gather user info
-      command: whoami
-      register: user
-    - name: gather ssh pub key 
-      command: cat {{ ansible_env.HOME }}/.ssh/id_rsa.pub 
-      register: ssh_pub_key
-    - name: generate id for this machine
-      shell: hostname | cksum | awk &#39;{print $1;}&#39;
-      register: machineid
-    - name: copy your ssh pub key on digital ocean
-      digital_ocean: &amp;gt;
-          state=present
-          command=ssh
-          name={{ machineid.stdout }}-{{ user.stdout }}
-          client_id={{ client_id }}
-          api_key={{ api_key }}
-          ssh_pub_key=&#39;{{ ssh_pub_key.stdout }}&#39;
-      register: my_ssh
-    - name: creating new digital ocean vm
-      digital_ocean: &amp;gt;
-          state=present
-          command=droplet
-          name={{ machineid.stdout }}-{{ user.stdout }}
-          ssh_key_ids={{ my_ssh.ssh_key.id }}
-          unique_name=yes
-          client_id={{ client_id }}
-          api_key={{ api_key }}
-          size_id=66
-          region_id=1
-          image_id=1505447
-          wait_timeout=500
-      register: my_droplet
-    - name: writing local2cloud inventory with new vm ip
-      shell: cat local2cloud | sed &#39;s/CHANGE/{{ my_droplet.droplet.ip_address }}/&#39; &amp;gt; local2cloud.templated
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This script does a bunch of things, create ssh key and vm, but also makes sure people create only one VM. That is what we need for now. This snippet takes a inventory template (local2cloud) and fills it with the new droplet&amp;rsquo;s IP address, so it can used to provision the new server.&lt;/p&gt;
-
-&lt;p&gt;To launch this script, make sure right variables are set, and make sure you have dopy installed in your virtualenv, then run:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ansible-playbook -i &#39;localhost,&#39; -e ansible_python_interpreter=`which python` create_vm.yml
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;-e makes sure uses python from your virtualenv, -i forces not to load an inventory file but use localhost directly. This last option is a bit &lt;a href=&#34;https://groups.google.com/forum/#!topic/Ansible-project/RuntoPUvqHM&#34; title=&#34;Ansible mailing-list&#34;&gt;hacky&lt;/a&gt;, hope in the future there are better ways to do this.&lt;/p&gt;
 </description>
     </item>
     

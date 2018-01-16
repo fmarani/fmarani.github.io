@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Team on Blog | Federico Marani</title>
+    <link>/tags/team/index.xml</link>
+    <description>Recent content in Team on Blog | Federico Marani</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
+    <atom:link href="/tags/team/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Delegation</title>
+      <link>/blog/delegation/</link>
+      <pubDate>Wed, 10 Jan 2018 15:27:10 +0000</pubDate>
+      
+      <guid>/blog/delegation/</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;bus factor&lt;/li&gt;
+&lt;li&gt;choose your battles&lt;/li&gt;
+&lt;li&gt;define the standards - design patterns, paradigms, technologies, coding standards&lt;/li&gt;
+&lt;li&gt;problems are on you, not them&lt;/li&gt;
+&lt;li&gt;help them understand what they can do&lt;/li&gt;
+&lt;li&gt;let people do mistakes you can afford to do as a team&lt;/li&gt;
+&lt;li&gt;software design is not a democracy&lt;/li&gt;
+&lt;li&gt;never blame, always ask&lt;/li&gt;
+&lt;li&gt;acknowledge emotions as legitimate&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

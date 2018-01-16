@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta property="og:title" content=" Using GRPC with Django &middot;  Blog | Federico Marani" />
+<meta property="og:site_name" content="Blog | Federico Marani" />
+<meta property="og:url" content="/blog/using-grpc-with-django/" />
+
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content="2018-01-10T15:41:15Z" />
+    <meta property="og:article:tag" content="microservices" />
+    <meta property="og:article:tag" content="grpc" />
+    <meta property="og:article:tag" content="python" />
+    <meta property="og:article:tag" content="architecture" />
+    
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@" />
+    <meta name="twitter:creator" content="@" />
+    <meta name="twitter:title" content="Using GRPC with Django" />
+    <meta name="twitter:description" content="" />
+    <meta name="twitter:url" content="/blog/using-grpc-with-django/" />
+
+
+<title> Using GRPC with Django &middot;  Blog | Federico Marani</title>
+
+
+    <meta name="description" content="" />
+
+
+<meta name="p:domain_verify" content="fc173d84e3a4de948ed4bda2908afd3e"/>
+<meta name="HandheldFriendly" content="True" />
+<meta name="MobileOptimized" content="320" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+
+
+
+<link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../../css/pure-min.css">
+
+
+    <link rel="stylesheet" href="../../css/grids-responsive-min.css">
+
+<link rel="stylesheet" href="../../css/crisp.css">
+<link rel="stylesheet" href="../../css/rrssb.css">
+
+
+
+
+
+
+
+
+<link rel="canonical" href="../../blog/using-grpc-with-django/" />
+
+
+    
+
+
+    </head>
+    <div id="layout" class="pure-g">
+        <div class="sidebar pure-u-1 pure-u-md-1-6">
+            <div class="header">
+    <div class="logo">
+        
+        
+            
+                <a id="logo" href="../../"><img src="../../img/me.png" alt="Blog | Federico Marani" /></a>
+            
+        
+    </div>
+    <div class="title">
+        <h1><a href="../../">Blog | Federico Marani</a></h1>
+        <p class="lead">Freelance Engineer/Architect. Former VP Engineering @TrialReach &amp; CTO at TalentRank. MSc Business Psychology.</p>
+    </div>
+
+    <ul class="sidebar-menu">
+        
+            <li class="sidebar-menu-item"><a href="../../about/">About me</a></li>
+        
+            <li class="sidebar-menu-item"><a href="../../projects/">Projects</a></li>
+        
+    </ul>
+
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ" target="_blank" rel="me"><i class="fa fa-twitter fa-3x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani" target="_blank" rel="me"><i class="fa fa-linkedin fa-3x"></i></a>
+        <a href="http://github.com/fmarani" target="_blank" rel="me"><i class="fa fa-github fa-3x"></i></a>
+        <a href="https://speakerdeck.com/fmarani" target="_blank" rel="me"><i class="fa fa-slideshare fa-3x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope fa-3x"></i></a>
+        <a href=""><i class="fa fa-rss fa-2x"></i></a> 
+    </div>
+
+    
+        <div class="cc">
+            
+            
+            
+            
+            
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+            
+        </div>
+    
+</div>
+
+        </div>
+        <div class="content pure-u-1 pure-u-md-5-6">
+            <div class="article singlepage" id="" class="blog">
+                <div class="post-stamp">
+                    <h1 class="post-title">Using GRPC with Django</h1>
+                    <span class="post-date">Jan 10, 2018 &middot; 5 minute read</span>
+                    
+                        <span class="taglist">
+                            
+                        </span>
+                    
+
+                    <span class="taglist">
+                    
+                        &middot;
+                        
+                            <a href="../../tags/microservices/">microservices</a>
+                        
+                            <a href="../../tags/grpc/">grpc</a>
+                        
+                            <a href="../../tags/python/">python</a>
+                        
+                            <a href="../../tags/architecture/">architecture</a>
+                        
+                    
+                    </span>
+                </div>
+        <div id="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+                
+
+<p>GRPC is an implementation of an RPC system, created by Google and Square, that leverages the low-level features of HTTP/2. It has many interesting properties, like bi-directionality, efficiency, and support from many languages. RPC interfaces are declared in a special &ldquo;proto&rdquo; file in a readable way, which makes it, in part, self-documenting. These proto files are then used to generate client and server stubs, which is very convenient.</p>
+
+<p>GRPC is a good choice for internal and performance-sensitive APIs. It cannot (yet) be used from the browser.</p>
+
+<p>Here I am using as a reference a system I built for monitoring purposes. It is an internal API that receives a list of sensors everytime a new client is run, followed by sensor activations from every sensor connected to every client when the sensors are triggered. The exact nature of this is not very important, as long as mechanically it is clear.</p>
+
+<p>When using this system, the generated stubs and the message descriptors need to be shared between client and server projects, therefore for these it is better to create a Python package. Another reason for this is that proto files in turn can have packages and imports, and when the compiler compiles proto files, those concepts are translated into Python modules and imports following the GRPC convention.</p>
+
+<h1 id="shared-package">Shared package</h1>
+
+<p>I will be using as example a toy project called <code>slimmer</code>. We will have a client project, a server project and a shared package, which will contain the stubs. To start with, create an empty folder with a minimal <code>setup.py</code> file:</p>
+
+<pre><code>from setuptools import setup
+
+setup(name='slimmer_grpc',
+      version='0.1',
+      description='Slimmer client/server stubs',
+      url='http://github.com/fmarani/slimmer_grpc',
+      author='Federico Marani',
+      author_email='flagzeta@gmail.com',
+      license='MIT',
+      packages=['slimmer_grpc'],
+      install_requires=[
+          'grpcio==1.8.3'
+      ],
+      zip_safe=False)
+</code></pre>
+
+<p>That is the minimum required to make this package installable. It is missing a dependency that is required when you are developing. We will add that through a <code>requirements-dev.txt</code> file:</p>
+
+<pre><code>grpcio-tools==1.8.3
+</code></pre>
+
+<p>Second step you need to create your proto file. I am using an example which is more sophisticated than an &ldquo;Hello world&rdquo;, hope it is clear anyway.</p>
+
+<p>I am placing this file inside a special folder called <code>proto</code> with a folder structure that mirrors the package hierarchy. In this case, that would be <code>proto/slimmer_grpc/main.proto</code>.</p>
+
+<pre><code>syntax = &quot;proto3&quot;;
+
+package slimmer_grpc;
+
+service Main {
+  rpc ping (Ping) returns (Pong) {}
+  rpc new_system_run (SystemRun) returns (SystemRunResponse) {}
+  rpc new_activation (Activation) returns (ActivationResponse) {}
+}
+
+message Ping {
+  string message = 1;
+}
+
+message Pong {
+  string message = 1;
+}
+
+message SystemEntity {
+  string category = 1;
+  string name = 2;
+  string identity = 3;
+}
+message SystemRun {
+  string system_id = 1;
+  repeated SystemEntity entities = 2;
+}
+message SystemRunResponse {
+  string run_id = 1;
+}
+
+message Activation {
+  string system_id = 1;
+  string run_id = 2;
+  SystemEntity entity = 3;
+}
+message ActivationResponse {
+  bool success = 1;
+}
+</code></pre>
+
+<p>After you have written all this, now it is time to generate the code. From the folder that contains <code>setup.py</code>, run the following command.</p>
+
+<pre><code>python -m grpc_tools.protoc -I proto --python_out=./ --grpc_python_out=./ proto/slimmer_grpc/main.proto
+</code></pre>
+
+<p>This command will generate a new folder called <code>slimmer_grpc</code>. This is the folder that we want to distribute.</p>
+
+<p>There are several methods of distributing packages, some Python specific (e.g. Pypi), some Git specific (e.g. submodules), some more bare-bones (e.g. have it in a folder in the same repo). How you decide to do this is up to you. In the rest of the article we assume the package is in a subfolder of repository. A structure like this will do:</p>
+
+<pre><code>/repo/client_project - the python client
+/repo/slimmer_grpc - the shared library
+/repo/slimmer - server code
+</code></pre>
+
+<h1 id="django-server">Django server</h1>
+
+<p>First of all, you have to install the package we created above. In order to proceed fast, we can install it in editable mode. Once activated the virtualenv of the server project (in the filesystem structure above it would be &ldquo;slimmer&rdquo;), this is the command to install it:</p>
+
+<pre><code>pip install -e ./slimmer_grpc/
+</code></pre>
+
+<p>Next step is to focus on integration with the server. Django is a WSGI application, which is normally run by a WSGI HTTP server like Gunicorn or uWSGI. Both Gunicorn and uWSGI have their own event loop, which are clashing with the GRPC event loop.</p>
+
+<p>Gevent may be used here to make the two cooperate, but I am reluctant to explore that path. The more complex your Django (or GRPC) stack becomes the easier is to find a piece of software that is not gevent-friendly. Also, I am not a fan of its approach.</p>
+
+<p>I am choosing a way that is a lot simpler and more basic: have two separate processes, with two event loops. In order to do that, they must be independent. They will listen to different ports, and they will have separate lifecycles (startup/shutdown/etc).</p>
+
+<p>What we need is a Django management command that instead of entering the WSGI loop, enters in the GRPC loop.</p>
+
+<pre><code>from concurrent import futures
+import time
+import grpc
+from contextlib import contextmanager
+from django.core.management.base import BaseCommand, CommandError
+from slimmer_grpc import main_pb2_grpc, main_pb2
+from main import models
+
+
+class MainServicer(main_pb2_grpc.MainServicer):
+    def ping(self, request, context):
+        return main_pb2.Pong(message=request.message)
+
+    def new_system_run(self, request, context):
+        # your code here
+        return main_pb2.SystemRunResponse(run_id=&quot;your id&quot;)
+
+    def new_activation(self, request, context):
+        # your code here
+        return main_pb2.ActivationResponse(success=True)
+
+
+_ONE_DAY_IN_SECONDS = 60 * 60 * 24
+
+@contextmanager
+def serve_forever():
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    main_pb2_grpc.add_MainServicer_to_server(MainServicer(), server)
+    server.add_insecure_port('[::]:50051')
+    server.start()
+    yield
+    server.stop(0)
+
+class Command(BaseCommand):
+    help = 'api server'
+
+    def handle(self, *args, **options):
+        with serve_forever():
+            self.stdout.write(self.style.SUCCESS('Successfully started grpc server '))
+            try:
+                while True:
+                    time.sleep(_ONE_DAY_IN_SECONDS)
+            except KeyboardInterrupt:
+                pass
+</code></pre>
+
+<p>This is enough to start serving GRPC requests!</p>
+
+<h1 id="python-client">Python client</h1>
+
+<p>Using the client does not require any special treatment. It is just a class that needs to be called. Once installed the shared package in the virtualenv of the client, it is quite straightforward.</p>
+
+<pre><code>from slimmer_grpc import main_pb2_grpc, main_pb2
+import grpc
+
+def get_client():
+    channel = grpc.insecure_channel(&quot;1.2.3.4:50051&quot;)
+    client = main_pb2_grpc.MainStub(channel)
+    response = client.ping(main_pb2.Ping(message='test'))
+    if response.message == &quot;test&quot;:
+        return client
+</code></pre>
+
+<p>That is a starting point. This will need to be extended with exception handling, etc&hellip;</p>
+
+<h1 id="production">Production</h1>
+
+<p>Whatever system you use to run this:</p>
+
+<ul>
+<li>Highly advised to run the Gunicorn part under Nginx. A similar setup is not necessary for the GRPC server.</li>
+<li>Both processes need to be run under a supervisor. If you are running this in Heroku, the GRPC server needs to be in a separate dyno.</li>
+<li>You may be able to use a recent version of Nginx to do virtual hosting + reverse proxying for GRPC.</li>
+</ul>
+
+                
+                
+    <div id="comments">
+        
+        
+    </div>
+
+
+<p>
+<a href="https://news.ycombinator.com/submit" class="hn-button">Vote on Hacker News</a>
+</p>
+<script type="text/javascript">var HN=[];HN.factory=function(e){return function(){HN.push([e].concat(Array.prototype.slice.call(arguments,0)))};},HN.on=HN.factory("on"),HN.once=HN.factory("once"),HN.off=HN.factory("off"),HN.emit=HN.factory("emit"),HN.load=function(){var e="hn-button.js";if(document.getElementById(e))return;var t=document.createElement("script");t.id=e,t.src="//hn-button.herokuapp.com/hn-button.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n)},HN.load();</script>
+
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2018-01-10T15:41:15Z").getTime();
+if (postTime < cutoffTime) {
+    document.getElementById("blogpost-old").style.display = "block";
+}
+</script>
+
+                
+    <div id="footer">
+        <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+    </div>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-47493827-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+            </div>
+        </div>
+    </body>
+</html>
+
