@@ -203,26 +203,6 @@ def get_client():
     </item>
     
     <item>
-      <title>Delegation</title>
-      <link>/blog/delegation/</link>
-      <pubDate>Wed, 10 Jan 2018 15:27:10 +0000</pubDate>
-      
-      <guid>/blog/delegation/</guid>
-      <description>&lt;ul&gt;
-&lt;li&gt;bus factor&lt;/li&gt;
-&lt;li&gt;choose your battles&lt;/li&gt;
-&lt;li&gt;define the standards - design patterns, paradigms, technologies, coding standards&lt;/li&gt;
-&lt;li&gt;problems are on you, not them&lt;/li&gt;
-&lt;li&gt;help them understand what they can do&lt;/li&gt;
-&lt;li&gt;let people do mistakes you can afford to do as a team&lt;/li&gt;
-&lt;li&gt;software design is not a democracy&lt;/li&gt;
-&lt;li&gt;never blame, always ask&lt;/li&gt;
-&lt;li&gt;acknowledge emotions as legitimate&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Feeding data to Redshift with Airflow (Europython 2017)</title>
       <link>/blog/feeding-data-to-redshift-with-airflow-presentation/</link>
       <pubDate>Thu, 20 Jul 2017 12:00:00 +0000</pubDate>
@@ -1035,6 +1015,22 @@ ssh USER@HOST ipfs name publish $hash
 &lt;p&gt;I am generally against systems that automatically cache all database queries: if you have a good schema, you should not need it. We used to cache all Postgresql queries but the speed gain was not noticeable so we removed it, we have a fast network, enough memory for the disk buffer and, honestly, not a great volume of complex queries.&lt;/p&gt;
 
 &lt;p&gt;The setup of Memcache is really simple, you can start by just using the defaults after the installation. The default cache size is 64Mb and when exceeding that it will start to delete keys in least recently used order.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Scaling with Ansible (Europython 2014)</title>
+      <link>/blog/scaling-with-ansible/</link>
+      <pubDate>Sun, 27 Jul 2014 12:00:00 +0000</pubDate>
+      
+      <guid>/blog/scaling-with-ansible/</guid>
+      <description>&lt;p&gt;The presentation I gave at Europython 2014 in Berlin. Again it is about how TrialReach uses Ansible to manage its own infrastructure and some tips and tricks about our use of Ansible.&lt;/p&gt;
+
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;38a6f0d0f48f01318f29762c3a3e275b&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;And also the video of the presentation:&lt;/p&gt;
+
+&lt;iframe width=&#34;560&#34; height=&#34;315&#34; src=&#34;//www.youtube.com/embed/ptc9E24YAcc&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
 </description>
     </item>
     
