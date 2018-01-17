@@ -160,53 +160,35 @@
 <h2 id="step-by-step-example">Step by step example</h2>
 
 <p>Step zero is to enable all the extensions that we need:</p>
-
-<pre><code>CREATE EXTENSION postgres_fdw;
-CREATE EXTENSION dblink;
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#069;font-weight:bold">CREATE</span> EXTENSION postgres_fdw;
+<span style="color:#069;font-weight:bold">CREATE</span> EXTENSION dblink;</code></pre></div>
 <p>Then as a first step, you need a connection and a user mapping. The first is essentially telling Postgres the location of the foreign server and the second are the credentials that a specific user can use to read from the remote server.</p>
-
-<pre><code>CREATE SERVER foreign_server
-        FOREIGN DATA WRAPPER postgres_fdw
-        OPTIONS (host 'blabla.us-east-1.redshift.amazonaws.com', port '5439', dbname 'dbname_here', sslmode 'require');
-CREATE USER MAPPING FOR current_db_user
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#069;font-weight:bold">CREATE</span> SERVER foreign_server
+        <span style="color:#069;font-weight:bold">FOREIGN</span> <span style="color:#069;font-weight:bold">DATA</span> WRAPPER postgres_fdw
+        <span style="color:#069;font-weight:bold">OPTIONS</span> (<span style="color:#069;font-weight:bold">host</span> <span style="color:#c30">&#39;blabla.us-east-1.redshift.amazonaws.com&#39;</span>, port <span style="color:#c30">&#39;5439&#39;</span>, dbname <span style="color:#c30">&#39;dbname_here&#39;</span>, sslmode <span style="color:#c30">&#39;require&#39;</span>);
+<span style="color:#069;font-weight:bold">CREATE</span> <span style="color:#069;font-weight:bold">USER</span> MAPPING <span style="color:#069;font-weight:bold">FOR</span> current_db_user
         SERVER foreign_server
-        OPTIONS (user 'remote_user', password 'secret');
-</code></pre>
-
+        <span style="color:#069;font-weight:bold">OPTIONS</span> (<span style="color:#069;font-weight:bold">user</span> <span style="color:#c30">&#39;remote_user&#39;</span>, password <span style="color:#c30">&#39;secret&#39;</span>);</code></pre></div>
 <p>This is the bare minimum to start moving data back and forth. You can issue INSERT SELECT statements now, but without importing the foreign schema, you have to specify all column types.</p>
-
-<pre><code>INSERT INTO latest_load (id, table_name, loaded_at)
-SELECT *
-FROM dblink('foreign_server',$MARK$
-    SELECT id, table_name, loaded_at
-    FROM latest_load
-$MARK$) AS t1 (
-	id varchar(256),
-	table_name varchar(256),
-	loaded_at timestamp);
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#069;font-weight:bold">INSERT</span> <span style="color:#069;font-weight:bold">INTO</span> latest_load (id, <span style="color:#069;font-weight:bold">table_name</span>, loaded_at)
+<span style="color:#069;font-weight:bold">SELECT</span> <span style="color:#555">*</span>
+<span style="color:#069;font-weight:bold">FROM</span> dblink(<span style="color:#c30">&#39;foreign_server&#39;</span>,<span style="color:#a00;background-color:#faa">$</span>MARK$
+    <span style="color:#069;font-weight:bold">SELECT</span> id, <span style="color:#069;font-weight:bold">table_name</span>, loaded_at
+    <span style="color:#069;font-weight:bold">FROM</span> latest_load
+<span style="color:#a00;background-color:#faa">$</span>MARK$) <span style="color:#069;font-weight:bold">AS</span> t1 (
+	id <span style="color:#366">varchar</span>(<span style="color:#f60">256</span>),
+	<span style="color:#069;font-weight:bold">table_name</span> <span style="color:#366">varchar</span>(<span style="color:#f60">256</span>),
+	loaded_at <span style="color:#069;font-weight:bold">timestamp</span>);</code></pre></div>
 <p>If you are working with Postgres 9.5+ you can import the foreign schema in a local schema and use that to trasparently copy data back and forth between databases. As example, importing a schema from a Redshift database locally, you can issue these two commands:</p>
-
-<pre><code>CREATE SCHEMA redshift;
-IMPORT FOREIGN SCHEMA public FROM SERVER foreign_server INTO redshift;
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#069;font-weight:bold">CREATE</span> <span style="color:#069;font-weight:bold">SCHEMA</span> redshift;
+IMPORT <span style="color:#069;font-weight:bold">FOREIGN</span> <span style="color:#069;font-weight:bold">SCHEMA</span> <span style="color:#069;font-weight:bold">public</span> <span style="color:#069;font-weight:bold">FROM</span> SERVER foreign_server <span style="color:#069;font-weight:bold">INTO</span> redshift;</code></pre></div>
 <p>Not all foreign data wrappers have support for this, and also not all DBMS have the concept of schema. Mysql does not really distinguish between database and schema, while Postgres and Redshift do.</p>
-
-<pre><code>INSERT INTO redshift.latest_load VALUES ('abc', now(), 'blabla');
-SELECT * FROM redshift.latest_load;
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#069;font-weight:bold">INSERT</span> <span style="color:#069;font-weight:bold">INTO</span> redshift.latest_load <span style="color:#069;font-weight:bold">VALUES</span> (<span style="color:#c30">&#39;abc&#39;</span>, now(), <span style="color:#c30">&#39;blabla&#39;</span>);
+<span style="color:#069;font-weight:bold">SELECT</span> <span style="color:#555">*</span> <span style="color:#069;font-weight:bold">FROM</span> redshift.latest_load;</code></pre></div>
 <p>These operations are completely transparent now, as in they have the same form as when working locally. For more complex SELECTs, depending on the foreign data wrappers, you have the ability to push down WHERE clauses and local JOINs, decreasing the amount of network traffic the SELECT generates and improving the performance by orders of magnitude.</p>
 
 <p>It is also possible to clone remote table structure locally, if the foreign schema has been imported.</p>
-
-<pre><code>CREATE TABLE a_table AS SELECT * FROM redshift.table_ccc;
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#069;font-weight:bold">CREATE</span> <span style="color:#069;font-weight:bold">TABLE</span> a_table <span style="color:#069;font-weight:bold">AS</span> <span style="color:#069;font-weight:bold">SELECT</span> <span style="color:#555">*</span> <span style="color:#069;font-weight:bold">FROM</span> redshift.table_ccc;</code></pre></div>
 <p>That&rsquo;s a run through of the most important ops. Hope it was useful!</p>
 
                 
@@ -234,10 +216,6 @@ if (postTime < cutoffTime) {
     <div id="footer">
         <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
     </div>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 
 
     <script>

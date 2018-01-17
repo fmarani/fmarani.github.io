@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
     <loc>/blog/using-grpc-with-django/</loc>
@@ -251,6 +252,11 @@
   <url>
     <loc>/tags/cache/</loc>
     <lastmod>2015-01-14T11:45:46+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/</loc>
     <priority>0</priority>
   </url>
   
@@ -517,13 +523,14 @@
   </url>
   
   <url>
-    <loc>/tags/tabs/index.to/</loc>
+    <loc>/tags/tabs.to/</loc>
     <lastmod>2014-01-26T15:24:59+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/</loc>
+    <lastmod>2009-03-15T18:39:48+00:00</lastmod>
     <priority>0</priority>
   </url>
   

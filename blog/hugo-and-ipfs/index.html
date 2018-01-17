@@ -172,31 +172,28 @@
 <h2 id="glue-everything-together">Glue everything together</h2>
 
 <p>I created this simple deploy script:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#099">#!/bin/bash
+</span><span style="color:#099"></span>
+<span style="color:#09f;font-style:italic"># Build the project.
+</span><span style="color:#09f;font-style:italic"></span>hugo
 
-<pre><code>#!/bin/bash
+<span style="color:#366">echo</span> -e <span style="color:#c30">&#34;\033[0;32mDeploying updates to Github pages...\033[0m&#34;</span>
 
-# Build the project.
-hugo
-
-echo -e &quot;\033[0;32mDeploying updates to Github pages...\033[0m&quot;
-
-cd public
+<span style="color:#366">cd</span> public
 git add -A
-msg=&quot;rebuilding site `date`&quot;
-if [ $# -eq 1 ]
-  then msg=&quot;$1&quot;
-fi
-git commit -m &quot;$msg&quot;
+<span style="color:#033">msg</span><span style="color:#555">=</span><span style="color:#c30">&#34;rebuilding site `date`&#34;</span>
+<span style="color:#069;font-weight:bold">if</span> <span style="color:#555">[</span> <span style="color:#033">$#</span> -eq <span style="color:#f60">1</span> <span style="color:#555">]</span>
+  <span style="color:#069;font-weight:bold">then</span> <span style="color:#033">msg</span><span style="color:#555">=</span><span style="color:#c30">&#34;</span><span style="color:#033">$1</span><span style="color:#c30">&#34;</span>
+<span style="color:#069;font-weight:bold">fi</span>
+git commit -m <span style="color:#c30">&#34;</span><span style="color:#033">$msg</span><span style="color:#c30">&#34;</span>
 git push origin master
-cd ..
+<span style="color:#366">cd</span> ..
 
-echo -e &quot;\033[0;32mDeploying updates to IPFS...\033[0m&quot;
+<span style="color:#366">echo</span> -e <span style="color:#c30">&#34;\033[0;32mDeploying updates to IPFS...\033[0m&#34;</span>
 
 scp -r public/ USER@HOST:repo
-hash=`ssh USER@HOST ipfs add -r -q repo | tail -1`
-ssh USER@HOST ipfs name publish $hash
-</code></pre>
-
+<span style="color:#033">hash</span><span style="color:#555">=</span><span style="color:#c30">`</span>ssh USER@HOST ipfs add -r -q repo | tail -1<span style="color:#c30">`</span>
+ssh USER@HOST ipfs name publish <span style="color:#033">$hash</span></code></pre></div>
 <p>Just change the USER@HOST part with your IPFS server. If you run it locally, no need to ssh.</p>
 
                 
@@ -224,10 +221,6 @@ if (postTime < cutoffTime) {
     <div id="footer">
         <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
     </div>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 
 
     <script>

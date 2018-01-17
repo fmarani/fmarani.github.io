@@ -135,102 +135,99 @@
 <p>This software is so good that we decided to put images that compose emails on this server as well. This is kind of critical because, after the nightly mail-out, there are 5-6 hours in the morning with constants spikes of traffic. Again, absolutely no side-effects, Nginx relentlessly serves gigabytes and gigabytes of images as if nothing happened.</p>
 
 <p>This is our configuration:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#09f;font-style:italic"># FIRST TIER TO ANSWER HTTP REQUESTS FOR IMAGES
+</span><span style="color:#09f;font-style:italic"># SECOND TIER IS APACHE
+</span><span style="color:#09f;font-style:italic"></span>
+<span style="color:#069;font-weight:bold">user</span>  <span style="color:#c30">apache</span>;
+<span style="color:#069;font-weight:bold">worker_processes</span>  <span style="color:#f60">4</span>; <span style="color:#069;font-weight:bold">//</span> <span style="color:#c30">same</span> <span style="color:#c30">as</span> <span style="color:#c30">number</span> <span style="color:#c30">of</span> <span style="color:#c30">cpu</span> <span style="color:#c30">cores</span>
 
-<pre><code># FIRST TIER TO ANSWER HTTP REQUESTS FOR IMAGES
-# SECOND TIER IS APACHE
+<span style="color:#c30">error_log</span>  <span style="color:#c30">logs/error.log</span>;
+<span style="color:#069;font-weight:bold">pid</span>        <span style="color:#c30">logs/nginx.pid</span>;
 
-user  apache;
-worker_processes  4; // same as number of cpu cores
-
-error_log  logs/error.log;
-pid        logs/nginx.pid;
-
-events {
-worker_connections  512;
+<span style="color:#069;font-weight:bold">events</span> {
+<span style="color:#069;font-weight:bold">worker_connections</span>  <span style="color:#f60">512</span>;
 }
 
-http {
-include       mime.types;
-default_type  application/octet-stream;
+<span style="color:#069;font-weight:bold">http</span> {
+<span style="color:#069;font-weight:bold">include</span>       <span style="color:#c30">mime.types</span>;
+<span style="color:#069;font-weight:bold">default_type</span>  <span style="color:#c30">application/octet-stream</span>;
 
-log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
-'$status $body_bytes_sent &quot;$http_referer&quot; '
-'&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
+<span style="color:#069;font-weight:bold">log_format</span>  <span style="color:#c30">main</span>  <span style="color:#c30">&#39;</span><span style="color:#033">$remote_addr</span> <span style="color:#c30">-</span> <span style="color:#033">$remote_user</span> <span style="color:#c30">[</span><span style="color:#033">$time_local]</span> <span style="color:#c30">&#34;</span><span style="color:#033">$request&#34;</span> <span style="color:#c30">&#39;</span>
+<span style="color:#c30">&#39;</span><span style="color:#033">$status</span> <span style="color:#033">$body_bytes_sent</span> <span style="color:#c30">&#34;</span><span style="color:#033">$http_referer&#34;</span> <span style="color:#c30">&#39;</span>
+<span style="color:#c30">&#39;&#34;</span><span style="color:#033">$http_user_agent&#34;</span> <span style="color:#c30">&#34;</span><span style="color:#033">$http_x_forwarded_for&#34;&#39;</span>;
 
-# access_log  logs/access.log  main;
-access_log off;
+<span style="color:#09f;font-style:italic"># access_log  logs/access.log  main;
+</span><span style="color:#09f;font-style:italic"></span><span style="color:#069;font-weight:bold">access_log</span> <span style="color:#360">off</span>;
 
-sendfile        on;
-keepalive_timeout  65;
+<span style="color:#069;font-weight:bold">sendfile</span>        <span style="color:#360">on</span>;
+<span style="color:#069;font-weight:bold">keepalive_timeout</span>  <span style="color:#f60">65</span>;
 
-upstream imageserver {
-server 127.0.0.1:81 fail_timeout=120s;
+<span style="color:#069;font-weight:bold">upstream</span> <span style="color:#c30">imageserver</span> {
+<span style="color:#069;font-weight:bold">server</span> 127.0.0.1:<span style="color:#f60">81</span> <span style="color:#c30">fail_timeout=120s</span>;
 }
 
-proxy_cache_path /opt/nginx/cache levels=2:2:2 keys_zone=imagecache:10m;
-proxy_temp_path /opt/nginx/cache_temp;
+<span style="color:#069;font-weight:bold">proxy_cache_path</span> <span style="color:#c30">/opt/nginx/cache</span> <span style="color:#c30">levels=2:2:2</span> <span style="color:#c30">keys_zone=imagecache:10m</span>;
+<span style="color:#069;font-weight:bold">proxy_temp_path</span> <span style="color:#c30">/opt/nginx/cache_temp</span>;
 
-server {
-listen       80;
-server_name  NAME.DOMAIN.COM;
-#access_log  logs/host.access.log  main; //disabled for speed
+<span style="color:#069;font-weight:bold">server</span> {
+<span style="color:#069;font-weight:bold">listen</span>       <span style="color:#f60">80</span>;
+<span style="color:#069;font-weight:bold">server_name</span>  <span style="color:#c30">NAME.DOMAIN.COM</span>;
+<span style="color:#09f;font-style:italic">#access_log  logs/host.access.log  main; //disabled for speed
+</span><span style="color:#09f;font-style:italic"></span>
+<span style="color:#069;font-weight:bold">root</span> <span style="color:#c30">/home/website/root</span>;
+<span style="color:#069;font-weight:bold">index</span> <span style="color:#c30">index.php</span> <span style="color:#c30">index.html</span> <span style="color:#c30">index.htm</span>;
 
-root /home/website/root;
-index index.php index.html index.htm;
+<span style="color:#069;font-weight:bold">gzip</span> <span style="color:#360">on</span>;
+<span style="color:#069;font-weight:bold">gzip_disable</span> <span style="color:#c30">&#34;msie6&#34;</span>;
+<span style="color:#069;font-weight:bold">gzip_disable</span> <span style="color:#c30">&#34;Lynx&#34;</span>;
+<span style="color:#069;font-weight:bold">gzip_comp_level</span> <span style="color:#f60">8</span>;
+<span style="color:#069;font-weight:bold">gzip_min_length</span> <span style="color:#f60">1000</span>;
+<span style="color:#069;font-weight:bold">gzip_proxied</span> <span style="color:#c30">any</span>;
+<span style="color:#069;font-weight:bold">gzip_types</span> <span style="color:#c30">text/plain</span> <span style="color:#c30">text/css</span> <span style="color:#c30">application/x-javascript</span> <span style="color:#c30">text/xml</span> <span style="color:#c30">application/xml</span> <span style="color:#c30">application/xml+rss</span> <span style="color:#c30">text/javascript</span>;
 
-gzip on;
-gzip_disable &quot;msie6&quot;;
-gzip_disable &quot;Lynx&quot;;
-gzip_comp_level 8;
-gzip_min_length 1000;
-gzip_proxied any;
-gzip_types text/plain text/css application/x-javascript text/xml application/xml application/xml+rss text/javascript;
-
-location /nginx_status {
-stub_status on;
-access_log   off;
-allow 127.0.0.1;
-deny all;
+<span style="color:#069;font-weight:bold">location</span> <span style="color:#c30">/nginx_status</span> {
+<span style="color:#069;font-weight:bold">stub_status</span> <span style="color:#360">on</span>;
+<span style="color:#069;font-weight:bold">access_log</span>   <span style="color:#360">off</span>;
+<span style="color:#069;font-weight:bold">allow</span> <span style="color:#f60">127</span><span style="color:#c30">.0.0.1</span>;
+<span style="color:#069;font-weight:bold">deny</span> <span style="color:#c30">all</span>;
 }
 
-location /images {
-expires 15d;
+<span style="color:#069;font-weight:bold">location</span> <span style="color:#c30">/images</span> {
+<span style="color:#069;font-weight:bold">expires</span> <span style="color:#c30">15d</span>;
 
-client_max_body_size 8m;
+<span style="color:#069;font-weight:bold">client_max_body_size</span> <span style="color:#f60">8m</span>;
 
-proxy_redirect off;
-proxy_set_header Host $host;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_pass_header Set-Cookie;
+<span style="color:#069;font-weight:bold">proxy_redirect</span> <span style="color:#360">off</span>;
+<span style="color:#069;font-weight:bold">proxy_set_header</span> <span style="color:#c30">Host</span> <span style="color:#033">$host</span>;
+<span style="color:#069;font-weight:bold">proxy_set_header</span> <span style="color:#c30">X-Real-IP</span> <span style="color:#033">$remote_addr</span>;
+<span style="color:#069;font-weight:bold">proxy_set_header</span> <span style="color:#c30">X-Forwarded-For</span> <span style="color:#033">$proxy_add_x_forwarded_for</span>;
+<span style="color:#069;font-weight:bold">proxy_pass_header</span> <span style="color:#c30">Set-Cookie</span>;
 
-proxy_cache imagecache;
-proxy_cache_valid 200 302 60m;
-proxy_cache_valid 404 5m;
+<span style="color:#069;font-weight:bold">proxy_cache</span> <span style="color:#c30">imagecache</span>;
+<span style="color:#069;font-weight:bold">proxy_cache_valid</span> <span style="color:#f60">200</span> <span style="color:#f60">302</span> <span style="color:#f60">60m</span>;
+<span style="color:#069;font-weight:bold">proxy_cache_valid</span> <span style="color:#f60">404</span> <span style="color:#f60">5m</span>;
 
-proxy_cache_use_stale timeout;
-proxy_connect_timeout 40;
-proxy_read_timeout 80;
+<span style="color:#069;font-weight:bold">proxy_cache_use_stale</span> <span style="color:#c30">timeout</span>;
+<span style="color:#069;font-weight:bold">proxy_connect_timeout</span> <span style="color:#f60">40</span>;
+<span style="color:#069;font-weight:bold">proxy_read_timeout</span> <span style="color:#f60">80</span>;
 
-# REGEX to filter out bad image urls
-if ($uri ~* &quot;.*/([a-z]+)/[a-z0-9\-]+/([a-z0-9\-]+)/([0-9]+)/([0-9]+)/([a-z0-9\-]*)/([a-z0-9\-]+)\.jpg$&quot;) {     #case insensitive
-proxy_pass http://imageserver;
+<span style="color:#09f;font-style:italic"># REGEX to filter out bad image urls
+</span><span style="color:#09f;font-style:italic"></span><span style="color:#069;font-weight:bold">if</span> <span style="color:#c30">(</span><span style="color:#033">$uri</span> ~<span style="color:#3aa">*</span> <span style="color:#c30">&#34;.*/([a-z]+)/[a-z0-9\-]+/([a-z0-9\-]+)/([0-9]+)/([0-9]+)/([a-z0-9\-]*)/([a-z0-9\-]+)\.jpg</span><span style="color:#033">$&#34;</span><span style="color:#c30">)</span> {     <span style="color:#09f;font-style:italic">#case insensitive
+</span><span style="color:#09f;font-style:italic"></span><span style="color:#069;font-weight:bold">proxy_pass</span> <span style="color:#c30">http://imageserver</span>;
 }
 
 }
 
-error_page   500 502 503 504  /50x.html;
-location = /50x.html {
-root   html;
+<span style="color:#069;font-weight:bold">error_page</span>   <span style="color:#f60">500</span> <span style="color:#f60">502</span> <span style="color:#f60">503</span> <span style="color:#f60">504</span>  <span style="color:#c30">/50x.html</span>;
+<span style="color:#069;font-weight:bold">location</span> = <span style="color:#c30">/50x.html</span> {
+<span style="color:#069;font-weight:bold">root</span>   <span style="color:#c30">html</span>;
 }
 
-location ~ /\.ht {
-deny  all;
+<span style="color:#069;font-weight:bold">location</span> ~ <span style="color:#3aa">/\.ht</span> {
+<span style="color:#069;font-weight:bold">deny</span>  <span style="color:#c30">all</span>;
 }
 }
-}
-</code></pre>
-
+}</code></pre></div>
 <p>This configuration is able to serve a constant flux of 1.5Mb/s, which i reckon is about 200 requests/sec for an average file of 3Kb. Most of the requests are served directly by Nginx, some others go through to Apache which has in average 200 connnections opened.</p>
 
 <p>The version of nginx used is 0.7.65 compiled from sources. This because new 0.7 has an improved reverse caching module which was needed for this.</p>
@@ -262,10 +259,6 @@ if (postTime < cutoffTime) {
     <div id="footer">
         <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
     </div>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 
 
     <script>

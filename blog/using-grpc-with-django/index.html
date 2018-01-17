@@ -153,23 +153,20 @@
 <h1 id="shared-package">Shared package</h1>
 
 <p>I will be using as example a toy project called <code>slimmer</code>. We will have a client project, a server project and a shared package, which will contain the stubs. To start with, create an empty folder with a minimal <code>setup.py</code> file:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">setuptools</span> <span style="color:#069;font-weight:bold">import</span> setup
 
-<pre><code>from setuptools import setup
-
-setup(name='slimmer_grpc',
-      version='0.1',
-      description='Slimmer client/server stubs',
-      url='http://github.com/fmarani/slimmer_grpc',
-      author='Federico Marani',
-      author_email='flagzeta@gmail.com',
-      license='MIT',
-      packages=['slimmer_grpc'],
-      install_requires=[
-          'grpcio==1.8.3'
+setup(name<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;slimmer_grpc&#39;</span>,
+      version<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;0.1&#39;</span>,
+      description<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;Slimmer client/server stubs&#39;</span>,
+      url<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;http://github.com/fmarani/slimmer_grpc&#39;</span>,
+      author<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;Federico Marani&#39;</span>,
+      author_email<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;flagzeta@gmail.com&#39;</span>,
+      license<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;MIT&#39;</span>,
+      packages<span style="color:#555">=</span>[<span style="color:#c30"></span><span style="color:#c30">&#39;slimmer_grpc&#39;</span>],
+      install_requires<span style="color:#555">=</span>[
+          <span style="color:#c30"></span><span style="color:#c30">&#39;grpcio==1.8.3&#39;</span>
       ],
-      zip_safe=False)
-</code></pre>
-
+      zip_safe<span style="color:#555">=</span>False)</code></pre></div>
 <p>That is the minimum required to make this package installable. It is missing a dependency that is required when you are developing. We will add that through a <code>requirements-dev.txt</code> file:</p>
 
 <pre><code>grpcio-tools==1.8.3
@@ -178,48 +175,45 @@ setup(name='slimmer_grpc',
 <p>Second step you need to create your proto file. I am using an example which is more sophisticated than an &ldquo;Hello world&rdquo;, hope it is clear anyway.</p>
 
 <p>I am placing this file inside a special folder called <code>proto</code> with a folder structure that mirrors the package hierarchy. In this case, that would be <code>proto/slimmer_grpc/main.proto</code>.</p>
-
-<pre><code>syntax = &quot;proto3&quot;;
-
-package slimmer_grpc;
-
-service Main {
-  rpc ping (Ping) returns (Pong) {}
-  rpc new_system_run (SystemRun) returns (SystemRunResponse) {}
-  rpc new_activation (Activation) returns (ActivationResponse) {}
-}
-
-message Ping {
-  string message = 1;
-}
-
-message Pong {
-  string message = 1;
-}
-
-message SystemEntity {
-  string category = 1;
-  string name = 2;
-  string identity = 3;
-}
-message SystemRun {
-  string system_id = 1;
-  repeated SystemEntity entities = 2;
-}
-message SystemRunResponse {
-  string run_id = 1;
-}
-
-message Activation {
-  string system_id = 1;
-  string run_id = 2;
-  SystemEntity entity = 3;
-}
-message ActivationResponse {
-  bool success = 1;
-}
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-protobuf" data-lang="protobuf"><span style="color:#309">syntax</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;proto3&#34;</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">package</span> <span style="color:#0cf;font-weight:bold">slimmer_grpc</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">service</span> Main {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#069;font-weight:bold">rpc</span> ping (Ping) <span style="color:#069;font-weight:bold">returns</span> (Pong) {}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#069;font-weight:bold">rpc</span> new_system_run (SystemRun) <span style="color:#069;font-weight:bold">returns</span> (SystemRunResponse) {}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#069;font-weight:bold">rpc</span> new_activation (Activation) <span style="color:#069;font-weight:bold">returns</span> (ActivationResponse) {}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">Ping</span> {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#069;font-weight:bold">message</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">Pong</span> {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#069;font-weight:bold">message</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SystemEntity</span> {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">category</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">name</span> <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">identity</span> <span style="color:#555">=</span> <span style="color:#f60">3</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SystemRun</span> {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">system_id</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#069;font-weight:bold">repeated</span> SystemEntity <span style="color:#309">entities</span> <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SystemRunResponse</span> {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">run_id</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">Activation</span> {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">system_id</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">run_id</span> <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  SystemEntity <span style="color:#309">entity</span> <span style="color:#555">=</span> <span style="color:#f60">3</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">ActivationResponse</span> {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">bool</span> <span style="color:#309">success</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}</code></pre></div>
 <p>After you have written all this, now it is time to generate the code. From the folder that contains <code>setup.py</code>, run the following command.</p>
 
 <pre><code>python -m grpc_tools.protoc -I proto --python_out=./ --grpc_python_out=./ proto/slimmer_grpc/main.proto
@@ -248,70 +242,64 @@ message ActivationResponse {
 <p>I am choosing a way that is a lot simpler and more basic: have two separate processes, with two event loops. In order to do that, they must be independent. They will listen to different ports, and they will have separate lifecycles (startup/shutdown/etc).</p>
 
 <p>What we need is a Django management command that instead of entering the WSGI loop, enters in the GRPC loop.</p>
-
-<pre><code>from concurrent import futures
-import time
-import grpc
-from contextlib import contextmanager
-from django.core.management.base import BaseCommand, CommandError
-from slimmer_grpc import main_pb2_grpc, main_pb2
-from main import models
-
-
-class MainServicer(main_pb2_grpc.MainServicer):
-    def ping(self, request, context):
-        return main_pb2.Pong(message=request.message)
-
-    def new_system_run(self, request, context):
-        # your code here
-        return main_pb2.SystemRunResponse(run_id=&quot;your id&quot;)
-
-    def new_activation(self, request, context):
-        # your code here
-        return main_pb2.ActivationResponse(success=True)
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">concurrent</span> <span style="color:#069;font-weight:bold">import</span> futures
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">time</span>
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">grpc</span>
+<span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">contextlib</span> <span style="color:#069;font-weight:bold">import</span> contextmanager
+<span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">django.core.management.base</span> <span style="color:#069;font-weight:bold">import</span> BaseCommand, CommandError
+<span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">slimmer_grpc</span> <span style="color:#069;font-weight:bold">import</span> main_pb2_grpc, main_pb2
+<span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">main</span> <span style="color:#069;font-weight:bold">import</span> models
 
 
-_ONE_DAY_IN_SECONDS = 60 * 60 * 24
+<span style="color:#069;font-weight:bold">class</span> <span style="color:#0a8;font-weight:bold">MainServicer</span>(main_pb2_grpc<span style="color:#555">.</span>MainServicer):
+    <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">ping</span>(self, request, context):
+        <span style="color:#069;font-weight:bold">return</span> main_pb2<span style="color:#555">.</span>Pong(message<span style="color:#555">=</span>request<span style="color:#555">.</span>message)
 
-@contextmanager
-def serve_forever():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    main_pb2_grpc.add_MainServicer_to_server(MainServicer(), server)
-    server.add_insecure_port('[::]:50051')
-    server.start()
-    yield
-    server.stop(0)
+    <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">new_system_run</span>(self, request, context):
+        <span style="color:#09f;font-style:italic"># your code here</span>
+        <span style="color:#069;font-weight:bold">return</span> main_pb2<span style="color:#555">.</span>SystemRunResponse(run_id<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#34;your id&#34;</span>)
 
-class Command(BaseCommand):
-    help = 'api server'
+    <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">new_activation</span>(self, request, context):
+        <span style="color:#09f;font-style:italic"># your code here</span>
+        <span style="color:#069;font-weight:bold">return</span> main_pb2<span style="color:#555">.</span>ActivationResponse(success<span style="color:#555">=</span>True)
 
-    def handle(self, *args, **options):
-        with serve_forever():
-            self.stdout.write(self.style.SUCCESS('Successfully started grpc server '))
-            try:
-                while True:
-                    time.sleep(_ONE_DAY_IN_SECONDS)
-            except KeyboardInterrupt:
-                pass
-</code></pre>
 
+_ONE_DAY_IN_SECONDS <span style="color:#555">=</span> <span style="color:#f60">60</span> <span style="color:#555">*</span> <span style="color:#f60">60</span> <span style="color:#555">*</span> <span style="color:#f60">24</span>
+
+<span style="color:#99f">@contextmanager</span>
+<span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">serve_forever</span>():
+    server <span style="color:#555">=</span> grpc<span style="color:#555">.</span>server(futures<span style="color:#555">.</span>ThreadPoolExecutor(max_workers<span style="color:#555">=</span><span style="color:#f60">10</span>))
+    main_pb2_grpc<span style="color:#555">.</span>add_MainServicer_to_server(MainServicer(), server)
+    server<span style="color:#555">.</span>add_insecure_port(<span style="color:#c30"></span><span style="color:#c30">&#39;[::]:50051&#39;</span>)
+    server<span style="color:#555">.</span>start()
+    <span style="color:#069;font-weight:bold">yield</span>
+    server<span style="color:#555">.</span>stop(<span style="color:#f60">0</span>)
+
+<span style="color:#069;font-weight:bold">class</span> <span style="color:#0a8;font-weight:bold">Command</span>(BaseCommand):
+    help <span style="color:#555">=</span> <span style="color:#c30"></span><span style="color:#c30">&#39;api server&#39;</span>
+
+    <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">handle</span>(self, <span style="color:#555">*</span>args, <span style="color:#555">**</span>options):
+        <span style="color:#069;font-weight:bold">with</span> serve_forever():
+            self<span style="color:#555">.</span>stdout<span style="color:#555">.</span>write(self<span style="color:#555">.</span>style<span style="color:#555">.</span>SUCCESS(<span style="color:#c30"></span><span style="color:#c30">&#39;Successfully started grpc server &#39;</span>))
+            <span style="color:#069;font-weight:bold">try</span>:
+                <span style="color:#069;font-weight:bold">while</span> True:
+                    time<span style="color:#555">.</span>sleep(_ONE_DAY_IN_SECONDS)
+            <span style="color:#069;font-weight:bold">except</span> <span style="color:#c00;font-weight:bold">KeyboardInterrupt</span>:
+                <span style="color:#069;font-weight:bold">pass</span></code></pre></div>
 <p>This is enough to start serving GRPC requests!</p>
 
 <h1 id="python-client">Python client</h1>
 
 <p>Using the client does not require any special treatment. It is just a class that needs to be called. Once installed the shared package in the virtualenv of the client, it is quite straightforward.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">slimmer_grpc</span> <span style="color:#069;font-weight:bold">import</span> main_pb2_grpc, main_pb2
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">grpc</span>
 
-<pre><code>from slimmer_grpc import main_pb2_grpc, main_pb2
-import grpc
-
-def get_client():
-    channel = grpc.insecure_channel(&quot;1.2.3.4:50051&quot;)
-    client = main_pb2_grpc.MainStub(channel)
-    response = client.ping(main_pb2.Ping(message='test'))
-    if response.message == &quot;test&quot;:
-        return client
-</code></pre>
-
+<span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">get_client</span>():
+    channel <span style="color:#555">=</span> grpc<span style="color:#555">.</span>insecure_channel(<span style="color:#c30"></span><span style="color:#c30">&#34;1.2.3.4:50051&#34;</span>)
+    client <span style="color:#555">=</span> main_pb2_grpc<span style="color:#555">.</span>MainStub(channel)
+    response <span style="color:#555">=</span> client<span style="color:#555">.</span>ping(main_pb2<span style="color:#555">.</span>Ping(message<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;test&#39;</span>))
+    <span style="color:#069;font-weight:bold">if</span> response<span style="color:#555">.</span>message <span style="color:#555">==</span> <span style="color:#c30"></span><span style="color:#c30">&#34;test&#34;</span>:
+        <span style="color:#069;font-weight:bold">return</span> client</code></pre></div>
 <p>That is a starting point. This will need to be extended with exception handling, etc&hellip;</p>
 
 <h1 id="production">Production</h1>
@@ -349,10 +337,6 @@ if (postTime < cutoffTime) {
     <div id="footer">
         <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
     </div>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 
 
     <script>

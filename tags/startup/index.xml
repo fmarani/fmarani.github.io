@@ -2,12 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Startup on Blog | Federico Marani</title>
-    <link>/tags/startup/index.xml</link>
+    <link>/tags/startup/</link>
     <description>Recent content in Startup on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <atom:link href="/tags/startup/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 Jan 2014 15:24:59 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/startup/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Why my first startup failed - tabs.to</title>
@@ -15,26 +18,7 @@
       <pubDate>Sun, 26 Jan 2014 15:24:59 +0000</pubDate>
       
       <guid>/blog/why-my-first-startup-failed/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;../../attachments/logo.png&#34; alt=&#34;logo&#34; title=&#34;Tabs.to&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Tabs.to was a url shortener, but with a twist, it could support multiple urls and it was displaying them with a sort of tabbed interface which you could use to switch between pages. The use case I was seeing was sending multiple links via twitter, and by doing so you would have saved space. In hindsight, it seems pretty short-sighted but that was the problem I had. This was in 2010, 4 years ago.&lt;/p&gt;
-
-&lt;p&gt;I really liked the idea, it was simple, easy to explain, easy to pitch. The way I saw this challenge was really a growth problem, more than a revenue problem. After having grown big, we would have had a ton of data about sites, and we could have built a kickass analytics tool on it.&lt;/p&gt;
-
-&lt;p&gt;I am pretty sure the reason why this failed was mainly overengineering, will come back to this later.&lt;/p&gt;
-
-&lt;p&gt;I wanted the site to be accessible through Web and API. I wanted to build this in Scala and MongoDB, two technologies I did not know, for the web-serving part, and Python/RabbitMQ for the offline processing part. I wanted the site to scale to thousands of requests, and it did. It took 6 months of hard work, every day, every weekend, it took an incredible amount of energy. A good friend of mine made me a logo and a design, someone on elance made me the front-end, my other co-founder helped me define the product, do wireframes and prioritize what needed to be done.&lt;/p&gt;
-
-&lt;p&gt;I started talking about this to people, and I also went to Hacker News in London to present this. It was a 20 minute presentation to a lot of people, it was fairly technical because I believed that the idea did not require explanation and technology was what I am passionate about. At the end I have received some good feedback, and I also had some angel investors interested in the product. People offered to mentor me, and I had interesting chats with some of them in the following weeks. We also met a lawyer for possibly patenting parts of this idea.&lt;/p&gt;
-
-&lt;p&gt;People started to use the product, but numbers were low and fundamental problems started to appear in the product. It turns out many websites did not like to be loaded in an frame, either by giving back a white page or escaping the frame. Resolving this was going to be really tricky, to give to the user the same site, I would have had to create a browser extension and use the real browser tabs for that.&lt;/p&gt;
-
-&lt;p&gt;Besides that, because I focused so much on technology and scaling, the energy I invested here was too high and I did not enough of what really matters in a startup, like market research, talking to other companies for integrations, offer content online myself, talking to early adopters.&lt;/p&gt;
-
-&lt;p&gt;People have a limited amount of energy before they burn out. At some point I exhausted mine, all the energy I spent on making the perfect platform turned out to have been misplaced.&lt;/p&gt;
-
-&lt;p&gt;I learned in the hard way from this experience, but it was really good learning. You can be really motivated at something, but motivation is not infinite, needs to be reinforced with success.&lt;/p&gt;
-</description>
+      <description>Tabs.to was a url shortener, but with a twist, it could support multiple urls and it was displaying them with a sort of tabbed interface which you could use to switch between pages. The use case I was seeing was sending multiple links via twitter, and by doing so you would have saved space. In hindsight, it seems pretty short-sighted but that was the problem I had. This was in 2010, 4 years ago.</description>
     </item>
     
     <item>
@@ -43,64 +27,8 @@
       <pubDate>Thu, 17 May 2012 00:28:34 +0000</pubDate>
       
       <guid>/blog/from-idea-to-a-product/</guid>
-      <description>
-
-&lt;p&gt;This is my history in one of the first startups I worked for, very small, but nevertheless a very good learning experience.&lt;/p&gt;
-
-&lt;h2 id=&#34;selling-the-idea&#34;&gt;Selling the idea&lt;/h2&gt;
-
-&lt;p&gt;We had the vision, and we sold our vision in the way a lean startup would do: sell the vision, receive funding for the project, deliver the product. Turns out it is extremely hard to sell something that does not exist, but we did it. After a while we found our first customer, which believed in us and was the right kind of customer. We worked for about a month alongside them, formalized the vision into a product, writing schemas, functional specifications, project plans, time estimates, wireframes. I think they were quite supportive and not too pretentious. They also saw a lot of value in what we were delivering. We also won a TSB grant, which helped us to go through initial stages and eventually hire our second developer.&lt;/p&gt;
-
-&lt;h2 id=&#34;studying-the-idea&#34;&gt;Studying the idea&lt;/h2&gt;
-
-&lt;p&gt;How to realize what we had in mind went through many iterations. Nobody of us had the complete knowledge to realize what we sold, the company did not have the expertise in house and the possibility to afford anyone who had it, so we had to learn a lot. I am not talking about frameworks and libraries but algorithms.
-Luckily enough, all the stanford classes of the past year introduced us to the techniques that we ended up using&amp;hellip; machine learning and nlp most of all.
-Our original idea was to be able to estimate how much a company is making in terms of revenue, estimating it with an acceptable margin of error, starting from data available publicly. There is a lot of data available publicly, some from Companies house, some from other financial institutes, some from the social sphere, some from search engines. Some information is also given away by the companies themselves on their site (e.g. testimonials, press releases, etc&amp;hellip;). Some other from press releases of investors such as VCs. If you dig deep enough you will see there is a LOT of data, but the problem is that there is always noise, would this noise have compromised our efforts?&lt;/p&gt;
-
-&lt;h2 id=&#34;machine-learning&#34;&gt;Machine learning&lt;/h2&gt;
-
-&lt;p&gt;Turns out ML is a very vast field, much of it unexplored. Neural networks are not the only method to instruct a machine to take decisions like humans&amp;hellip; there are many others. Human brain can fine tune automatically, but in a machine you have to pick the right algorithm: SVM, kNN, Naive bayes, NN, linear-logistic regression..
-Once you know these techniques, actually what we do is pretty simple, take known connections between data and revenue, train the system and use it to predict revenue when we do not have it. In the real-world though, there is a lot of work to do on data.. smoothing, make sure it is time-overlapping, make sure features you chose represent well the reality, etc.&lt;/p&gt;
-
-&lt;h2 id=&#34;choosing-the-technology&#34;&gt;Choosing the technology&lt;/h2&gt;
-
-&lt;p&gt;Python was the perfect choice for me. The one i have most experience with, and a very good language for prototyping ideas. I had previous experience in a startup using Scala and I was not able to reach the same development speed. I think slow development is absolutely to be avoided in a startup, it is a motivation killer&amp;hellip; Generally in a startup you should use things you know well, it cuts development time. Forget all the cool techs you always wanted to try, try them in a personal project, not a serious startup. I know it is a blow, but you have to accept it, it is a matter of life or death. We used Mysql, not Cassandra. I knew Mysql very well already and, to be honest, how many Mysql experts can you find on the market? and how many Cassandra experts?&lt;/p&gt;
-
-&lt;h2 id=&#34;building-the-team&#34;&gt;Building the team&lt;/h2&gt;
-
-&lt;p&gt;When i joined, it was just me and the CEO. It is a pretty exciting time to join a company, i had to give a direction to everything in terms of software development. We needed a team, but i was not sure exactly what kind of person.. senior, junior, contractor? Our budget was limited, therefore the best choice turned out to be someone junior-mid level with potential to grow quickly in the organization. Which skills did we require in a developer? Initialy i thought we need someone that knew Python but having thought about it.. what we really needed is someone interested in what we do and in the algorithms we use. Python is such an easy language you can pick it up in a couple of weeks, and if you don&amp;rsquo;t, you are probably not the right kind of developer for us anyway.&lt;/p&gt;
-
-&lt;h2 id=&#34;stay-lean&#34;&gt;Stay lean&lt;/h2&gt;
-
-&lt;p&gt;All we needed is a shared folder for docs, a code repository, a virtual machine and a whiteboard with lots of post-it notes. No need for issue tracking or CI server when you start, but that is not an excuse to get sloppy with unit-tests. I like 5-10 minutes stand-ups in the morning, you get a sense of what the team is up to and you can offer solutions to problems pretty quickly. There is not really time for documenting code either, at the start it is all in the heads of people. I am a fan of writing code like a prose, that is the best way to write docs.&lt;/p&gt;
-
-&lt;h2 id=&#34;lesson-learnt&#34;&gt;Lesson learnt&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;You are in a startup usually because you are incentivized by the idea, team or equity in the company, not because you have a good salary. Make sure you understand this.&lt;/li&gt;
-&lt;li&gt;Team is the most important thing. Much better if you have the same level of experience but specialize in different things.&lt;/li&gt;
-&lt;li&gt;Use what you already know, learn quickly what you don&amp;rsquo;t.&lt;/li&gt;
-&lt;li&gt;Identify a market and clients before starting. Call them and sell them the product, before, during and after you build it.&lt;/li&gt;
-&lt;li&gt;You have to tackle issues, not wait for somebody else.&lt;/li&gt;
-&lt;li&gt;Write down the rules of the game before joining.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;launch&#34;&gt;Launch!&lt;/h2&gt;
-
-&lt;p&gt;We delivered our first version of the product a couple of weeks ago&amp;hellip; Some screenshots:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-company-list-plus-filter.png&#34; alt=&#34;company list&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-company-detail.png&#34; alt=&#34;company detail&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-building-list.png&#34; alt=&#34;building list&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-building-detail.png&#34; alt=&#34;building detail&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-map.png&#34; alt=&#34;map&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/growthintelligence-com-insert-company.png&#34; alt=&#34;insert company&#34; /&gt;&lt;/p&gt;
-</description>
+      <description>This is my history in one of the first startups I worked for, very small, but nevertheless a very good learning experience.
+Selling the idea We had the vision, and we sold our vision in the way a lean startup would do: sell the vision, receive funding for the project, deliver the product. Turns out it is extremely hard to sell something that does not exist, but we did it.</description>
     </item>
     
     <item>
@@ -109,20 +37,8 @@ Once you know these techniques, actually what we do is pretty simple, take known
       <pubDate>Sun, 22 Jan 2012 21:49:33 +0000</pubDate>
       
       <guid>/blog/why-soa-in-a-startup-sucks/</guid>
-      <description>&lt;p&gt;Service Oriented Architectures as i intend are architectures where each component is deployable and usable separately from others. Take as example Amazon, much of their software stack is offered as a service, mainly through an HTTP interface, and marketed as SaaS.&lt;/p&gt;
-
-&lt;p&gt;There are tons of reasons why you would want to think to your system as a series of components deployable separately&amp;hellip; flexibility, being able to choose the right tools for each component, etc.. i will not talk about the advantages.&lt;/p&gt;
-
-&lt;p&gt;Sometime their use is convenient, but there&amp;rsquo;s a lot of hype about it and i want to write what i learned (the hard way) about building your system with this architecture in mind.
-&lt;h3&gt;Development cycle is too slow&lt;/h3&gt;
-When you need to change/add a functionality that changes more than one component, you need to code the functionality in both components and redesign the interaction. If you are using REST it means you will end up modifying URLs and data they return. To sum up, time to add code in component A, time to add code in component B, time to redesign and code changes in the interaction, time to redeploy them&amp;hellip; it is quite different from &amp;ldquo;everything in one component&amp;rdquo; scenario, the only thing you do is coding.
-&lt;h3&gt;Poor testability&lt;/h3&gt;
-Quite difficult to test functionalities that span multiple services, especially when persistency is involved. How do you limit components side-effects? Perhaps a testing flag passed through an HTTP request can be enough, but that can mean quite a few internal changes which you could skip if everything was integrated.
-&lt;h3&gt;Swapping mindsets (and related frustration)&lt;/h3&gt;
-This is not a technical reason but practical. When juggling between two different software, you have to change mindset and you have to get up to speed again. This mental effort will cost you time that you could have spent otherwise.&lt;/p&gt;
-
-&lt;p&gt; &lt;/p&gt;
-</description>
+      <description>Service Oriented Architectures as i intend are architectures where each component is deployable and usable separately from others. Take as example Amazon, much of their software stack is offered as a service, mainly through an HTTP interface, and marketed as SaaS.
+There are tons of reasons why you would want to think to your system as a series of components deployable separately&amp;hellip; flexibility, being able to choose the right tools for each component, etc.</description>
     </item>
     
   </channel>

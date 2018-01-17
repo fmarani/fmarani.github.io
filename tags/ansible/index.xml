@@ -2,12 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Ansible on Blog | Federico Marani</title>
-    <link>/tags/ansible/index.xml</link>
+    <link>/tags/ansible/</link>
     <description>Recent content in Ansible on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <atom:link href="/tags/ansible/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 27 Jul 2014 12:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/ansible/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Scaling with Ansible (Europython 2014)</title>
@@ -15,14 +18,9 @@
       <pubDate>Sun, 27 Jul 2014 12:00:00 +0000</pubDate>
       
       <guid>/blog/scaling-with-ansible/</guid>
-      <description>&lt;p&gt;The presentation I gave at Europython 2014 in Berlin. Again it is about how TrialReach uses Ansible to manage its own infrastructure and some tips and tricks about our use of Ansible.&lt;/p&gt;
-
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;38a6f0d0f48f01318f29762c3a3e275b&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;And also the video of the presentation:&lt;/p&gt;
-
-&lt;iframe width=&#34;560&#34; height=&#34;315&#34; src=&#34;//www.youtube.com/embed/ptc9E24YAcc&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
-</description>
+      <description>The presentation I gave at Europython 2014 in Berlin. Again it is about how TrialReach uses Ansible to manage its own infrastructure and some tips and tricks about our use of Ansible.
+ And also the video of the presentation:
+ </description>
     </item>
     
     <item>
@@ -31,65 +29,7 @@
       <pubDate>Tue, 11 Feb 2014 22:45:08 +0000</pubDate>
       
       <guid>/blog/give-everyone-one-vm/</guid>
-      <description>&lt;p&gt;At TrialReach we want to be always able to deploy clean versions of our code online. This allows us to show our work more quickly internally (and externally) and get feedback from people as early as possible, without having to wait release dates. This also give us the opportunity to test more frequently our server provisioning procedures, and having the ability to push something live anytime is a really empowering feeling.&lt;/p&gt;
-
-&lt;p&gt;We started using Ansible as our main DevOps tool, which recently we extended to also take care of DigitalOcean VM creation. DigitalOcean has very easy APIs and is well integrated with Ansible. While we use EC2 for production/staging environments, for these throw-away environments DigitalOcean offer a good price/performance trade-off.&lt;/p&gt;
-
-&lt;p&gt;Enough said, this is a vm creation snippet:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;---
-- name: digitalocean creation
-  hosts: all
-  connection: local
-  vars:
-    - api_key: XXXXX
-    - client_id: XXXX
-  tasks: 
-    - name: gather user info
-      command: whoami
-      register: user
-    - name: gather ssh pub key 
-      command: cat {{ ansible_env.HOME }}/.ssh/id_rsa.pub 
-      register: ssh_pub_key
-    - name: generate id for this machine
-      shell: hostname | cksum | awk &#39;{print $1;}&#39;
-      register: machineid
-    - name: copy your ssh pub key on digital ocean
-      digital_ocean: &amp;gt;
-          state=present
-          command=ssh
-          name={{ machineid.stdout }}-{{ user.stdout }}
-          client_id={{ client_id }}
-          api_key={{ api_key }}
-          ssh_pub_key=&#39;{{ ssh_pub_key.stdout }}&#39;
-      register: my_ssh
-    - name: creating new digital ocean vm
-      digital_ocean: &amp;gt;
-          state=present
-          command=droplet
-          name={{ machineid.stdout }}-{{ user.stdout }}
-          ssh_key_ids={{ my_ssh.ssh_key.id }}
-          unique_name=yes
-          client_id={{ client_id }}
-          api_key={{ api_key }}
-          size_id=66
-          region_id=1
-          image_id=1505447
-          wait_timeout=500
-      register: my_droplet
-    - name: writing local2cloud inventory with new vm ip
-      shell: cat local2cloud | sed &#39;s/CHANGE/{{ my_droplet.droplet.ip_address }}/&#39; &amp;gt; local2cloud.templated
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This script does a bunch of things, create ssh key and vm, but also makes sure people create only one VM. That is what we need for now. This snippet takes a inventory template (local2cloud) and fills it with the new droplet&amp;rsquo;s IP address, so it can used to provision the new server.&lt;/p&gt;
-
-&lt;p&gt;To launch this script, make sure right variables are set, and make sure you have dopy installed in your virtualenv, then run:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ansible-playbook -i &#39;localhost,&#39; -e ansible_python_interpreter=`which python` create_vm.yml
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;-e makes sure uses python from your virtualenv, -i forces not to load an inventory file but use localhost directly. This last option is a bit &lt;a href=&#34;https://groups.google.com/forum/#!topic/Ansible-project/RuntoPUvqHM&#34; title=&#34;Ansible mailing-list&#34;&gt;hacky&lt;/a&gt;, hope in the future there are better ways to do this.&lt;/p&gt;
-</description>
+      <description>At TrialReach we want to be always able to deploy clean versions of our code online. This allows us to show our work more quickly internally (and externally) and get feedback from people as early as possible, without having to wait release dates. This also give us the opportunity to test more frequently our server provisioning procedures, and having the ability to push something live anytime is a really empowering feeling.</description>
     </item>
     
     <item>
@@ -98,10 +38,8 @@
       <pubDate>Mon, 02 Dec 2013 13:13:47 +0000</pubDate>
       
       <guid>/blog/devops-with-ansible-presentation/</guid>
-      <description>&lt;p&gt;Presentation I gave at DJUGL in September 2013 about how TrialReach uses Ansible to automate server provisioning.&lt;/p&gt;
-
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;cf5216a0021b013147b94e9ac2870296&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-</description>
+      <description>Presentation I gave at DJUGL in September 2013 about how TrialReach uses Ansible to automate server provisioning.
+ </description>
     </item>
     
   </channel>

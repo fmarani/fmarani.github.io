@@ -2,12 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Djugl on Blog | Federico Marani</title>
-    <link>/tags/djugl/index.xml</link>
+    <link>/tags/djugl/</link>
     <description>Recent content in Djugl on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <atom:link href="/tags/djugl/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 02 Dec 2013 13:13:47 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/djugl/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>DevOps with Ansible presentation</title>
@@ -15,10 +18,8 @@
       <pubDate>Mon, 02 Dec 2013 13:13:47 +0000</pubDate>
       
       <guid>/blog/devops-with-ansible-presentation/</guid>
-      <description>&lt;p&gt;Presentation I gave at DJUGL in September 2013 about how TrialReach uses Ansible to automate server provisioning.&lt;/p&gt;
-
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;cf5216a0021b013147b94e9ac2870296&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-</description>
+      <description>Presentation I gave at DJUGL in September 2013 about how TrialReach uses Ansible to automate server provisioning.
+ </description>
     </item>
     
   </channel>

@@ -185,37 +185,34 @@
 <p>Here is a very simple client/server implementation of a search service by geometry and/or name.</p>
 
 <h3 id="proto-file">Proto file</h3>
-
-<pre><code>syntax = &quot;proto3&quot;;
-
-import &quot;google/protobuf/empty.proto&quot;;
-
-message SearchRequest {
-  string query = 1;
-  float lat = 4;
-  float lng = 5;
-  int32 page_number = 2;
-  int32 result_per_page = 3;
-}
-
-message SearchResponses {
-    repeated SearchResponse responses = 1;
-}
-
-message SearchResponse {
-    string response = 1;
-}
-
-message MonitorResponse {
-    int32 n_things = 1;
-}
-
-service Search {
-    rpc monitor(google.protobuf.Empty) returns (MonitorResponse) {}
-    rpc search(SearchRequest) returns (SearchResponses) {}
-}
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-protobuf" data-lang="protobuf"><span style="color:#309">syntax</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;proto3&#34;</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">import</span> <span style="color:#c30">&#34;google/protobuf/empty.proto&#34;</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SearchRequest</span> {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">query</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">float</span> <span style="color:#309">lat</span> <span style="color:#555">=</span> <span style="color:#f60">4</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">float</span> <span style="color:#309">lng</span> <span style="color:#555">=</span> <span style="color:#f60">5</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">int32</span> <span style="color:#309">page_number</span> <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">int32</span> <span style="color:#309">result_per_page</span> <span style="color:#555">=</span> <span style="color:#f60">3</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SearchResponses</span> {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>    <span style="color:#069;font-weight:bold">repeated</span> SearchResponse <span style="color:#309">responses</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SearchResponse</span> {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>    <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">response</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">MonitorResponse</span> {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>    <span style="color:#078;font-weight:bold">int32</span> <span style="color:#309">n_things</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">service</span> Search {<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>    <span style="color:#069;font-weight:bold">rpc</span> monitor(google.protobuf.Empty) <span style="color:#069;font-weight:bold">returns</span> (MonitorResponse) {}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>    <span style="color:#069;font-weight:bold">rpc</span> search(SearchRequest) <span style="color:#069;font-weight:bold">returns</span> (SearchResponses) {}<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>}</code></pre></div>
 <p>You can then generate the server code and stub client code with this command:</p>
 
 <pre><code>python -m grpc.tools.protoc -I. --python_out=. --grpc_python_out=. search.proto
@@ -224,152 +221,143 @@ service Search {
 <p>At this point you should get a file you can import in both client and server code. The client code is almost ready to use, while the server code gives you an abstract server class with empty methods that you would need to implement. In my version of GRPC, the file is called <code>search_pb2.py</code>.</p>
 
 <h3 id="server">Server</h3>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">time</span>
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">sys</span>
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">consul</span>
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">logging</span>
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">statsd</span>
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">random</span>
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
 
-<pre><code>import time
-import sys
-import consul
-import logging
-import statsd
-import random
-import os
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">search_pb2</span>
+<span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">models</span> <span style="color:#069;font-weight:bold">import</span> session, Thing, func
 
-import search_pb2
-from models import session, Thing, func
+log <span style="color:#555">=</span> logging<span style="color:#555">.</span>getLogger()
+log<span style="color:#555">.</span>setLevel(logging<span style="color:#555">.</span>DEBUG)
 
-log = logging.getLogger()
-log.setLevel(logging.DEBUG)
-
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-log.addHandler(ch)
-
-
-_ONE_DAY_IN_SECONDS = 60 * 60 * 24
-
-port = random.randint(50000, 59000)
-stat = statsd.StatsClient('localhost', 8125)
-
-class SearchServicer(search_pb2.SearchServicer):
-    @stat.timer(&quot;search&quot;)
-    def search(self, request, context):
-        stat.incr(&quot;search_count&quot;)
-        log.info(&quot;search request: &quot; + str(request))
-        query = session.query(Thing).filter(
-                func.ST_Contains(Thing.geom, 'POINT({} {})'.format(request.lat, request.lng)))
-        responses = [search_pb2.SearchResponse(response=rec.name) for rec in query]
-        log.info(&quot;search responses: &quot; + str(responses))
-        return search_pb2.SearchResponses(responses=responses)
-
-    @stat.timer(&quot;monitor&quot;)
-    def monitor(self, request, context):
-        stat.incr(&quot;monitor_count&quot;)
-        n_things = session.query(Thing).count()
-        return search_pb2.MonitorResponse(n_things=n_things)
-
-def register():
-    log.info(&quot;register started&quot;)
-    c = consul.Consul()
-    check = consul.Check.tcp(&quot;127.0.0.1&quot;, port, &quot;30s&quot;)
-    c.agent.service.register(&quot;search-service&quot;, &quot;search-service-%d&quot; % port, address=&quot;127.0.0.1&quot;, port=port, check=check)
-    log.info(&quot;services: &quot; + str(c.agent.services()))
-
-def unregister():
-    log.info(&quot;unregister started&quot;)
-    c = consul.Consul()
-    c.agent.service.deregister(&quot;search-service-%d&quot; % port)
-    log.info(&quot;services: &quot; + str(c.agent.services()))
-
-def serve():
-  server = search_pb2.beta_create_Search_server(SearchServicer())
-  server.add_insecure_port('[::]:' + str(port))
-  server.start()
-  log.info(&quot;server started&quot;)
-  try:
-    while True:
-      time.sleep(_ONE_DAY_IN_SECONDS)
-  except KeyboardInterrupt:
-    server.stop(0)
+ch <span style="color:#555">=</span> logging<span style="color:#555">.</span>StreamHandler(sys<span style="color:#555">.</span>stdout)
+ch<span style="color:#555">.</span>setLevel(logging<span style="color:#555">.</span>DEBUG)
+formatter <span style="color:#555">=</span> logging<span style="color:#555">.</span>Formatter(<span style="color:#c30"></span><span style="color:#c30">&#39;</span><span style="color:#a00">%(asctime)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(name)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(levelname)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(message)s</span><span style="color:#c30">&#39;</span>)
+ch<span style="color:#555">.</span>setFormatter(formatter)
+log<span style="color:#555">.</span>addHandler(ch)
 
 
-if __name__ == '__main__':
+_ONE_DAY_IN_SECONDS <span style="color:#555">=</span> <span style="color:#f60">60</span> <span style="color:#555">*</span> <span style="color:#f60">60</span> <span style="color:#555">*</span> <span style="color:#f60">24</span>
+
+port <span style="color:#555">=</span> random<span style="color:#555">.</span>randint(<span style="color:#f60">50000</span>, <span style="color:#f60">59000</span>)
+stat <span style="color:#555">=</span> statsd<span style="color:#555">.</span>StatsClient(<span style="color:#c30"></span><span style="color:#c30">&#39;localhost&#39;</span>, <span style="color:#f60">8125</span>)
+
+<span style="color:#069;font-weight:bold">class</span> <span style="color:#0a8;font-weight:bold">SearchServicer</span>(search_pb2<span style="color:#555">.</span>SearchServicer):
+    <span style="color:#99f">@stat.timer</span>(<span style="color:#c30"></span><span style="color:#c30">&#34;search&#34;</span>)
+    <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">search</span>(self, request, context):
+        stat<span style="color:#555">.</span>incr(<span style="color:#c30"></span><span style="color:#c30">&#34;search_count&#34;</span>)
+        log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;search request: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(request))
+        query <span style="color:#555">=</span> session<span style="color:#555">.</span>query(Thing)<span style="color:#555">.</span><span style="color:#366">filter</span>(
+                func<span style="color:#555">.</span>ST_Contains(Thing<span style="color:#555">.</span>geom, <span style="color:#c30"></span><span style="color:#c30">&#39;POINT({} {})&#39;</span><span style="color:#555">.</span>format(request<span style="color:#555">.</span>lat, request<span style="color:#555">.</span>lng)))
+        responses <span style="color:#555">=</span> [search_pb2<span style="color:#555">.</span>SearchResponse(response<span style="color:#555">=</span>rec<span style="color:#555">.</span>name) <span style="color:#069;font-weight:bold">for</span> rec <span style="color:#000;font-weight:bold">in</span> query]
+        log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;search responses: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(responses))
+        <span style="color:#069;font-weight:bold">return</span> search_pb2<span style="color:#555">.</span>SearchResponses(responses<span style="color:#555">=</span>responses)
+
+    <span style="color:#99f">@stat.timer</span>(<span style="color:#c30"></span><span style="color:#c30">&#34;monitor&#34;</span>)
+    <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">monitor</span>(self, request, context):
+        stat<span style="color:#555">.</span>incr(<span style="color:#c30"></span><span style="color:#c30">&#34;monitor_count&#34;</span>)
+        n_things <span style="color:#555">=</span> session<span style="color:#555">.</span>query(Thing)<span style="color:#555">.</span>count()
+        <span style="color:#069;font-weight:bold">return</span> search_pb2<span style="color:#555">.</span>MonitorResponse(n_things<span style="color:#555">=</span>n_things)
+
+<span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">register</span>():
+    log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;register started&#34;</span>)
+    c <span style="color:#555">=</span> consul<span style="color:#555">.</span>Consul()
+    check <span style="color:#555">=</span> consul<span style="color:#555">.</span>Check<span style="color:#555">.</span>tcp(<span style="color:#c30"></span><span style="color:#c30">&#34;127.0.0.1&#34;</span>, port, <span style="color:#c30"></span><span style="color:#c30">&#34;30s&#34;</span>)
+    c<span style="color:#555">.</span>agent<span style="color:#555">.</span>service<span style="color:#555">.</span>register(<span style="color:#c30"></span><span style="color:#c30">&#34;search-service&#34;</span>, <span style="color:#c30"></span><span style="color:#c30">&#34;search-service-</span><span style="color:#a00">%d</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> port, address<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#34;127.0.0.1&#34;</span>, port<span style="color:#555">=</span>port, check<span style="color:#555">=</span>check)
+    log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;services: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(c<span style="color:#555">.</span>agent<span style="color:#555">.</span>services()))
+
+<span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">unregister</span>():
+    log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;unregister started&#34;</span>)
+    c <span style="color:#555">=</span> consul<span style="color:#555">.</span>Consul()
+    c<span style="color:#555">.</span>agent<span style="color:#555">.</span>service<span style="color:#555">.</span>deregister(<span style="color:#c30"></span><span style="color:#c30">&#34;search-service-</span><span style="color:#a00">%d</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> port)
+    log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;services: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(c<span style="color:#555">.</span>agent<span style="color:#555">.</span>services()))
+
+<span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">serve</span>():
+  server <span style="color:#555">=</span> search_pb2<span style="color:#555">.</span>beta_create_Search_server(SearchServicer())
+  server<span style="color:#555">.</span>add_insecure_port(<span style="color:#c30"></span><span style="color:#c30">&#39;[::]:&#39;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(port))
+  server<span style="color:#555">.</span>start()
+  log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;server started&#34;</span>)
+  <span style="color:#069;font-weight:bold">try</span>:
+    <span style="color:#069;font-weight:bold">while</span> True:
+      time<span style="color:#555">.</span>sleep(_ONE_DAY_IN_SECONDS)
+  <span style="color:#069;font-weight:bold">except</span> <span style="color:#c00;font-weight:bold">KeyboardInterrupt</span>:
+    server<span style="color:#555">.</span>stop(<span style="color:#f60">0</span>)
+
+
+<span style="color:#069;font-weight:bold">if</span> __name__ <span style="color:#555">==</span> <span style="color:#c30"></span><span style="color:#c30">&#39;__main__&#39;</span>:
     register()
     serve()
-    unregister()
-</code></pre>
-
+    unregister()</code></pre></div>
 <p>Along with the required models:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">sqlalchemy</span> <span style="color:#069;font-weight:bold">import</span> create_engine, func
+<span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">sqlalchemy.ext.declarative</span> <span style="color:#069;font-weight:bold">import</span> declarative_base
+<span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">sqlalchemy</span> <span style="color:#069;font-weight:bold">import</span> Column, Integer, String
+<span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">geoalchemy2</span> <span style="color:#069;font-weight:bold">import</span> Geometry
+<span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">sqlalchemy.orm</span> <span style="color:#069;font-weight:bold">import</span> sessionmaker
 
-<pre><code>from sqlalchemy import create_engine, func
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
-from geoalchemy2 import Geometry
-from sqlalchemy.orm import sessionmaker
 
+engine <span style="color:#555">=</span> create_engine(<span style="color:#c30"></span><span style="color:#c30">&#34;postgresql://user:password@localhost:5434/test&#34;</span>)
+Base <span style="color:#555">=</span> declarative_base()
 
-engine = create_engine(&quot;postgresql://user:password@localhost:5434/test&quot;)
-Base = declarative_base()
+<span style="color:#069;font-weight:bold">class</span> <span style="color:#0a8;font-weight:bold">Thing</span>(Base):
+    __tablename__ <span style="color:#555">=</span> <span style="color:#c30"></span><span style="color:#c30">&#34;thing&#34;</span>
+    <span style="color:#366">id</span> <span style="color:#555">=</span> Column(Integer, primary_key<span style="color:#555">=</span>True)
+    name <span style="color:#555">=</span> Column(String)
+    geom <span style="color:#555">=</span> Column(Geometry(<span style="color:#c30"></span><span style="color:#c30">&#39;POLYGON&#39;</span>))
 
-class Thing(Base):
-    __tablename__ = &quot;thing&quot;
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    geom = Column(Geometry('POLYGON'))
-
-Session = sessionmaker(bind=engine)
-session = Session()
-</code></pre>
-
+Session <span style="color:#555">=</span> sessionmaker(bind<span style="color:#555">=</span>engine)
+session <span style="color:#555">=</span> Session()</code></pre></div>
 <p>In this very simple API server, you can see GRPC, Consul, statsD and SqlAlchemy all blended together, as a proof of concept. The server responds to 2 functions, one is the search function and another called monitor that returns some internal stats around the service.</p>
 
 <p>Once you populated Postgresql with some data, you should be able to query the service with the client.</p>
 
 <h3 id="client">Client</h3>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">grpc</span>
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">sys</span>
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">logging</span>
+<span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">dns</span> <span style="color:#069;font-weight:bold">import</span> resolver
 
-<pre><code>import grpc
-import sys
-import logging
-from dns import resolver
+<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">search_pb2</span>
 
-import search_pb2
+log <span style="color:#555">=</span> logging<span style="color:#555">.</span>getLogger()
+log<span style="color:#555">.</span>setLevel(logging<span style="color:#555">.</span>DEBUG)
 
-log = logging.getLogger()
-log.setLevel(logging.DEBUG)
+ch <span style="color:#555">=</span> logging<span style="color:#555">.</span>StreamHandler(sys<span style="color:#555">.</span>stdout)
+ch<span style="color:#555">.</span>setLevel(logging<span style="color:#555">.</span>DEBUG)
+formatter <span style="color:#555">=</span> logging<span style="color:#555">.</span>Formatter(<span style="color:#c30"></span><span style="color:#c30">&#39;</span><span style="color:#a00">%(asctime)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(name)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(levelname)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(message)s</span><span style="color:#c30">&#39;</span>)
+ch<span style="color:#555">.</span>setFormatter(formatter)
+log<span style="color:#555">.</span>addHandler(ch)
 
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-log.addHandler(ch)
+consul_resolver <span style="color:#555">=</span> resolver<span style="color:#555">.</span>Resolver()
+consul_resolver<span style="color:#555">.</span>port <span style="color:#555">=</span> <span style="color:#f60">8600</span>
+consul_resolver<span style="color:#555">.</span>nameservers <span style="color:#555">=</span> [<span style="color:#c30"></span><span style="color:#c30">&#34;127.0.0.1&#34;</span>]
 
-consul_resolver = resolver.Resolver()
-consul_resolver.port = 8600
-consul_resolver.nameservers = [&quot;127.0.0.1&quot;]
+dnsanswer <span style="color:#555">=</span> consul_resolver<span style="color:#555">.</span>query(<span style="color:#c30"></span><span style="color:#c30">&#34;search-service.service.consul&#34;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;A&#39;</span>)
+ip <span style="color:#555">=</span> <span style="color:#366">str</span>(dnsanswer[<span style="color:#f60">0</span>])
+dnsanswer_srv <span style="color:#555">=</span> consul_resolver<span style="color:#555">.</span>query(<span style="color:#c30"></span><span style="color:#c30">&#34;search-service.service.consul&#34;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;SRV&#39;</span>)
+port <span style="color:#555">=</span> <span style="color:#366">int</span>(<span style="color:#366">str</span>(dnsanswer_srv[<span style="color:#f60">0</span>])<span style="color:#555">.</span>split()[<span style="color:#f60">2</span>])
 
-dnsanswer = consul_resolver.query(&quot;search-service.service.consul&quot;, 'A')
-ip = str(dnsanswer[0])
-dnsanswer_srv = consul_resolver.query(&quot;search-service.service.consul&quot;, 'SRV')
-port = int(str(dnsanswer_srv[0]).split()[2])
+log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;creating grpc client based on consul data: ip=</span><span style="color:#a00">%s</span><span style="color:#c30"> port=</span><span style="color:#a00">%d</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> (ip, port))
+channel <span style="color:#555">=</span> grpc<span style="color:#555">.</span>insecure_channel(<span style="color:#c30"></span><span style="color:#c30">&#39;</span><span style="color:#a00">%s</span><span style="color:#c30">:</span><span style="color:#a00">%d</span><span style="color:#c30">&#39;</span> <span style="color:#555">%</span> (ip, port))
+stub <span style="color:#555">=</span> search_pb2<span style="color:#555">.</span>SearchStub(channel)
 
-log.info(&quot;creating grpc client based on consul data: ip=%s port=%d&quot; % (ip, port))
-channel = grpc.insecure_channel('%s:%d' % (ip, port))
-stub = search_pb2.SearchStub(channel)
-
-if len(sys.argv) == 1 and sys.argv[1] == &quot;--monitor&quot;:
-    monitresp = stub.monitor(search_pb2.google_dot_protobuf_dot_empty__pb2.Empty())
-    log.debug(&quot;monitor response: {}&quot;.format(monitresp))
-else:
-    req = search_pb2.SearchRequest(
-        query=&quot;queryabc&quot;,
-        lat=float(sys.argv[1]),
-        lng=float(sys.argv[2]),
-        result_per_page=10)
-    log.debug(&quot;sending request: {}&quot;.format(req))
-    resp = stub.search(req)
-    log.debug(&quot;received response: {}&quot;.format(resp))
-</code></pre>
-
+<span style="color:#069;font-weight:bold">if</span> <span style="color:#366">len</span>(sys<span style="color:#555">.</span>argv) <span style="color:#555">==</span> <span style="color:#f60">1</span> <span style="color:#000;font-weight:bold">and</span> sys<span style="color:#555">.</span>argv[<span style="color:#f60">1</span>] <span style="color:#555">==</span> <span style="color:#c30"></span><span style="color:#c30">&#34;--monitor&#34;</span>:
+    monitresp <span style="color:#555">=</span> stub<span style="color:#555">.</span>monitor(search_pb2<span style="color:#555">.</span>google_dot_protobuf_dot_empty__pb2<span style="color:#555">.</span>Empty())
+    log<span style="color:#555">.</span>debug(<span style="color:#c30"></span><span style="color:#c30">&#34;monitor response: {}&#34;</span><span style="color:#555">.</span>format(monitresp))
+<span style="color:#069;font-weight:bold">else</span>:
+    req <span style="color:#555">=</span> search_pb2<span style="color:#555">.</span>SearchRequest(
+        query<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#34;queryabc&#34;</span>,
+        lat<span style="color:#555">=</span><span style="color:#366">float</span>(sys<span style="color:#555">.</span>argv[<span style="color:#f60">1</span>]),
+        lng<span style="color:#555">=</span><span style="color:#366">float</span>(sys<span style="color:#555">.</span>argv[<span style="color:#f60">2</span>]),
+        result_per_page<span style="color:#555">=</span><span style="color:#f60">10</span>)
+    log<span style="color:#555">.</span>debug(<span style="color:#c30"></span><span style="color:#c30">&#34;sending request: {}&#34;</span><span style="color:#555">.</span>format(req))
+    resp <span style="color:#555">=</span> stub<span style="color:#555">.</span>search(req)
+    log<span style="color:#555">.</span>debug(<span style="color:#c30"></span><span style="color:#c30">&#34;received response: {}&#34;</span><span style="color:#555">.</span>format(resp))</code></pre></div>
 <p>The client is querying Consul DNS service to find the microservice, using the dnspython library.</p>
 
 <h2 id="underlying-services">Underlying services</h2>
@@ -451,10 +439,6 @@ if (postTime < cutoffTime) {
     <div id="footer">
         <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
     </div>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 
 
     <script>

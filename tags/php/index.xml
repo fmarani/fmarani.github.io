@@ -2,12 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Php on Blog | Federico Marani</title>
-    <link>/tags/php/index.xml</link>
+    <link>/tags/php/</link>
     <description>Recent content in Php on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <atom:link href="/tags/php/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 17 Oct 2010 13:09:26 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/php/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Dbunit testing</title>
@@ -15,204 +18,9 @@
       <pubDate>Sun, 17 Oct 2010 13:09:26 +0000</pubDate>
       
       <guid>/blog/dbunit-testing/</guid>
-      <description>&lt;p&gt;This article is about PHPUnit used in conjunction with DBUnit to test PHP code that interacts with a database server.&lt;/p&gt;
-
-&lt;p&gt;Please note that DBUnit is able to load and unload sets of data to the db but does not handle table creation and queries that alter structures. This is responsibility of an ORM or an initial sql script that creates/rebases the initial environment.&lt;/p&gt;
-
-&lt;p&gt;Code i wrote is run against a very simple ORM implementation we currently use in my workplace. Code should be simple enough to follow.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;DB Unit test&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;A dbunit test is basically a unit-test which inherits from PHPUnit_Extensions_Database_TestCase and declares two more methods: getConnection() and getDataSet(). The first one must return the dbunit wrapper of PDO and the second a dataset representation created with create*Dataset() functions.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;class TestAddress extends PHPUnit_Extensions_Database_TestCase
-{
-    private $fixture_addressId;
-    private $fixture_location;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this-&amp;gt;fixture_addressId = &amp;quot;5&amp;quot;;
-        $this-&amp;gt;fixture_location = &amp;quot;Melbourne&amp;quot;;
-    }
-
-    protected function getConnection()
-	{
-		$pdo = getPdo(); // replace this code
-		return $this-&amp;gt;createDefaultDBConnection($pdo, &#39;testdb&#39;);
-	}
-
-    protected function getDataSet()
-    {
-        return $this-&amp;gt;createFlatXMLDataSet(dirname(__FILE__).&#39;/../fixtures/db-addresses.xml&#39;);
-    }
-
-    public function testBasicFixtureLoading()
-    {
-        $mapper = new address_Mapper();
-        $address = $mapper-&amp;gt;findById($this-&amp;gt;fixture_addressId);
-        
-        $this-&amp;gt;assertEquals($address-&amp;gt;addressLine3, $this-&amp;gt;fixture_location);
-    }
-
-    public function testSave()
-    {
-        $mapper = new address_Mapper();
-        $address = $mapper-&amp;gt;findById($this-&amp;gt;fixture_addressId);
-        $address-&amp;gt;addressLine3 = &amp;quot;London&amp;quot;;
-    	$mapper-&amp;gt;save($address);
-    	unset($address);
-        $address = $mapper-&amp;gt;findById($this-&amp;gt;fixture_addressId);
-    	$this-&amp;gt;assertEquals(&amp;quot;London&amp;quot;, $address-&amp;gt;addressLine3);
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;model object&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Model objects are a representation of data. They are basically a data container. They must not contain any integration logic (ex. database queries), that is responsibility of mapper objects.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;class Address extends Model
-{
-	public function __construct()
-	{
-		parent::__construct(&#39;addressId&#39;);
-		$this-&amp;gt;setFieldNames(array(
-			&#39;addressId&#39;,
-			&#39;firstName&#39;,
-			&#39;lastName&#39;,
-			&#39;addressLine1&#39;,
-			&#39;addressLine2&#39;,
-			&#39;addressLine3&#39;,
-			&#39;addressLine4&#39;,
-			&#39;state&#39;,
-			&#39;postCode&#39;,
-			&#39;country&#39;,
-			&#39;createdDate&#39;
-			));
-	}
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;mapper object&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Responsibility of mapper object is to populate and return correspondent models of data. In this case it returns address models. Our mapper class already offers generic find()/insert()/update()/delete() operation but you may want to extend it to use different find methods.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;class address_Mapper extends Mapper
-{
-	const STORAGE_NAME = &#39;Addresses&#39;; // table name
-
-	public function __construct()
-	{
-		parent::__construct(getPdo(), self::STORAGE_NAME, &#39;addressId&#39;);
-	}
-
-    public function findById($addressId)
-    {
-        $identity = array(&#39;addressId&#39; =&amp;gt; $addressId);
-        $model = new Address;
-        parent::find($identity, $model);
-        return $model;
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;Fixture datasets&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;These are our test data. Each dbunit test has his own dataset. There are many formats available for PHPUnit, the one here is called FlatXMLDataset, which is really simple.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; ?&amp;gt;
-&amp;lt;dataset&amp;gt;
- &amp;lt;Addresses
-   addressId=&amp;quot;5&amp;quot;
-   firstName=&amp;quot;myName&amp;quot;
-   lastName=&amp;quot;mySurname&amp;quot;
-   addressLine1=&amp;quot;myAddr1&amp;quot;
-   addressLine2=&amp;quot;myAddr2&amp;quot;
-   addressLine3=&amp;quot;myAddr3&amp;quot;
-   addressLine4=&amp;quot;Melbourne&amp;quot;
-   state=&amp;quot;&amp;quot;
-   country=&amp;quot;AU&amp;quot;
-   postCode=&amp;quot;3400&amp;quot;
-   createdDate=&amp;quot;18:16:19 2009-10-18&amp;quot;
-  /&amp;gt;
-
- &amp;lt;Addresses
-   addressId=&amp;quot;6&amp;quot;
-   firstName=&amp;quot;Another&amp;quot;
-   lastName=&amp;quot;Person&amp;quot;
-   addressLine1=&amp;quot;Somewhere&amp;quot;
-   addressLine2=&amp;quot;&amp;quot;
-   addressLine3=&amp;quot;London&amp;quot;
-   addressLine4=&amp;quot;&amp;quot;
-   state=&amp;quot;&amp;quot;
-   country=&amp;quot;UK&amp;quot;
-   postCode=&amp;quot;XXX111&amp;quot;
-   createdDate=&amp;quot;18:00:19 2009-10-18&amp;quot;
-  /&amp;gt;
-&amp;lt;/dataset&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Each child tag of &lt;dataset&gt; is &lt;TABLE_NAME column1=&#34;value&#34;&gt; kind of syntax. Nothing more than that, no structure only data.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Bootstrapping&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;As we said there is no table definition loading by default in DBunit. Initial environment must be setup before the dbunit test runs and this can be done using PHPUnit bootstrap files (see &amp;ndash;bootstrap option).&lt;/p&gt;
-
-&lt;p&gt;It is not necessary to drop and recreate tables everytime but highly advisable, there could be cases in which the test is supposed to fail but it does not because it reads data that should not be in the database. That is why we need to control execution environment as much as possible.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;define(&amp;quot;FIXTURE_DB_REBASE&amp;quot;, dirname(__FILE__).&amp;quot;/fixtures/db-rebase.sql&amp;quot;);
-
-// To test database-dependent classes you need a local database with the following settings
-$host = &#39;localhost&#39;;
-$user = &#39;unittests&#39;;
-$password = &#39;myPassword&#39;;
-$dbName = &#39;app_UnitTests&#39;;
-
-// Create a database adapter
-try {
-    $dbh = new PDO(&amp;quot;mysql://&amp;quot;.$host.&amp;quot;/&amp;quot;.$dbName, $user, $password);
-} catch (PDOException $e) {
-    echo &#39;Connection failed: &#39; . $e-&amp;gt;getMessage();
-}
-
-// Ensure database credentials work
-try {
-    $results = $dbh-&amp;gt;query(&amp;quot;SHOW TABLES&amp;quot;)-&amp;gt;fetchAll();
-} catch (PDOException $e) {
-    echo &amp;quot;You need to create a local test database - see bootstrap.php for more details\n&amp;quot;;
-    echo &amp;quot;Connection error: &amp;quot;.$e-&amp;gt;getMessage().&amp;quot;\n&amp;quot;;
-    exit;
-}
-
-// rebase the database
-$dbh-&amp;gt;query(file_get_contents(FIXTURE_DB_REBASE))-&amp;gt;closeCursor();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;DB rebase SQL fixture&lt;/strong&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;--
--- Table structure for table &#39;Addresses&#39;
---
-
-DROP TABLE IF EXISTS Addresses;
-CREATE TABLE Addresses (
-  addressId int(10) unsigned NOT NULL auto_increment,
-  firstName varchar(128) NOT NULL,
-  lastName varchar(128) NOT NULL,
-  addressLine1 varchar(256) NOT NULL,
-  addressLine2 varchar(256) NOT NULL,
-  addressLine3 varchar(256) NOT NULL,
-  addressLine4 varchar(256) NOT NULL,
-  state varchar(128) NOT NULL,
-  country varchar(128) NOT NULL,
-  postCode varchar(32) NOT NULL,
-  createdDate datetime NOT NULL,
-  PRIMARY KEY  (addressId)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <description>This article is about PHPUnit used in conjunction with DBUnit to test PHP code that interacts with a database server.
+Please note that DBUnit is able to load and unload sets of data to the db but does not handle table creation and queries that alter structures. This is responsibility of an ORM or an initial sql script that creates/rebases the initial environment.
+Code i wrote is run against a very simple ORM implementation we currently use in my workplace.</description>
     </item>
     
     <item>
@@ -221,14 +29,7 @@ CREATE TABLE Addresses (
       <pubDate>Mon, 11 Oct 2010 00:56:07 +0000</pubDate>
       
       <guid>/blog/limonade/</guid>
-      <description>&lt;p&gt;The idea of microframeworks is an interesting new idea which appeared over the internet quite recently. The number of web frameworks available on internet is massive and many times i found myself puzzled about which one is the best one to use. Of course there are the ones i believe are the &amp;ldquo;classics&amp;rdquo; (django and ruby on rails) plus many minor ones. The first famous microframework was Sinatra, followed now by others.&lt;/p&gt;
-
-&lt;p&gt;Lately i&amp;rsquo;ve been coding a little project on my own and i wanted a framework which offers its services but stands out of the way as much as possible. Microframeworks were ideal: i still wanted to have a base infrastructure to work on, but it needed to be simple. I wanted APIs simple enough to be self-explanatory. I did not want any configuration files in any format. I needed something that can be deployed as soon as possible.&lt;/p&gt;
-
-&lt;p&gt;This project needed to be written in PHP. I used &lt;a href=&#34;http://www.limonade-php.net/&#34;&gt;Limonade&lt;/a&gt; in conjunction with &lt;a href=&#34;http://www.twig-project.org/&#34;&gt;Twig&lt;/a&gt;. Limonade offers his own template language but i really like Twig and that&amp;rsquo;s what i decided to use.&lt;/p&gt;
-
-&lt;p&gt;This post is not meant to be a tutorial on how to set up Limonade (or Twig). Instructions on the website are already clear and concise, there&amp;rsquo;s no need to repeat. I just wanted to say that the experience had been rather enjoyable.&lt;/p&gt;
-</description>
+      <description>The idea of microframeworks is an interesting new idea which appeared over the internet quite recently. The number of web frameworks available on internet is massive and many times i found myself puzzled about which one is the best one to use. Of course there are the ones i believe are the &amp;ldquo;classics&amp;rdquo; (django and ruby on rails) plus many minor ones. The first famous microframework was Sinatra, followed now by others.</description>
     </item>
     
   </channel>

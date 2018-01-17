@@ -2,13 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blog | Federico Marani</title>
-    <link>/index.xml</link>
+    <link>/</link>
     <description>Recent content on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
     <lastBuildDate>Tue, 16 Jan 2018 15:41:15 +0000</lastBuildDate>
-    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Using GRPC with Django</title>
@@ -16,190 +18,8 @@
       <pubDate>Tue, 16 Jan 2018 15:41:15 +0000</pubDate>
       
       <guid>/blog/using-grpc-with-django/</guid>
-      <description>
-
-&lt;p&gt;GRPC is an implementation of an RPC system, created by Google and Square, that leverages the low-level features of HTTP/2. It has many interesting properties, like bi-directionality, efficiency, and support from many languages. RPC interfaces are declared in a special &amp;ldquo;proto&amp;rdquo; file in a readable way, which makes it, in part, self-documenting. These proto files are then used to generate client and server stubs, which is very convenient.&lt;/p&gt;
-
-&lt;p&gt;GRPC is a good choice for internal and performance-sensitive APIs. It cannot (yet) be used from the browser.&lt;/p&gt;
-
-&lt;p&gt;Here I am using as a reference a system I built for monitoring purposes. It is an internal API that receives a list of sensors everytime a new client is run, followed by sensor activations from every sensor connected to every client when the sensors are triggered. The exact nature of this is not very important, as long as mechanically it is clear.&lt;/p&gt;
-
-&lt;p&gt;When using this system, the generated stubs and the message descriptors need to be shared between client and server projects, therefore for these it is better to create a Python package. Another reason for this is that proto files in turn can have packages and imports, and when the compiler compiles proto files, those concepts are translated into Python modules and imports following the GRPC convention.&lt;/p&gt;
-
-&lt;h1 id=&#34;shared-package&#34;&gt;Shared package&lt;/h1&gt;
-
-&lt;p&gt;I will be using as example a toy project called &lt;code&gt;slimmer&lt;/code&gt;. We will have a client project, a server project and a shared package, which will contain the stubs. To start with, create an empty folder with a minimal &lt;code&gt;setup.py&lt;/code&gt; file:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;from setuptools import setup
-
-setup(name=&#39;slimmer_grpc&#39;,
-      version=&#39;0.1&#39;,
-      description=&#39;Slimmer client/server stubs&#39;,
-      url=&#39;http://github.com/fmarani/slimmer_grpc&#39;,
-      author=&#39;Federico Marani&#39;,
-      author_email=&#39;flagzeta@gmail.com&#39;,
-      license=&#39;MIT&#39;,
-      packages=[&#39;slimmer_grpc&#39;],
-      install_requires=[
-          &#39;grpcio==1.8.3&#39;
-      ],
-      zip_safe=False)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That is the minimum required to make this package installable. It is missing a dependency that is required when you are developing. We will add that through a &lt;code&gt;requirements-dev.txt&lt;/code&gt; file:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;grpcio-tools==1.8.3
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Second step you need to create your proto file. I am using an example which is more sophisticated than an &amp;ldquo;Hello world&amp;rdquo;, hope it is clear anyway.&lt;/p&gt;
-
-&lt;p&gt;I am placing this file inside a special folder called &lt;code&gt;proto&lt;/code&gt; with a folder structure that mirrors the package hierarchy. In this case, that would be &lt;code&gt;proto/slimmer_grpc/main.proto&lt;/code&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;syntax = &amp;quot;proto3&amp;quot;;
-
-package slimmer_grpc;
-
-service Main {
-  rpc ping (Ping) returns (Pong) {}
-  rpc new_system_run (SystemRun) returns (SystemRunResponse) {}
-  rpc new_activation (Activation) returns (ActivationResponse) {}
-}
-
-message Ping {
-  string message = 1;
-}
-
-message Pong {
-  string message = 1;
-}
-
-message SystemEntity {
-  string category = 1;
-  string name = 2;
-  string identity = 3;
-}
-message SystemRun {
-  string system_id = 1;
-  repeated SystemEntity entities = 2;
-}
-message SystemRunResponse {
-  string run_id = 1;
-}
-
-message Activation {
-  string system_id = 1;
-  string run_id = 2;
-  SystemEntity entity = 3;
-}
-message ActivationResponse {
-  bool success = 1;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;After you have written all this, now it is time to generate the code. From the folder that contains &lt;code&gt;setup.py&lt;/code&gt;, run the following command.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;python -m grpc_tools.protoc -I proto --python_out=./ --grpc_python_out=./ proto/slimmer_grpc/main.proto
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This command will generate a new folder called &lt;code&gt;slimmer_grpc&lt;/code&gt;. This is the folder that we want to distribute.&lt;/p&gt;
-
-&lt;p&gt;There are several methods of distributing packages, some Python specific (e.g. Pypi), some Git specific (e.g. submodules), some more bare-bones (e.g. have it in a folder in the same repo). How you decide to do this is up to you. In the rest of the article we assume the package is in a subfolder of repository. A structure like this will do:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/repo/client_project - the python client
-/repo/slimmer_grpc - the shared library
-/repo/slimmer - server code
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&#34;django-server&#34;&gt;Django server&lt;/h1&gt;
-
-&lt;p&gt;First of all, you have to install the package we created above. In order to proceed fast, we can install it in editable mode. Once activated the virtualenv of the server project (in the filesystem structure above it would be &amp;ldquo;slimmer&amp;rdquo;), this is the command to install it:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;pip install -e ./slimmer_grpc/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Next step is to focus on integration with the server. Django is a WSGI application, which is normally run by a WSGI HTTP server like Gunicorn or uWSGI. Both Gunicorn and uWSGI have their own event loop, which are clashing with the GRPC event loop.&lt;/p&gt;
-
-&lt;p&gt;Gevent may be used here to make the two cooperate, but I am reluctant to explore that path. The more complex your Django (or GRPC) stack becomes the easier is to find a piece of software that is not gevent-friendly. Also, I am not a fan of its approach.&lt;/p&gt;
-
-&lt;p&gt;I am choosing a way that is a lot simpler and more basic: have two separate processes, with two event loops. In order to do that, they must be independent. They will listen to different ports, and they will have separate lifecycles (startup/shutdown/etc).&lt;/p&gt;
-
-&lt;p&gt;What we need is a Django management command that instead of entering the WSGI loop, enters in the GRPC loop.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;from concurrent import futures
-import time
-import grpc
-from contextlib import contextmanager
-from django.core.management.base import BaseCommand, CommandError
-from slimmer_grpc import main_pb2_grpc, main_pb2
-from main import models
-
-
-class MainServicer(main_pb2_grpc.MainServicer):
-    def ping(self, request, context):
-        return main_pb2.Pong(message=request.message)
-
-    def new_system_run(self, request, context):
-        # your code here
-        return main_pb2.SystemRunResponse(run_id=&amp;quot;your id&amp;quot;)
-
-    def new_activation(self, request, context):
-        # your code here
-        return main_pb2.ActivationResponse(success=True)
-
-
-_ONE_DAY_IN_SECONDS = 60 * 60 * 24
-
-@contextmanager
-def serve_forever():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    main_pb2_grpc.add_MainServicer_to_server(MainServicer(), server)
-    server.add_insecure_port(&#39;[::]:50051&#39;)
-    server.start()
-    yield
-    server.stop(0)
-
-class Command(BaseCommand):
-    help = &#39;api server&#39;
-
-    def handle(self, *args, **options):
-        with serve_forever():
-            self.stdout.write(self.style.SUCCESS(&#39;Successfully started grpc server &#39;))
-            try:
-                while True:
-                    time.sleep(_ONE_DAY_IN_SECONDS)
-            except KeyboardInterrupt:
-                pass
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This is enough to start serving GRPC requests!&lt;/p&gt;
-
-&lt;h1 id=&#34;python-client&#34;&gt;Python client&lt;/h1&gt;
-
-&lt;p&gt;Using the client does not require any special treatment. It is just a class that needs to be called. Once installed the shared package in the virtualenv of the client, it is quite straightforward.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;from slimmer_grpc import main_pb2_grpc, main_pb2
-import grpc
-
-def get_client():
-    channel = grpc.insecure_channel(&amp;quot;1.2.3.4:50051&amp;quot;)
-    client = main_pb2_grpc.MainStub(channel)
-    response = client.ping(main_pb2.Ping(message=&#39;test&#39;))
-    if response.message == &amp;quot;test&amp;quot;:
-        return client
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That is a starting point. This will need to be extended with exception handling, etc&amp;hellip;&lt;/p&gt;
-
-&lt;h1 id=&#34;production&#34;&gt;Production&lt;/h1&gt;
-
-&lt;p&gt;Whatever system you use to run this:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Highly advised to run the Gunicorn part under Nginx. A similar setup is not necessary for the GRPC server.&lt;/li&gt;
-&lt;li&gt;Both processes need to be run under a supervisor. If you are running this in Heroku, the GRPC server needs to be in a separate dyno.&lt;/li&gt;
-&lt;li&gt;You may be able to use a recent version of Nginx to do virtual hosting + reverse proxying for GRPC.&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>GRPC is an implementation of an RPC system, created by Google and Square, that leverages the low-level features of HTTP/2. It has many interesting properties, like bi-directionality, efficiency, and support from many languages. RPC interfaces are declared in a special &amp;ldquo;proto&amp;rdquo; file in a readable way, which makes it, in part, self-documenting. These proto files are then used to generate client and server stubs, which is very convenient.
+GRPC is a good choice for internal and performance-sensitive APIs.</description>
     </item>
     
     <item>
@@ -208,14 +28,8 @@ def get_client():
       <pubDate>Thu, 20 Jul 2017 12:00:00 +0000</pubDate>
       
       <guid>/blog/feeding-data-to-redshift-with-airflow-presentation/</guid>
-      <description>&lt;p&gt;The presentation I gave at Europython 2017 in Rimini. The talk is divided in 3 parts: some guiding principles on architecting data pipelines, an introduction to Apache Airflow and the last part is about specifically working with Amazon Redshift. The experience in these tools comes from building an analytics engine for meetups, where historical reports, trend analysis and data enrichment are critical factors.&lt;/p&gt;
-
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;380d0b967be44504b386b01b34de1fe5&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;And also the video of the presentation:&lt;/p&gt;
-
-&lt;iframe width=&#34;1024&#34; height=&#34;576&#34; src=&#34;https://www.youtube.com/embed/0s6lmVbvoFo&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
-</description>
+      <description>The presentation I gave at Europython 2017 in Rimini. The talk is divided in 3 parts: some guiding principles on architecting data pipelines, an introduction to Apache Airflow and the last part is about specifically working with Amazon Redshift. The experience in these tools comes from building an analytics engine for meetups, where historical reports, trend analysis and data enrichment are critical factors.
+ And also the video of the presentation:</description>
     </item>
     
     <item>
@@ -224,82 +38,8 @@ def get_client():
       <pubDate>Sun, 18 Jun 2017 14:44:35 +0100</pubDate>
       
       <guid>/blog/moving-data-in-and-out-of-postgresql/</guid>
-      <description>
-
-&lt;p&gt;Postgresql is a database, and its primary goal is to be efficient when storing and querying information that is stored on disk. Same primary goal of many other databases, with the minor exception of in-memory databases. Postgresql however is a very flexible and extensible system, and in the last few years a lot of extensions came out, one of which is Foreign Data Wrappers.&lt;/p&gt;
-
-&lt;p&gt;With Postgres foreign data wrappers, it is very easy to move data in and out of it from other databases. This is particularly convenient when volumes of data are high and no business logic needs to be applied while copying data. An example scenario could be copying data from Redshift to Postgresql, or viceversa.&lt;/p&gt;
-
-&lt;p&gt;There are many reasons why using this approach makes it more efficient than a normal import/export:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;no intermediary system is needed to issue batched read/writes to databases&lt;/li&gt;
-&lt;li&gt;no temporary storage of data&lt;/li&gt;
-&lt;li&gt;no serialization/deserialization of data&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/importing-with-fdw.svg&#34; alt=&#34;Importing data methods&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;All the steps above, in the case of FDW, are handled trasparently. The drawback of this method is that it uses a feature specific to Postgresql. Although this feature is based on an official extension of SQL (SQL/MED), there is not enough feature parity among database servers to make this portable.&lt;/p&gt;
-
-&lt;h2 id=&#34;data-vs-metadata&#34;&gt;Data vs Metadata&lt;/h2&gt;
-
-&lt;p&gt;First important distinction is between data and metadata, which in this context means table structure (and table list). In Postgres there is a concept called schema: it is a namespace for tables within a database. By default all tables are placed in a schema called &amp;ldquo;public&amp;rdquo;. It is possible however to create tables in a given schema and associate permissions/do operations on schemas.&lt;/p&gt;
-
-&lt;p&gt;In our case, we can use schemas to map a local namespace to all foreign tables on a specific foreign server. In this way we do not have to specify the table structure everytime we do a SELECT on the foreign server.&lt;/p&gt;
-
-&lt;h2 id=&#34;step-by-step-example&#34;&gt;Step by step example&lt;/h2&gt;
-
-&lt;p&gt;Step zero is to enable all the extensions that we need:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE EXTENSION postgres_fdw;
-CREATE EXTENSION dblink;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then as a first step, you need a connection and a user mapping. The first is essentially telling Postgres the location of the foreign server and the second are the credentials that a specific user can use to read from the remote server.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE SERVER foreign_server
-        FOREIGN DATA WRAPPER postgres_fdw
-        OPTIONS (host &#39;blabla.us-east-1.redshift.amazonaws.com&#39;, port &#39;5439&#39;, dbname &#39;dbname_here&#39;, sslmode &#39;require&#39;);
-CREATE USER MAPPING FOR current_db_user
-        SERVER foreign_server
-        OPTIONS (user &#39;remote_user&#39;, password &#39;secret&#39;);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This is the bare minimum to start moving data back and forth. You can issue INSERT SELECT statements now, but without importing the foreign schema, you have to specify all column types.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;INSERT INTO latest_load (id, table_name, loaded_at)
-SELECT *
-FROM dblink(&#39;foreign_server&#39;,$MARK$
-    SELECT id, table_name, loaded_at
-    FROM latest_load
-$MARK$) AS t1 (
-	id varchar(256),
-	table_name varchar(256),
-	loaded_at timestamp);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you are working with Postgres 9.5+ you can import the foreign schema in a local schema and use that to trasparently copy data back and forth between databases. As example, importing a schema from a Redshift database locally, you can issue these two commands:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE SCHEMA redshift;
-IMPORT FOREIGN SCHEMA public FROM SERVER foreign_server INTO redshift;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Not all foreign data wrappers have support for this, and also not all DBMS have the concept of schema. Mysql does not really distinguish between database and schema, while Postgres and Redshift do.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;INSERT INTO redshift.latest_load VALUES (&#39;abc&#39;, now(), &#39;blabla&#39;);
-SELECT * FROM redshift.latest_load;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;These operations are completely transparent now, as in they have the same form as when working locally. For more complex SELECTs, depending on the foreign data wrappers, you have the ability to push down WHERE clauses and local JOINs, decreasing the amount of network traffic the SELECT generates and improving the performance by orders of magnitude.&lt;/p&gt;
-
-&lt;p&gt;It is also possible to clone remote table structure locally, if the foreign schema has been imported.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE TABLE a_table AS SELECT * FROM redshift.table_ccc;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That&amp;rsquo;s a run through of the most important ops. Hope it was useful!&lt;/p&gt;
-</description>
+      <description>Postgresql is a database, and its primary goal is to be efficient when storing and querying information that is stored on disk. Same primary goal of many other databases, with the minor exception of in-memory databases. Postgresql however is a very flexible and extensible system, and in the last few years a lot of extensions came out, one of which is Foreign Data Wrappers.
+With Postgres foreign data wrappers, it is very easy to move data in and out of it from other databases.</description>
     </item>
     
     <item>
@@ -308,44 +48,8 @@ SELECT * FROM redshift.latest_load;
       <pubDate>Wed, 31 May 2017 10:17:15 +0100</pubDate>
       
       <guid>/blog/how-apache-airflow-works/</guid>
-      <description>
-
-&lt;p&gt;(continuing from a &lt;a href=&#34;./blog/intro-to-apache-airflow/&#34;&gt;previous article&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&#34;scheduler&#34;&gt;Scheduler&lt;/h2&gt;
-
-&lt;p&gt;Airflow is made up of mainly two components: webserver and scheduler. The webserver is the main way to interact with Airflow, although some commands can be issued from the command line, such as setting variables or connection credentials. The scheduler is the component that is in charge of executing whatever needs to be executed at a specific time and using a configurable strategy.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/airflow-scheduler.png&#34; alt=&#34;Airflow scheduler CLI&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;When creating DAGs, you specify an interval (daily/hourly/etc) and in doing so the scheduler knows that a DagRun need to be created at a specific recurring time. DagRuns are a database model and they represent a run of a DAG at a set execution date. For instance, if we generate a report every day, at midnight of each day a new DagRun is created. These will then get collected by a scheduler &amp;ldquo;executor&amp;rdquo; for execution. In addition to this, a DagRun can be created by manually triggering a Dag, with the command &lt;code&gt;trigger_dag&lt;/code&gt; available from the command line.&lt;/p&gt;
-
-&lt;p&gt;In the previous post it was mentioned that DAG are composed by many Tasks. In a parallel way, DagRuns, during execution, get connected to many TaskInstances, which represent the execution of a specific task in the context of a Dag run at a specific time. Task instances have several data points that are saved in the Airflow database, therefore can be analyzed afterwards for spotting problems with task duration, launch time, execution environment, etc. Every instance also has all log information coming from executing its code written to a log file automatically managed by Airflow.&lt;/p&gt;
-
-&lt;p&gt;The normal behaviour of Dag execution is that tasks are executed in a dependency order and only in case the previous task has terminated successfully. This behaviour can be changed to activate regardless of exit status or only in case of failure of the previous task. I never had to change this. If you think you should add an error triggering task, be aware that Airflow comes with its own error reporting facilities, although quite basic. Dependencies between tasks can be declared in both ways, as in &amp;ldquo;is-dependent-from&amp;rdquo; and &amp;ldquo;depends-on&amp;rdquo;. Airflow will automatically make the correct graph out of this and traverse it accordingly.&lt;/p&gt;
-
-&lt;h2 id=&#34;executors&#34;&gt;Executors&lt;/h2&gt;
-
-&lt;p&gt;The actual execution of the task happens somewhat separately from the scheduler process. There are 3 strategies included in Airflow: local, sequential, Celery and Mesos executor. Sequential is the default and good for development, but it will not get you far. Local executor is the one I have seen used the most, and it is based on a pre-fork model: a number of workers are forked from the main scheduler and polling from an IPC queue tasks to run. When a task is taken from the queue, another fork happens and a new process is wrapping the actual execution of the task. There are no external dependencies needed here, and it scales up well until all resources on the server are used.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/airflow-processhierarchy.png&#34; alt=&#34;Airflow processes&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;If you want to scale out to multiple servers, you can use the Celery executor. Celery executor uses Celery (and a messaging queue server) to distribute the load on a pool of workers. It is quite a common pattern used in the Django/RoR world. This is a more complex setup, and it requires the code to be in sync with all machines.&lt;/p&gt;
-
-&lt;h2 id=&#34;retries-and-idempotency&#34;&gt;Retries and Idempotency&lt;/h2&gt;
-
-&lt;p&gt;An important concept is idempotency: any task could be executed potentially any number of time (although ideally not many more than one), therefore it is important that this is taken into account, either by bringing it to a known state every time it starts or some other specific way. If you are not familiar with the term, it is a term that is frequently used in messaging systems, where at-least-once delivery is common. Most background jobs queue implement this.&lt;/p&gt;
-
-&lt;p&gt;If for any reason the task that is being run fails, Airflow, if configured to do so, will try to re-run it after a time delay. This behaviour is helpful in case systems are temporarily unavailable. The number of retries can be configured at DAG-level and at Task-level. Once all the possible runs have been exhausted and the system continuously failed, the task is marked as failed and, depending on the DAG configuration, the whole DAG may be marked as failed.&lt;/p&gt;
-
-&lt;h2 id=&#34;miscellaneous&#34;&gt;Miscellaneous&lt;/h2&gt;
-
-&lt;p&gt;Worth mentioning are the Hooks (Connections in the UI) and Variables. This is a non-core but quite useful part of Airflow. It allows you to manage all connection details and configuration variables of your DAGs and your scripts directly from the Airflow Web UI. Given that all this data is read at runtime, it is quite convenient if you need to update these without restarting Airflow and all its running processes with it. Besides this, they do not offer anything more that you would not get by deploying a configuration file.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/airflow-connections.png&#34; alt=&#34;Airflow Hooks&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;One last thing is XCom. The architecture of Airflow is built in a way that tasks have complete separation from any other tasks in the same DAG. The only truth that you can assert is that all tasks that the current task depends on are guaranteed to be executed. Besides that, there is no implicit way to pass dynamic data between tasks at execution time of the DAG. If you want to do so, you need to use XCom. XCom is a simple key/value store API that uses the Airflow DB, and it&amp;rsquo;s available for querying when a task is being executed. It is generally helpful if, for instance, you generate temporary files/dirs and you want the following tasks to use the dynamically generated file paths.&lt;/p&gt;
-</description>
+      <description>(continuing from a previous article)
+Scheduler Airflow is made up of mainly two components: webserver and scheduler. The webserver is the main way to interact with Airflow, although some commands can be issued from the command line, such as setting variables or connection credentials. The scheduler is the component that is in charge of executing whatever needs to be executed at a specific time and using a configurable strategy.</description>
     </item>
     
     <item>
@@ -354,42 +58,8 @@ SELECT * FROM redshift.latest_load;
       <pubDate>Tue, 16 May 2017 10:17:15 +0100</pubDate>
       
       <guid>/blog/intro-to-apache-airflow/</guid>
-      <description>
-
-&lt;p&gt;&lt;img src=&#34;./attachments/workflow.jpg&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-
-&lt;p&gt;Apache Airflow is a tool to work with complex and recurring workflows. Workflows is a more formal term to describe scripts like cronjobs. Scripts constitute of a series of tasks, sometimes with retry mechanism attached to it.&lt;/p&gt;
-
-&lt;p&gt;A tool like this is used in data-intensive environments with background jobs that need to run everyday. These background scripts do extraction, enrichment and other transformations to a dataset. Most workflow software gives you a structure to use when writing your scripts, so they are able to distinguish between steps and manage their interdependencies. It is a very handy feature because it allows Airflow to run only the steps that are needed.&lt;/p&gt;
-
-&lt;p&gt;It is a powerful concept those of tasks dependencies: if you have a workflow that starts with a common task and then branches out in two parallel sequence of tasks, a failure in one of the branches can be recovered without running the initial tasks. Generally, if a task depends on another task that has already been run successfully, it will not be re-run again. It is literally a time-saver.&lt;/p&gt;
-
-&lt;p&gt;In data processing there are two kinds of architecture: batch processing and streaming. Generally it is easier to reason in terms of batch processing, and advisable to do so, unless there are near real-time requirements. In batch processing, workflow tasks are started and terminated when they are needed rather than daemonized and kept in the background. The processing happens in &amp;ldquo;batches&amp;rdquo; of data, rather than streamed in through a message queue.&lt;/p&gt;
-
-&lt;p&gt;Apache Airflow comes from the experience of Maxime Beauchemin that worked both at Facebook and Airbnb. When you use it, you realize it covers a lot of use cases and many levels of sophistication. It is the only open source workflow management tool as far as i know that covers both scheduling and workflow management.&lt;/p&gt;
-
-&lt;p&gt;The core concepts are quite simple: workflows are called DAGs, workflow steps are called tasks. Tasks are instances of Operators. There are many types of Operators in Airflow, PythonOperator runs Python code, BashOperator runs shell commands&amp;hellip; you get the idea.&lt;/p&gt;
-
-&lt;h2 id=&#34;what-you-get&#34;&gt;What you get&lt;/h2&gt;
-
-&lt;p&gt;Airflow offers a web UI and most operations are done from there. One of the most helpful web views is the tree view, although slightly harder to read than the graph view. It is a matrix where rows represent tasks and columns represent the time intervals. If your workflow is made up of 3 tasks and runs daily, columns will be days and the 3 rows will be the 3 tasks. Each cell will then represent the task run status.&lt;/p&gt;
-
-&lt;p&gt;In the example below, upload_to_s3 is a step that depends on frontend_generate_report step, which in turns depend on reset_output_folder, which in turn depends on latest_only. That is how it is read.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/airflow-treeview.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;For each task run there are a bunch of useful operations that can be done through the UI. View its logging (Airflow creates a log file per task run), and clear/mark done its status. I found these last options very useful when fixing bugs: if you clear a task run, it will be rescheduled and rerun by the system. Marking it done will allow Airflow to schedule the next dependent task, it is useful when you want to skip some steps.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/airflow-taskrunpopup.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Another view that is interesting to look at is task duration. It&amp;rsquo;s about how long each tasks take from start to end. Useful if you want to make sure they run within a certain amount of time.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/airflow-taskduration.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I will write an article with a more in-depth view of the tool sometimes soon. Stay tuned!&lt;/p&gt;
-</description>
+      <description>Background Apache Airflow is a tool to work with complex and recurring workflows. Workflows is a more formal term to describe scripts like cronjobs. Scripts constitute of a series of tasks, sometimes with retry mechanism attached to it.
+A tool like this is used in data-intensive environments with background jobs that need to run everyday. These background scripts do extraction, enrichment and other transformations to a dataset. Most workflow software gives you a structure to use when writing your scripts, so they are able to distinguish between steps and manage their interdependencies.</description>
     </item>
     
     <item>
@@ -398,82 +68,8 @@ SELECT * FROM redshift.latest_load;
       <pubDate>Sat, 18 Mar 2017 16:30:28 +0000</pubDate>
       
       <guid>/blog/minimalism-is-how-startups-keep-focus/</guid>
-      <description>
-
-&lt;p&gt;I want to blog about this topic because minimalism, meant as the art of doing only the essential, is a very hard thing to do. Writing about things helps me with having a clear mind. I will therefore try to write about it, and rewrite about it in the future as many times as my thinking clears up.&lt;/p&gt;
-
-&lt;p&gt;I realize this article will leave you with a ton of space for interpretation. You may have more questions after reading this than answers. This is the goal of this article.&lt;/p&gt;
-
-&lt;p&gt;I had the chance to work on some big projects last year, and this year slightly smaller projects, where my job was sitting somewhere between coding and delivery. This was a personal choice. In this space, if there is a &amp;ldquo;bug&amp;rdquo;, its cost is usually tenfold, because it has a cascading effect. Sometimes it could be the kind of bug that you cannot fix later.&lt;/p&gt;
-
-&lt;p&gt;Industry got smarter on this, with safety nets to catch bad practices, but I struggle to support this one-size-fits-all approach that seems to permeate the software industry. Approaches like Best Practices, SCRUM, 3-layer architecture, DRY, JIRA, NoSQL, REST, modularity, reusability, unit-testing, microservices. There are pros and cons for each one of these, and blogged at length by the engineering community. I acknowledge that each one of these acronyms provide common ground for processes and discussions, but why do we have to use them if in our context they do more harm than good?&lt;/p&gt;
-
-&lt;p&gt;How do we communicate we want to do something different, because the current industry standard has arguably some problems?&lt;/p&gt;
-
-&lt;p&gt;Can we advocate for DRY when we have never seen 5-6 codebases tumbling down the copy-paste route? Can we advocate for unit-tests when every new feature is 90% a rewrite of the old one? Is NoSQL better because it is newer than SQL? Why REST when there is no clear resource to act on? Unfortunately, there is no silver bullet, but we still communicate ground rules by picking an existing approach rather than coming up with one.&lt;/p&gt;
-
-&lt;p&gt;I think the only universal solution here is to only do what is needed, but there are no guidelines that help you choose to not do something. Let&amp;rsquo;s try to have a framework to take minimalistic decisions. I can count 5 levels in which minimalism can be applied.&lt;/p&gt;
-
-&lt;h2 id=&#34;product-minimalism&#34;&gt;Product minimalism&lt;/h2&gt;
-
-&lt;p&gt;Every feature needs to be mantained. When tackling a roadmap, usually features are added and products created, but this is hardly sustainable in the long term. If you compare building software to building houses, you will understand that you cannot always add rooms without rethinking the house plan.&lt;/p&gt;
-
-&lt;p&gt;Product is the medium for business to take place. It needs to be clean and clear. I think the product needs to be minimized so it is very clear what it is. Every time we add something that is not connected with the primary goal of the business, we accumulate product debt. Debt that need to be repaid by either forming a business structure around it, or by removing it from the codebase.&lt;/p&gt;
-
-&lt;p&gt;I have been thinking about negative roadmaps lately, which is a list of things you decided not to have anymore, or split out in its separate product with a separate support. I think if everything is measured in usage numbers, it should be pretty clear what is valuable and what is not.&lt;/p&gt;
-
-&lt;h2 id=&#34;architecture-minimalism&#34;&gt;Architecture minimalism&lt;/h2&gt;
-
-&lt;p&gt;How many databases, how many frameworks, languages and libraries do you need to build your product? Does each one of these choices justify the time invested in learning and maintaining it? Do they enable you to do something that you would not be able to do otherwise?&lt;/p&gt;
-
-&lt;p&gt;I am not against using the right tool for the job. I think sometimes it is better to have a flexible tool for the job instead of many right tools. This type of choice buys you options and gives you only one thing to care about.&lt;/p&gt;
-
-&lt;p&gt;How about a tool that fits you 90%? Does another tool that covers the remaining 10% justifies the added business value?&lt;/p&gt;
-
-&lt;p&gt;As a last thing, this is connected to product minimalism. Any product reduction or modification should reflect on here. If a product feature is removed, but you still keep the underlying software architecture for it, you have architecture debt.&lt;/p&gt;
-
-&lt;p&gt;I do not think architecture design by committee works, ever, especially in startups. At the same time, one person designing this and telling the team the outcome does not work either.&lt;/p&gt;
-
-&lt;p&gt;Please value your team opinions, but ultimately good points need to be discerned from bad ones, and the last ones discarded. Listening does not mean doing everything everybody wants.&lt;/p&gt;
-
-&lt;h2 id=&#34;infrastructure-minimalism&#34;&gt;Infrastructure minimalism&lt;/h2&gt;
-
-&lt;p&gt;The amount of effort you need to put in managing a network of servers is often undervalued. DevOps can drain a lot of your time if you are not careful.&lt;/p&gt;
-
-&lt;p&gt;I found that the average developer is quite bad at infrastructure, perhaps because they are different disciplines. This could be part of the reason why microservices are becoming such a buzzword nowadays.&lt;/p&gt;
-
-&lt;p&gt;Plenty has been written about microservices and how you should practice a monolith first approach when the business is young and the product is still in its definition phase. I agree with the general idea.&lt;/p&gt;
-
-&lt;p&gt;From a infrastructure management perspective, microservices is the worst option: you have to manage a distributed system with multiple points of failure which needs careful coordination when releasing, especially paying attention to forward and backward compatibility of their REST interfaces (or any other i/o format). Essentially a full-time job.&lt;/p&gt;
-
-&lt;p&gt;A much better use of your time is to lay down the infrastructure in a way that is easy to automate. You should aim to have a script for everything. Creating servers, installing databases, deploy and releasing code, etc. If you know you may have to do what you did a second time, automate it. If you are not sure, at least document it.&lt;/p&gt;
-
-&lt;h2 id=&#34;code-minimalism&#34;&gt;Code minimalism&lt;/h2&gt;
-
-&lt;p&gt;I feel like here there is potentially the biggest impact for this. Only create software layers and apply clever design patterns if they provide better common groud for the team, which can then use those to apply higher level thinking. In the other words, the abstraction needs to be good and solid. If an abstraction leaks, it is time to remove it, for the same reason you would remove a leaky pipe from your kitchen.&lt;/p&gt;
-
-&lt;p&gt;Recently I read some advice that was saying that you should write code in a way that is easy to remove. I think it is a good starting point to think about this.&lt;/p&gt;
-
-&lt;p&gt;I think in the engineering profession there is a lot of intellectual pride in being picked to build the backbone of a new codebase, but sometimes comes with intellectual arrogance attached. Building software is expected to be a very fluid process, and it can probably be that way if we try to limit the number of hard choices we feel the urge to make.&lt;/p&gt;
-
-&lt;h2 id=&#34;process-minimalism&#34;&gt;Process minimalism&lt;/h2&gt;
-
-&lt;p&gt;For me, there is nothing worse than having too many processes, but I also understand that for some type of people having a process for communicating gives you more comfort.&lt;/p&gt;
-
-&lt;p&gt;First off, processes are about communication, therefore they can be of two kinds: asynchronous and synchronous. Synchronous comunications are more costly in terms of stress and interruption of flow, but sometimes lead to solutions more quickly.&lt;/p&gt;
-
-&lt;p&gt;If your focus is progressing with work, the worst option is having a synchonous communication session that does not lead to any helpful outcome to anyone. If your focus is having fun, take 2 hours off at the end of the day and go to the pub. Nobody can claim to do constant progress 8 hours a day.&lt;/p&gt;
-
-&lt;p&gt;To me, the minimum set of meetings an engineering team should have are the ones, with explicit no blame policy, that are dedicated to voicing concerns (or support) towards specific team processes, architecture, infrastructure or code. Better if these areas are taken one at a time. What in SCRUM terms is called retrospective is one of these.&lt;/p&gt;
-
-&lt;h2 id=&#34;conclusions&#34;&gt;Conclusions&lt;/h2&gt;
-
-&lt;p&gt;If our goal is to do the things that work and do not do the things that do not work, we have to be open minded and question everything.&lt;/p&gt;
-
-&lt;p&gt;The product you do not put together will not confuse your user, the architecture you do not insert in your repository will not give any more headaches to engineers, the infrastructure you do not provision on your servers will not break, the process you do not have in place will avoid people telling you they have too many meetings. The code you do not write never crashes.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s agree that sometimes not doing, or undoing, something is a better course of action.&lt;/p&gt;
-</description>
+      <description>I want to blog about this topic because minimalism, meant as the art of doing only the essential, is a very hard thing to do. Writing about things helps me with having a clear mind. I will therefore try to write about it, and rewrite about it in the future as many times as my thinking clears up.
+I realize this article will leave you with a ton of space for interpretation.</description>
     </item>
     
     <item>
@@ -482,296 +78,8 @@ SELECT * FROM redshift.latest_load;
       <pubDate>Sat, 24 Sep 2016 23:16:56 +0200</pubDate>
       
       <guid>/blog/a-python-microservice-stack/</guid>
-      <description>
-
-&lt;p&gt;First of all, let me say the word &amp;ldquo;microservice&amp;rdquo; is incredibly inflated these days, but some of the original reasons to use them still hold true. Part of its definition comes from SOA, with some added considerations:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Services roughly map to business functions&lt;/li&gt;
-&lt;li&gt;Services are autonomous (shared nothing architecture)&lt;/li&gt;
-&lt;li&gt;Boundaries are explicit&lt;/li&gt;
-&lt;li&gt;Services declare schemas and interfaces&lt;/li&gt;
-&lt;li&gt;Company policy defines version compatibility&lt;/li&gt;
-&lt;li&gt;Services are deployed separately&lt;/li&gt;
-&lt;li&gt;Services are manageable by different teams&lt;/li&gt;
-&lt;li&gt;Service unavailability is handled gracefully&lt;/li&gt;
-&lt;li&gt;Service call stack is broad rather than deep&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Recently I worked with a company that needed to scale product/engineering to 50+ people, which makes the investment towards this methodology justifiable. There is a cost in managing all this, but people&amp;rsquo;s autonomy pays this off quickly. In the future this cost might change, but I doubt it is going to be zero. Consider that it is much harder to change a microservice ecosystem than to change the layers of a monolithic software, because of its distributed nature.&lt;/p&gt;
-
-&lt;p&gt;Regarding the tools for this, I put together a proof of concept of a microservice stack. It is focused on Python to start with, but I picked tools that can be used from any language. In these environments you also do not need a generic framework like Django anymore, you can pick something more lightweight if the current service allows it.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;GRPC&lt;/li&gt;
-&lt;li&gt;Consul&lt;/li&gt;
-&lt;li&gt;StatsD&lt;/li&gt;
-&lt;li&gt;Kafka&lt;/li&gt;
-&lt;li&gt;SQLAlchemy/Alembic (Python specific)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;All these tools together allowed me to put together a simplified version of a service they had in production already.&lt;/p&gt;
-
-&lt;p&gt;GRPC is a modern RPC library based on HTTP/2 and Protocol Buffers. The reason why I picked this instead of REST or a messaging queue is that it makes schemas and interfaces explicit. One could argue that Swagger (or similar) can be used for the same purpose, but in reality I have seen these files get out of date quickly because people forget.&lt;/p&gt;
-
-&lt;p&gt;GPRC forces you to generate client/server code out of &amp;ldquo;documentation&amp;rdquo; files, which makes them always be up to date. It is also an RPC protocol, which is inherently more flexible than a REST system. In addition to this, HTTP/2 is a multiplexed protocol, which finally means we are not forced to fit everything in one response, just because the frontend team wants performance.&lt;/p&gt;
-
-&lt;p&gt;Consul allows you to do mainly 2 things, service discovery and configuration storage. Service discovery is useful in case you want to stop thinking about servers as reference point for your architecture: your service should not rely on always be on the same server(s). Location may change in case servers get rebuilt and IPs change. This tool gives you a lot more flexibility in modifying your server infrastructure. Consul has also integrated healthcheck, which works with GRPC, so in case servers go down, you are redirected to a working copy on a different server.&lt;/p&gt;
-
-&lt;p&gt;Consul configuration storage is something that you may not decide to use it if you already have a highly available database, but what makes Consul stand out is the ability to watch for changes to selected keys, and trigger microservice restarts. There is a nice utility built by Hashicorp called envconsul, which copies values from Consul to environment variables, and restarts services, which is for instance the behaviour of Heroku.&lt;/p&gt;
-
-&lt;p&gt;Logging and monitoring are critical in distributed environments. StatsD and Kafka are both suitable for high-traffic environments, due to being battle-tested tech, and having asynchronous client libraries helps with this. Even though in theory you could base your monitoring on your logging system, I found that when you have high-throughput logging, the system tends to drop logging packets, and you do not get the full numbers. That is why I like separation between logging and monitoring.&lt;/p&gt;
-
-&lt;p&gt;Kafka seems to be all the craze these days. It is a messaging queue system unlike any other. It is not based on ack-ing messages (queues) or simple pub-sub (topics) but on a form of pub-sub with the ability to go back in time by specifying different starting offsets. It is an ideal setting for many applications, such as logging data processing. That is because it saves complexity server-side (explicit message marking) and client bandwidth (ack transmission), with the cost of mantaining more state on the client (offsets) and potentially a big storage buffer on the server.&lt;/p&gt;
-
-&lt;p&gt;Kafka allows you to process all messages, have at-least-once or at-most-once delivery, and a performant system, given that you are able to recover from client crash pretty quickly. If the time to recover is within the retention period of your Kafka queues, you will not have lost any message.&lt;/p&gt;
-
-&lt;h2 id=&#34;the-code&#34;&gt;The code&lt;/h2&gt;
-
-&lt;p&gt;Here is a very simple client/server implementation of a search service by geometry and/or name.&lt;/p&gt;
-
-&lt;h3 id=&#34;proto-file&#34;&gt;Proto file&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;syntax = &amp;quot;proto3&amp;quot;;
-
-import &amp;quot;google/protobuf/empty.proto&amp;quot;;
-
-message SearchRequest {
-  string query = 1;
-  float lat = 4;
-  float lng = 5;
-  int32 page_number = 2;
-  int32 result_per_page = 3;
-}
-
-message SearchResponses {
-    repeated SearchResponse responses = 1;
-}
-
-message SearchResponse {
-    string response = 1;
-}
-
-message MonitorResponse {
-    int32 n_things = 1;
-}
-
-service Search {
-    rpc monitor(google.protobuf.Empty) returns (MonitorResponse) {}
-    rpc search(SearchRequest) returns (SearchResponses) {}
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can then generate the server code and stub client code with this command:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;python -m grpc.tools.protoc -I. --python_out=. --grpc_python_out=. search.proto
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;At this point you should get a file you can import in both client and server code. The client code is almost ready to use, while the server code gives you an abstract server class with empty methods that you would need to implement. In my version of GRPC, the file is called &lt;code&gt;search_pb2.py&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;server&#34;&gt;Server&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;import time
-import sys
-import consul
-import logging
-import statsd
-import random
-import os
-
-import search_pb2
-from models import session, Thing, func
-
-log = logging.getLogger()
-log.setLevel(logging.DEBUG)
-
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter(&#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;)
-ch.setFormatter(formatter)
-log.addHandler(ch)
-
-
-_ONE_DAY_IN_SECONDS = 60 * 60 * 24
-
-port = random.randint(50000, 59000)
-stat = statsd.StatsClient(&#39;localhost&#39;, 8125)
-
-class SearchServicer(search_pb2.SearchServicer):
-    @stat.timer(&amp;quot;search&amp;quot;)
-    def search(self, request, context):
-        stat.incr(&amp;quot;search_count&amp;quot;)
-        log.info(&amp;quot;search request: &amp;quot; + str(request))
-        query = session.query(Thing).filter(
-                func.ST_Contains(Thing.geom, &#39;POINT({} {})&#39;.format(request.lat, request.lng)))
-        responses = [search_pb2.SearchResponse(response=rec.name) for rec in query]
-        log.info(&amp;quot;search responses: &amp;quot; + str(responses))
-        return search_pb2.SearchResponses(responses=responses)
-
-    @stat.timer(&amp;quot;monitor&amp;quot;)
-    def monitor(self, request, context):
-        stat.incr(&amp;quot;monitor_count&amp;quot;)
-        n_things = session.query(Thing).count()
-        return search_pb2.MonitorResponse(n_things=n_things)
-
-def register():
-    log.info(&amp;quot;register started&amp;quot;)
-    c = consul.Consul()
-    check = consul.Check.tcp(&amp;quot;127.0.0.1&amp;quot;, port, &amp;quot;30s&amp;quot;)
-    c.agent.service.register(&amp;quot;search-service&amp;quot;, &amp;quot;search-service-%d&amp;quot; % port, address=&amp;quot;127.0.0.1&amp;quot;, port=port, check=check)
-    log.info(&amp;quot;services: &amp;quot; + str(c.agent.services()))
-
-def unregister():
-    log.info(&amp;quot;unregister started&amp;quot;)
-    c = consul.Consul()
-    c.agent.service.deregister(&amp;quot;search-service-%d&amp;quot; % port)
-    log.info(&amp;quot;services: &amp;quot; + str(c.agent.services()))
-
-def serve():
-  server = search_pb2.beta_create_Search_server(SearchServicer())
-  server.add_insecure_port(&#39;[::]:&#39; + str(port))
-  server.start()
-  log.info(&amp;quot;server started&amp;quot;)
-  try:
-    while True:
-      time.sleep(_ONE_DAY_IN_SECONDS)
-  except KeyboardInterrupt:
-    server.stop(0)
-
-
-if __name__ == &#39;__main__&#39;:
-    register()
-    serve()
-    unregister()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Along with the required models:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;from sqlalchemy import create_engine, func
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
-from geoalchemy2 import Geometry
-from sqlalchemy.orm import sessionmaker
-
-
-engine = create_engine(&amp;quot;postgresql://user:password@localhost:5434/test&amp;quot;)
-Base = declarative_base()
-
-class Thing(Base):
-    __tablename__ = &amp;quot;thing&amp;quot;
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    geom = Column(Geometry(&#39;POLYGON&#39;))
-
-Session = sessionmaker(bind=engine)
-session = Session()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In this very simple API server, you can see GRPC, Consul, statsD and SqlAlchemy all blended together, as a proof of concept. The server responds to 2 functions, one is the search function and another called monitor that returns some internal stats around the service.&lt;/p&gt;
-
-&lt;p&gt;Once you populated Postgresql with some data, you should be able to query the service with the client.&lt;/p&gt;
-
-&lt;h3 id=&#34;client&#34;&gt;Client&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;import grpc
-import sys
-import logging
-from dns import resolver
-
-import search_pb2
-
-log = logging.getLogger()
-log.setLevel(logging.DEBUG)
-
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter(&#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;)
-ch.setFormatter(formatter)
-log.addHandler(ch)
-
-consul_resolver = resolver.Resolver()
-consul_resolver.port = 8600
-consul_resolver.nameservers = [&amp;quot;127.0.0.1&amp;quot;]
-
-dnsanswer = consul_resolver.query(&amp;quot;search-service.service.consul&amp;quot;, &#39;A&#39;)
-ip = str(dnsanswer[0])
-dnsanswer_srv = consul_resolver.query(&amp;quot;search-service.service.consul&amp;quot;, &#39;SRV&#39;)
-port = int(str(dnsanswer_srv[0]).split()[2])
-
-log.info(&amp;quot;creating grpc client based on consul data: ip=%s port=%d&amp;quot; % (ip, port))
-channel = grpc.insecure_channel(&#39;%s:%d&#39; % (ip, port))
-stub = search_pb2.SearchStub(channel)
-
-if len(sys.argv) == 1 and sys.argv[1] == &amp;quot;--monitor&amp;quot;:
-    monitresp = stub.monitor(search_pb2.google_dot_protobuf_dot_empty__pb2.Empty())
-    log.debug(&amp;quot;monitor response: {}&amp;quot;.format(monitresp))
-else:
-    req = search_pb2.SearchRequest(
-        query=&amp;quot;queryabc&amp;quot;,
-        lat=float(sys.argv[1]),
-        lng=float(sys.argv[2]),
-        result_per_page=10)
-    log.debug(&amp;quot;sending request: {}&amp;quot;.format(req))
-    resp = stub.search(req)
-    log.debug(&amp;quot;received response: {}&amp;quot;.format(resp))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The client is querying Consul DNS service to find the microservice, using the dnspython library.&lt;/p&gt;
-
-&lt;h2 id=&#34;underlying-services&#34;&gt;Underlying services&lt;/h2&gt;
-
-&lt;h3 id=&#34;consul&#34;&gt;Consul&lt;/h3&gt;
-
-&lt;p&gt;As the code is written above, Consul is not optional. In order to quickly test the setup above, you can use Docker. Please consider that the following command does not start Consul with failover or any option that you would want to use in production.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker run --net=host consul agent -server -ui -bootstrap -bind=127.0.0.1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;With Consul, you are free to have multiple copies of the API server running on multiple nodes, and requests will be resolved with Round Robin. The healthcheck will take a copy of the service off the DNS list if it becomes unresponsive. You can also stop the service and before exiting, it will deregister itself.&lt;/p&gt;
-
-&lt;p&gt;In order to get the benefits of centralized configuration management, you can start the service with envconsul:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;./envconsul -consul localhost:8500 -prefix search-service python search_server.py
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can then add variables through the Consul UI and the service will be restarted automatically.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/consulkv.png&#34; alt=&#34;consul&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;statsd&#34;&gt;StatsD&lt;/h3&gt;
-
-&lt;p&gt;Again, you can use Docker to get running pretty quickly. Let&amp;rsquo;s start Graphite on port 8002 and StatsD on 8125.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker run -p 8002:80 -p 8125:8125/udp -d samsaffron/graphite
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The use we do here is quite basic, but it is enough to get an idea of the load on the service. With this data you can do estimates whether you have to run this on additional servers, or do some additional optimizations to the code.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/graphite.png&#34; alt=&#34;graphite&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;kafka&#34;&gt;Kafka&lt;/h3&gt;
-
-&lt;p&gt;This component is optional in the above setup. If you run the code as it is, all logging goes to stdout. I find this very valuable when you are developing on your local machine. But on staging/production environments, you may want to stream the logs, and that is when you pick a tool like Kafka.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;./attachments/grpc-server.png&#34; alt=&#34;grpc-server&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s start a copy of Kafka by using the Docker image created by Spotify&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker run -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST=127.0.0.1 --env ADVERTISED_PORT=9092 spotify/kafka
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;After Kafka has succcessfully started, you can modify the envconsul command above to pipe all output to Kafka.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;./envconsul -consul localhost:8500 -prefix search-service python search_server.py | kafkacat -P -b localhost -t search-service
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And see all output back using kafkacat again:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;kafkacat -b localhost -t search-service
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This use of Kafka is quite basic, but it offers already enough to do a distributed &amp;ldquo;tail -f&amp;rdquo; of a service, regardless of its location. I will blog a bit more about a more advanced use of Kafka, for now that is all.&lt;/p&gt;
-</description>
+      <description>First of all, let me say the word &amp;ldquo;microservice&amp;rdquo; is incredibly inflated these days, but some of the original reasons to use them still hold true. Part of its definition comes from SOA, with some added considerations:
+ Services roughly map to business functions Services are autonomous (shared nothing architecture) Boundaries are explicit Services declare schemas and interfaces Company policy defines version compatibility Services are deployed separately Services are manageable by different teams Service unavailability is handled gracefully Service call stack is broad rather than deep  Recently I worked with a company that needed to scale product/engineering to 50+ people, which makes the investment towards this methodology justifiable.</description>
     </item>
     
     <item>
@@ -780,25 +88,8 @@ else:
       <pubDate>Thu, 15 Sep 2016 12:23:07 +0200</pubDate>
       
       <guid>/blog/do-not-use-https-and-basic-auth/</guid>
-      <description>&lt;p&gt;Security is a difficult topic, the discipline is very &amp;ldquo;deep&amp;rdquo;, therefore it is easy to make mistakes if you do not dig deep enough. Unfortunately many people misjudge perceived security with real security, on the basis of &amp;ldquo;it makes sense&amp;rdquo;.&lt;/p&gt;
-
-&lt;p&gt;HTTPS is a wonderful protocol, it gives you encryption therefore you cannot see what is going on at L7 (urls, http headers, http verbs, app data). This level of obscurity may be enough for simple apps. The fact that your app knows your private REST api structure is already a (weak) client authentication proof. &lt;strong&gt;Basic auth does not give you any extra security on top of that&lt;/strong&gt;, because if you can read the REST urls (with a MITM attack), you can read the password hash, and if you know the password hash, you can send requests as the original client. You can reuse the hash to reauthenticate yourself.&lt;/p&gt;
-
-&lt;p&gt;In most cases, it is enough for your app to &lt;strong&gt;verify the server SSL certificate&lt;/strong&gt;. When you do that, it gets almost impossible to hack the connection and read data from it.&lt;/p&gt;
-
-&lt;p&gt;If you want some extra security, you could:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Introduce API keys and passwords for app users. It is going to be application dependent, so up to you to build the verification for this. &lt;strong&gt;This is not a strong authentication model&lt;/strong&gt;, but because they are User-specific, if they are compromised, these credentials can be easily revoked and reset. Many SaaS use this method, because it is very easy to deploy at scale and to understand.&lt;/li&gt;
-&lt;li&gt;Use HTTP Digest auth, or something with a randomized pre-shared nonce. Differently from all the previous ones, this is not vulnerable to replay attacks, therefore it is more secure.&lt;/li&gt;
-&lt;li&gt;Have some mechanism to sign HTTP requests. This is not an authentication mechanism, but it protects against data tampering. If an hacker sees that you are protected against replay attacks, the next logical step is modify existing requests on the fly. If the request is signed, this will be much harder.&lt;/li&gt;
-&lt;li&gt;Use HTTPS Client certificates, that the server authenticates. This is a bit harder to put in place and theoretically offers maximum protection.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Security is not an immutable thing in time. Things that were secure 5 years ago might not be considered secure today. Security is also not an absolute, there is no 100% secure. Your only option is to defend yourself down every level of your stack, hoping that whoever wants to hack you either loses interest in you or runs out of hacking ideas.&lt;/p&gt;
-
-&lt;p&gt;All the above options can be used in combination, because they offer different benefits. Evaluating the right combination is up to you. This is a run-through all possible options, focusing only on security at transport level. There is a lot more to say about security of the device. If an attacker is able to get access to the application code, the surface of attack becomes bigger.&lt;/p&gt;
-</description>
+      <description>Security is a difficult topic, the discipline is very &amp;ldquo;deep&amp;rdquo;, therefore it is easy to make mistakes if you do not dig deep enough. Unfortunately many people misjudge perceived security with real security, on the basis of &amp;ldquo;it makes sense&amp;rdquo;.
+HTTPS is a wonderful protocol, it gives you encryption therefore you cannot see what is going on at L7 (urls, http headers, http verbs, app data). This level of obscurity may be enough for simple apps.</description>
     </item>
     
     <item>
@@ -807,72 +98,7 @@ else:
       <pubDate>Wed, 14 Sep 2016 17:04:43 +0200</pubDate>
       
       <guid>/blog/hugo-and-ipfs/</guid>
-      <description>
-
-&lt;h2 id=&#34;hugo&#34;&gt;Hugo&lt;/h2&gt;
-
-&lt;p&gt;This site was built using Django and, given the very simple content model that it had (and almost never changed), I decided to rebuild it in &lt;a href=&#34;http://gohugo.io&#34;&gt;Hugo&lt;/a&gt;. I also was getting fed up of mantaining yet another dynamic site, along with runtime and databases. I picked Hugo because it is written in Go, therefore very easy to get going (one file to install) and it works on any platform.&lt;/p&gt;
-
-&lt;p&gt;There are 2 steps for this conversion:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Convert the Django template files to Go template files. Converting any simple logic into either Go template logic or JS if needs to be evaluated every time.&lt;/li&gt;
-&lt;li&gt;Cycle over all posts, convert them into files. Write them in a directory (under content) that uses names from the current URLs.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;There might be more steps in your setup. In mine, I had to transfer some media files, and define another archetype for normal pages. You can see that at &lt;a href=&#34;https://github.com/fmarani/blog&#34;&gt;my repo&lt;/a&gt;. If you can deal with the Go template language, Hugo is a very nice software.&lt;/p&gt;
-
-&lt;h2 id=&#34;github-pages&#34;&gt;Github pages&lt;/h2&gt;
-
-&lt;p&gt;At this point, the architecture was already much simpler. But I wanted to get rid of the hassle of hosting it. Github pages is free and works pretty well (S3 could also be an option). While I was in the process of following their tutorials, the only slightly obscure step was that I needed two repositories, one for the original Hugo site, and another one for the compiled version. Forget all the tutorials that tell you to create a &lt;code&gt;gh-pages&lt;/code&gt; branch, those are for project sites, not user sites.&lt;/p&gt;
-
-&lt;p&gt;I ended up with:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/fmarani/blog&#34;&gt;the original repo&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/fmarani/fmarani.github.io&#34;&gt;the compiled repo&lt;/a&gt;. Please note the name of the repo, that&amp;rsquo;s how Github needs it.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The only additional step after all this was to make my domain point to Github, you can find some instructions on their site for that.&lt;/p&gt;
-
-&lt;h2 id=&#34;ipfs&#34;&gt;IPFS&lt;/h2&gt;
-
-&lt;p&gt;Given that all the content is static, it lends itself very well to be distributed rather than just staying on a central server. I installed IPFS on a machine I had available, configured it and let it run as a daemon (quite easy, plenty of docs online). In case Github is down, you can also find this site on IPFS.&lt;/p&gt;
-
-&lt;p&gt;You can either use the &lt;a href=&#34;http://gateway.ipfs.io/ipns/QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3/&#34;&gt;gateway&lt;/a&gt; or use the IPNS directly (QmfEMiRfCDtPs9B1UsCLWgRWWFp7ZUwZLU2oPWMTqzPKm3).&lt;/p&gt;
-
-&lt;p&gt;The only caveat I would like to underline here is that you have to use &lt;code&gt;relativeurls = true&lt;/code&gt; in your Hugo configuration, otherwise absolute URLs will not work well with the IPFS gateway.&lt;/p&gt;
-
-&lt;h2 id=&#34;glue-everything-together&#34;&gt;Glue everything together&lt;/h2&gt;
-
-&lt;p&gt;I created this simple deploy script:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!/bin/bash
-
-# Build the project.
-hugo
-
-echo -e &amp;quot;\033[0;32mDeploying updates to Github pages...\033[0m&amp;quot;
-
-cd public
-git add -A
-msg=&amp;quot;rebuilding site `date`&amp;quot;
-if [ $# -eq 1 ]
-  then msg=&amp;quot;$1&amp;quot;
-fi
-git commit -m &amp;quot;$msg&amp;quot;
-git push origin master
-cd ..
-
-echo -e &amp;quot;\033[0;32mDeploying updates to IPFS...\033[0m&amp;quot;
-
-scp -r public/ USER@HOST:repo
-hash=`ssh USER@HOST ipfs add -r -q repo | tail -1`
-ssh USER@HOST ipfs name publish $hash
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Just change the USER@HOST part with your IPFS server. If you run it locally, no need to ssh.&lt;/p&gt;
-</description>
+      <description>Hugo This site was built using Django and, given the very simple content model that it had (and almost never changed), I decided to rebuild it in Hugo. I also was getting fed up of mantaining yet another dynamic site, along with runtime and databases. I picked Hugo because it is written in Go, therefore very easy to get going (one file to install) and it works on any platform.</description>
     </item>
     
     <item>
@@ -881,18 +107,8 @@ ssh USER@HOST ipfs name publish $hash
       <pubDate>Sun, 01 May 2016 20:43:48 +0000</pubDate>
       
       <guid>/blog/yc-interview/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;./attachments/ycombinator.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;A month ago me and my co-founder did an application for YC, and last week we were lucky enough to be selected for an interview, along with other startups. We got called all the way to California with not even a week of notice, everything paid&amp;hellip; definitely a bit more serious than a phone call.&lt;/p&gt;
-
-&lt;p&gt;We prepared a lot during the last few days, reading what people say online, meeting previous YC companies, doing mock interviews with YC alumni. Some of that was YC specific, as we knew they are very product-focused. Little aside here: I am an engineer and I really dislike sales talk, because most sales words are so vague that are worthless at describing specifics. It was very refreshing to see that YC thought it the same way I did.&lt;/p&gt;
-
-&lt;p&gt;The interview only lasted 10 minutes, although we got a second interview with other partners, so they had listened to our story twice. There were 3-4 groups of 3 partners doing interviews for max 10 min throughout the day, for 2 weeks, so you can imagine there were a lot of companies there, all with their online application accepted. I have spoken with a few of them, all clearly smart, although at that stage you practiced your pitch so many times that you do not want to hear yourself having to say it again :-)&lt;/p&gt;
-
-&lt;p&gt;If there is one take-away for me is: explain the product, as opposed to sell the product. Explain it in a way that someone technical might be able to rebuild it. Describe it well in a way that sales processes, addressable markets, customer acquisition strategies and costs, LTV, who buys and who uses it, all these should all come naturally from the product description. You should have a good answer for all these, even if not perfect yet.&lt;/p&gt;
-
-&lt;p&gt;In the same evening we received a negative answer, along with some good feedback. When things do not go as you would, it is easy to be dismissive, but really, there is a lot that could be learnt if you were in. I would definitely go back if we had the chance.&lt;/p&gt;
-</description>
+      <description>A month ago me and my co-founder did an application for YC, and last week we were lucky enough to be selected for an interview, along with other startups. We got called all the way to California with not even a week of notice, everything paid&amp;hellip; definitely a bit more serious than a phone call.
+We prepared a lot during the last few days, reading what people say online, meeting previous YC companies, doing mock interviews with YC alumni.</description>
     </item>
     
     <item>
@@ -901,57 +117,7 @@ ssh USER@HOST ipfs name publish $hash
       <pubDate>Sun, 15 Nov 2015 12:00:00 +0000</pubDate>
       
       <guid>/blog/assessing-software-quality/</guid>
-      <description>&lt;p&gt;This post is about measuring how the technology supports your current product, that being a single marketable entity. If we accept that the definition of quality is having as less bugs as possible, and the more code you write the more bugs you insert, you will have to accept the fact that the more code you write the less quality you will be able to get out of it. A good software project has the right amount of code to support the features that your product strategy dictates. That I think is independent of the paradigm you adopt, monolith or microservice, functional or not, etc. This post is really about the product.&lt;/p&gt;
-
-&lt;p&gt;A web product is made of pages and hyperlinks that bring you to other pages, all this resulting in user journeys. Your product strategy tells you what are the journeys your product needs, ux and marketing are more concerned about the how these steps are presented. Technology is influenced by both the what and the how, so we need to map both. These are some ideas on how to map out softwares based on various system architectures.&lt;/p&gt;
-
-&lt;p&gt;Simple case (Django/RoR-type setup):&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;user journey description&lt;/li&gt;
-&lt;li&gt;where the html is&lt;/li&gt;
-&lt;li&gt;where the backend code files are&lt;/li&gt;
-&lt;li&gt;does the backend have unit tests&lt;/li&gt;
-&lt;li&gt;what db tables it is using&lt;/li&gt;
-&lt;li&gt;any SaaS dependency&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Single page apps:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;user journey description&lt;/li&gt;
-&lt;li&gt;where the html/js component is&lt;/li&gt;
-&lt;li&gt;what api is using&lt;/li&gt;
-&lt;li&gt;does the js component have unit tests&lt;/li&gt;
-&lt;li&gt;does the js depend on other SaaS api&lt;/li&gt;
-&lt;li&gt;where is the backend code to support those api&lt;/li&gt;
-&lt;li&gt;does the backend component have unit tests&lt;/li&gt;
-&lt;li&gt;what db tables it is using&lt;/li&gt;
-&lt;li&gt;any dependency on other installed software&lt;/li&gt;
-&lt;li&gt;any SaaS dependency&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Single page apps with microservices:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;user journey description&lt;/li&gt;
-&lt;li&gt;where the html/js component is&lt;/li&gt;
-&lt;li&gt;what api is using&lt;/li&gt;
-&lt;li&gt;does the js component have unit tests&lt;/li&gt;
-&lt;li&gt;does the js depend on other SaaS api&lt;/li&gt;
-&lt;li&gt;where is the backend code to support those api&lt;/li&gt;
-&lt;li&gt;does the backend component have unit tests&lt;/li&gt;
-&lt;li&gt;what other microservices is the backend talking to&lt;/li&gt;
-&lt;li&gt;what is the fallback mechanism in case the microservice is unavailable&lt;/li&gt;
-&lt;li&gt;what db tables or nosql resources are these microservices using&lt;/li&gt;
-&lt;li&gt;any dependency on other installed software&lt;/li&gt;
-&lt;li&gt;any SaaS dependency&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The more complex your system architecture is, the more layers you will have to map, so the above list is non-exhaustive.&lt;/p&gt;
-
-&lt;p&gt;Once you have mapped out every column presented above, you should have a good idea of how good (or entangled) your software architecture is. That is a pretty good base to assess a project&amp;rsquo;s quality. The less things you have in the list the better&amp;hellip; you will have less to justify.&lt;/p&gt;
-</description>
+      <description>This post is about measuring how the technology supports your current product, that being a single marketable entity. If we accept that the definition of quality is having as less bugs as possible, and the more code you write the more bugs you insert, you will have to accept the fact that the more code you write the less quality you will be able to get out of it. A good software project has the right amount of code to support the features that your product strategy dictates.</description>
     </item>
     
     <item>
@@ -960,20 +126,7 @@ ssh USER@HOST ipfs name publish $hash
       <pubDate>Wed, 11 Mar 2015 12:00:00 +0000</pubDate>
       
       <guid>/blog/comprotempo/</guid>
-      <description>&lt;p&gt;When it came out, I was fashinated by TaskRabbit. I thought that a generic marketplace for handymen was the perfect tool for this decade. We have lots of young unemployment in Italy and there were also middle-class people willing to pay for someone doing chores for them. The idea was simple: putting both sides in touch by agreeing location, type of task and price. The advantages for handymen were money for work, the advantages for the committant is to &amp;ldquo;buy&amp;rdquo; someone else&amp;rsquo;s time (hence the &amp;ldquo;comprotempo&amp;rdquo; name)&lt;/p&gt;
-
-&lt;p&gt;In 2012, I set out to replicate the idea and find a good team of people to work with. I am an engineer, it is easy for us to &amp;ldquo;over-build&amp;rdquo; the product, or &amp;ldquo;over-engineer&amp;rdquo; a product feature, so I only built what I thought was the minimum product. Everybody is biased in some ways, working in a team is the only way to keep these biases in check. Once I built it, 2-3 months later, it was about spreading the word: Facebook page, Twitter account, PPC on various channels, writing content, reaching out to people, etc&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;Turns out building a Marketplace is very hard. You have now to convince two types of customers which may have a completely different set of concerns and motivations. The money incentive is always very strong, in fact we had a lot of users registered as handymen for a very broad set of tasks. On the other hand, feeding the system with tasks has proven to be very challenging.&lt;/p&gt;
-
-&lt;p&gt;Because we started with handling a broad set of tasks, we had a problem with audience addressability: people likely to buy services on our site were not very addressable, distinguishable from the crowd. For instance, how do you target people willing to pay for lawn mowing, and willing to trust an online service for it? Not easy. We had to do that for every type of service the site was offering, so it was hardly marketing scalable. Some of these services were by nature recurrent, most of them were not though.&lt;/p&gt;
-
-&lt;p&gt;We were also doing a bad job at keeping people&amp;rsquo;s attention on the site. The homepage was generic on purpose, and I don&amp;rsquo;t think people were understanding the relevance to their problem. Also they were very likely to be busy people, I think we were wasting their attention timespan. Posting an ad for a task also required filling a lot of information about the task before-hand, in order to receive good money quotes for it. People don&amp;rsquo;t like long forms.&lt;/p&gt;
-
-&lt;p&gt;Most of all, I think we had done a very bad job at building trust as a community. We had a rating system for handymen, but with no user-generated ratings it was not helpful. It is a bit of a chicken-and-egg problem sometimes, communities are not self-sustaining from the start. Building brand reputation is just really long and hard.&lt;/p&gt;
-
-&lt;p&gt;At the end, we also had problems with the team. With internal divisions, you just cannot focus your energies anymore. I can&amp;rsquo;t stress this enough, problems with founding team are just incredibly hard to deal with. They ripple out into everything else. That was the end for us.&lt;/p&gt;
-</description>
+      <description>When it came out, I was fashinated by TaskRabbit. I thought that a generic marketplace for handymen was the perfect tool for this decade. We have lots of young unemployment in Italy and there were also middle-class people willing to pay for someone doing chores for them. The idea was simple: putting both sides in touch by agreeing location, type of task and price. The advantages for handymen were money for work, the advantages for the committant is to &amp;ldquo;buy&amp;rdquo; someone else&amp;rsquo;s time (hence the &amp;ldquo;comprotempo&amp;rdquo; name)</description>
     </item>
     
     <item>
@@ -982,16 +135,8 @@ ssh USER@HOST ipfs name publish $hash
       <pubDate>Fri, 16 Jan 2015 12:51:25 +0000</pubDate>
       
       <guid>/blog/monitoring-with-munin/</guid>
-      <description>&lt;p&gt;I normally use Munin for server monitoring, it is very easy to install and the kind of tool with not much setup. It may not be the best tool when you have many servers, due to static graph generation. Munin 2, released recently, has a few changes in that regard, they might have improved that.&lt;/p&gt;
-
-&lt;p&gt;Munin is mainly a resource usage graph tool, which monitors many metrics from a pool of servers (called nodes). When set up, the monitoring server connects to every node (specified in its configuration) and then asks for a list of current values for all monitored metrics, through a simple text-based protocol. Every node has a list of enabled &amp;ldquo;plugins&amp;rdquo; which will be run everytime the server connects to the node. Many plugins come installed by default with Munin, and many additional plugins are available online with an open source license (or public domain). Those plugins have default parameters in it, but much can be customized in the munin-node configuration file.&lt;/p&gt;
-
-&lt;p&gt;These &amp;ldquo;plugins&amp;rdquo; define the metrics, then the server will render any metrics the node send, without any a priori knowledge. The security model is IP whitelisting: each node has a list of IPs allowed to ask for metrics. The server, by default, will connect to every host every 5 minutes and add all collected metrics to its database. Every hour all the html and graphs are generated and put in a folder where Nginx is able to serve these.&lt;/p&gt;
-
-&lt;p&gt;Munin can also be configured to trigger alerts in case a metric changes state between OK, Warning and Critical. Alerts via email are easy to setup and normally enough for basic error reporting. These thresholds can be changed if needed, but the values defined by the plugins are normally good enough. Alerts for specific plugins can be disabled if needed, see &lt;a href=&#34;http://serverfault.com/questions/532319/i-have-setup-munin-how-do-i-set-up-alerts-for-specific-parameters&#34; title=&#34;here&#34;&gt;http://serverfault.com/questions/532319/i-have-setup-munin-how-do-i-set-up-alerts-for-specific-parameters&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The only daemon in the Munin architecture is munin-node, which runs on every monitored server. On the monitoring server side, everything is managed through cron. Munin is written in Perl and its core modules are quite battle-tested.&lt;/p&gt;
-</description>
+      <description>I normally use Munin for server monitoring, it is very easy to install and the kind of tool with not much setup. It may not be the best tool when you have many servers, due to static graph generation. Munin 2, released recently, has a few changes in that regard, they might have improved that.
+Munin is mainly a resource usage graph tool, which monitors many metrics from a pool of servers (called nodes).</description>
     </item>
     
     <item>
@@ -1000,22 +145,8 @@ ssh USER@HOST ipfs name publish $hash
       <pubDate>Wed, 14 Jan 2015 11:45:46 +0000</pubDate>
       
       <guid>/blog/working-with-memcache/</guid>
-      <description>&lt;p&gt;The traditional use of Memcache is to cache things like computations that take some time or result coming from external system with limited throughput. Examples of these may be database queries (sometimes long to compute), search queries coming from dedicated search services or simply feeds from other sites that don&amp;rsquo;t change often.&lt;/p&gt;
-
-&lt;p&gt;Memcache is both a cache system and a separate component in your system architecture, so it is very important to understand the implications. There are many negatives: it is another dependency, which adds complexity to the system, it potentially contains stale data, and it is a potential point of failure. Please consider all these things before inserting a cache in your app, many annoying and hard to find bugs in software development are related to cache.&lt;/p&gt;
-
-&lt;p&gt;On the positive side, if done right, caching means increase in performance for the website and less stress for the underlying service. Start by looking at the areas of your application which are executed very frequently and are computationally or IO heavy. For example, loading recursive structures (like category trees) from relational databases (which are flat) is an expensive operation.&lt;/p&gt;
-
-&lt;p&gt;One common usecase is search: results depend only on a set of parameters which are repetitive. If parameters are not repetitive, they can be made to by approximating them to some common form: free text keywords can be stemmed (see NLP), geographic coordinates can be rounded, number of results can be made multiple of some base number, etc&amp;hellip; in this way we increase the cache hit rate without losing too much precision.&lt;/p&gt;
-
-&lt;p&gt;This exercise of increasing cache hits is quite common, and it is also very common in compilers when they try to align structures in a way that they fit CPU caches. The principle is similar, you want to increase the likelihood of having fast read operations instead of slow operations.&lt;/p&gt;
-
-&lt;p&gt;In python there are libraries to interact with memcache, as in Django. They are quite small as the protocol is very simple to understand.&lt;/p&gt;
-
-&lt;p&gt;I am generally against systems that automatically cache all database queries: if you have a good schema, you should not need it. We used to cache all Postgresql queries but the speed gain was not noticeable so we removed it, we have a fast network, enough memory for the disk buffer and, honestly, not a great volume of complex queries.&lt;/p&gt;
-
-&lt;p&gt;The setup of Memcache is really simple, you can start by just using the defaults after the installation. The default cache size is 64Mb and when exceeding that it will start to delete keys in least recently used order.&lt;/p&gt;
-</description>
+      <description>The traditional use of Memcache is to cache things like computations that take some time or result coming from external system with limited throughput. Examples of these may be database queries (sometimes long to compute), search queries coming from dedicated search services or simply feeds from other sites that don&amp;rsquo;t change often.
+Memcache is both a cache system and a separate component in your system architecture, so it is very important to understand the implications.</description>
     </item>
     
     <item>
@@ -1024,14 +155,266 @@ ssh USER@HOST ipfs name publish $hash
       <pubDate>Sun, 27 Jul 2014 12:00:00 +0000</pubDate>
       
       <guid>/blog/scaling-with-ansible/</guid>
-      <description>&lt;p&gt;The presentation I gave at Europython 2014 in Berlin. Again it is about how TrialReach uses Ansible to manage its own infrastructure and some tips and tricks about our use of Ansible.&lt;/p&gt;
-
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;38a6f0d0f48f01318f29762c3a3e275b&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;And also the video of the presentation:&lt;/p&gt;
-
-&lt;iframe width=&#34;560&#34; height=&#34;315&#34; src=&#34;//www.youtube.com/embed/ptc9E24YAcc&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
-</description>
+      <description>The presentation I gave at Europython 2014 in Berlin. Again it is about how TrialReach uses Ansible to manage its own infrastructure and some tips and tricks about our use of Ansible.
+ And also the video of the presentation:
+ </description>
+    </item>
+    
+    <item>
+      <title>Give everyone one (public) VM</title>
+      <link>/blog/give-everyone-one-vm/</link>
+      <pubDate>Tue, 11 Feb 2014 22:45:08 +0000</pubDate>
+      
+      <guid>/blog/give-everyone-one-vm/</guid>
+      <description>At TrialReach we want to be always able to deploy clean versions of our code online. This allows us to show our work more quickly internally (and externally) and get feedback from people as early as possible, without having to wait release dates. This also give us the opportunity to test more frequently our server provisioning procedures, and having the ability to push something live anytime is a really empowering feeling.</description>
+    </item>
+    
+    <item>
+      <title>Why my first startup failed - tabs.to</title>
+      <link>/blog/why-my-first-startup-failed/</link>
+      <pubDate>Sun, 26 Jan 2014 15:24:59 +0000</pubDate>
+      
+      <guid>/blog/why-my-first-startup-failed/</guid>
+      <description>Tabs.to was a url shortener, but with a twist, it could support multiple urls and it was displaying them with a sort of tabbed interface which you could use to switch between pages. The use case I was seeing was sending multiple links via twitter, and by doing so you would have saved space. In hindsight, it seems pretty short-sighted but that was the problem I had. This was in 2010, 4 years ago.</description>
+    </item>
+    
+    <item>
+      <title>DevOps with Ansible presentation</title>
+      <link>/blog/devops-with-ansible-presentation/</link>
+      <pubDate>Mon, 02 Dec 2013 13:13:47 +0000</pubDate>
+      
+      <guid>/blog/devops-with-ansible-presentation/</guid>
+      <description>Presentation I gave at DJUGL in September 2013 about how TrialReach uses Ansible to automate server provisioning.
+ </description>
+    </item>
+    
+    <item>
+      <title>Spatial search on multiple points in Solr</title>
+      <link>/blog/spatial-search-on-multiple-points-in-solr/</link>
+      <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
+      
+      <guid>/blog/spatial-search-on-multiple-points-in-solr/</guid>
+      <description>At TrialReach we deal with clinical trials data, which contain a lot of spatial information. Tipically, clinical trials treat a certain set of conditions and they happen in various locations globally. If you are a patient then searching across clinical trials becomes really spatial sensitive: you are only interested in the closest location to you.
+This case might apply to other events as well, but the key point is global distribution.</description>
+    </item>
+    
+    <item>
+      <title>Transifex for your Django projects</title>
+      <link>/blog/transifex-for-your-django-projects/</link>
+      <pubDate>Thu, 31 Jan 2013 15:39:37 +0000</pubDate>
+      
+      <guid>/blog/transifex-for-your-django-projects/</guid>
+      <description>I am assuming you already created a project on Transifex (in this example is TxProject), either on the hosted version or on the downloadable version, and all the users you need are on there (just one to start is enough). I am also assuming i18n is already setup and you have at least 2 languages already in your project.
+The aim of integrating Transifex libraries into your code is to make it really easy to push/pull translations of a project to their web front-end.</description>
+    </item>
+    
+    <item>
+      <title>Technology behind tools.seogadget.co.uk</title>
+      <link>/blog/technology-behind-toolsseogadgetcouk/</link>
+      <pubDate>Sun, 25 Nov 2012 17:30:21 +0000</pubDate>
+      
+      <guid>/blog/technology-behind-toolsseogadgetcouk/</guid>
+      <description>Scalability was one of the primary concerns when we started building the tool. Essentially, the tool gathers numbers about links you post, it is quite straightforward. To gather these numbers, our tool uses many external APIs and in a way acts as a sort of proxy between the user and many other 3rd party API providers, on top of which some internal indicators are derived. Many tools allow you to do that, but, regarding scalability, some ways are better than others.</description>
+    </item>
+    
+    <item>
+      <title>Basic things to do and not in Django</title>
+      <link>/blog/basic-things-to-do-and-not-in-django/</link>
+      <pubDate>Sun, 23 Sep 2012 19:33:30 +0000</pubDate>
+      
+      <guid>/blog/basic-things-to-do-and-not-in-django/</guid>
+      <description>Make software dependent on absolute paths: One of the projects i was working on had all module imports including the project main folder name. That in turn made impossible to have the same project installed 2 times in the same folder with 2 distinct names. (e.g. 2 versions of the staging site). Sometime is even worse than this, when you have a full path in the code. These should always be in configuration files which are changeable at deployment.</description>
+    </item>
+    
+    <item>
+      <title>From idea to a product</title>
+      <link>/blog/from-idea-to-a-product/</link>
+      <pubDate>Thu, 17 May 2012 00:28:34 +0000</pubDate>
+      
+      <guid>/blog/from-idea-to-a-product/</guid>
+      <description>This is my history in one of the first startups I worked for, very small, but nevertheless a very good learning experience.
+Selling the idea We had the vision, and we sold our vision in the way a lean startup would do: sell the vision, receive funding for the project, deliver the product. Turns out it is extremely hard to sell something that does not exist, but we did it.</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu on EC2, the simple way.</title>
+      <link>/blog/ubuntu-on-ec2-the-simple-way/</link>
+      <pubDate>Sun, 06 May 2012 11:39:37 +0000</pubDate>
+      
+      <guid>/blog/ubuntu-on-ec2-the-simple-way/</guid>
+      <description>Problem Sometime ago I had to run a statistical software on some data, the computation was really expensive, it was impractical to run it on my small laptop as it would hung for hours waiting for a result to come up. I thought about running it on Amazon.
+Solution Amazon EC2 is a virtual machine hosting service, also known as IaaS. Quite similar to Linode or Rackspace. Payment here is per hour, differently from Linode&amp;hellip; slightly on the expensive side i might add, but top-end VMs are quite powerful.</description>
+    </item>
+    
+    <item>
+      <title>Text classification in Python</title>
+      <link>/blog/text-classification-in-python/</link>
+      <pubDate>Wed, 21 Mar 2012 22:44:23 +0000</pubDate>
+      
+      <guid>/blog/text-classification-in-python/</guid>
+      <description>Python and NLTK form quite a good platform to do text analysis. There is a lot of information on Internet, nevertheless i have not found a clean and simple example of a classifier. Text classifiers come from techniques such as Natural Language Processing and Machine Learning, in fact i think they are exactly in the middle of these.
+Bearing in mind that building a good classifier is only possible when you have a training set that represents reality quite well, and certainly longer than the one in this example, here a first stab at it:</description>
+    </item>
+    
+    <item>
+      <title>Why SOA in a startup sucks</title>
+      <link>/blog/why-soa-in-a-startup-sucks/</link>
+      <pubDate>Sun, 22 Jan 2012 21:49:33 +0000</pubDate>
+      
+      <guid>/blog/why-soa-in-a-startup-sucks/</guid>
+      <description>Service Oriented Architectures as i intend are architectures where each component is deployable and usable separately from others. Take as example Amazon, much of their software stack is offered as a service, mainly through an HTTP interface, and marketed as SaaS.
+There are tons of reasons why you would want to think to your system as a series of components deployable separately&amp;hellip; flexibility, being able to choose the right tools for each component, etc.</description>
+    </item>
+    
+    <item>
+      <title>Passion and Pragmatism in IT</title>
+      <link>/blog/passion-and-pragmatism-in-it/</link>
+      <pubDate>Thu, 03 Nov 2011 14:49:36 +0000</pubDate>
+      
+      <guid>/blog/passion-and-pragmatism-in-it/</guid>
+      <description>Do what you love is what, for instance, Steve Jobs said. It does not get more true than that. Hacking has been labeled as a negative word, but for me has a positive meaning, which is the impulse of people to open things, learn how they work and change it to make it better. Hacking for me is a passion, something I always do with pleasure.
+Having this attitude in IT is important, only experimenting with stuff pushes your skills forward.</description>
+    </item>
+    
+    <item>
+      <title>Logging</title>
+      <link>/blog/logging/</link>
+      <pubDate>Fri, 08 Apr 2011 01:00:10 +0000</pubDate>
+      
+      <guid>/blog/logging/</guid>
+      <description>I work on e-commerce platforms, logging is a critical component in this area. Learn how to do it correctly will allow you and everybody else to save time when problems happen. Sometimes it is not just about saving time, but also being able to give correct answers to customers when things go wrong. When interacting with third parties, logging is even more important, because it allows you to understand where the problem lies, in your code or in the external service.</description>
+    </item>
+    
+    <item>
+      <title>How small websites become big</title>
+      <link>/blog/how-small-websites-become-big/</link>
+      <pubDate>Wed, 30 Mar 2011 00:42:56 +0000</pubDate>
+      
+      <guid>/blog/how-small-websites-become-big/</guid>
+      <description>There is no secret recipe, there is no list of check boxes to tick&amp;hellip; just some guidelines. Part of these lessons have been learned in the hard way, part because i have been always taught that if you want to be the best, you have to copy the best. There is plenty of literature on Internet about this&amp;hellip; read, understand and copy.
+I think the art of building high-traffic websites is part about the code, but mostly about your web architecture and the tools you use.</description>
+    </item>
+    
+    <item>
+      <title>Functional Programming ideas in OOP</title>
+      <link>/blog/functional-programming-ideas-in-oop/</link>
+      <pubDate>Sun, 27 Mar 2011 13:29:33 +0000</pubDate>
+      
+      <guid>/blog/functional-programming-ideas-in-oop/</guid>
+      <description>About a year and half ago I started to be interested in Scala. Scala is a hybrid between an Object Oriented language and a Functional Language, and while i was using it i learnt to appreciate more and more the Functional part. I will not hide that the most difficult part in learning Scala was because of that.
+The mindset when solving problems using FP is different because it forces you to think in terms of mapping transformations rather than step-by-step algorithms.</description>
+    </item>
+    
+    <item>
+      <title>CDN Optimizations</title>
+      <link>/blog/cdn-optimizations/</link>
+      <pubDate>Sun, 17 Oct 2010 13:55:49 +0000</pubDate>
+      
+      <guid>/blog/cdn-optimizations/</guid>
+      <description>One of our most trafficked website is on average sustaining 300000 page views per day. Each page has normally a considerable amount of JavaScript, some of it activated only after the whole DOM has been loaded.
+Considering that every page has on average 20-30 images coming from our image server, every small optimization to it has an avalanche effect on all the other parts of the system.
+I already described the infrastructure in the Nginx post.</description>
+    </item>
+    
+    <item>
+      <title>Dbunit testing</title>
+      <link>/blog/dbunit-testing/</link>
+      <pubDate>Sun, 17 Oct 2010 13:09:26 +0000</pubDate>
+      
+      <guid>/blog/dbunit-testing/</guid>
+      <description>This article is about PHPUnit used in conjunction with DBUnit to test PHP code that interacts with a database server.
+Please note that DBUnit is able to load and unload sets of data to the db but does not handle table creation and queries that alter structures. This is responsibility of an ORM or an initial sql script that creates/rebases the initial environment.
+Code i wrote is run against a very simple ORM implementation we currently use in my workplace.</description>
+    </item>
+    
+    <item>
+      <title>Limonade</title>
+      <link>/blog/limonade/</link>
+      <pubDate>Mon, 11 Oct 2010 00:56:07 +0000</pubDate>
+      
+      <guid>/blog/limonade/</guid>
+      <description>The idea of microframeworks is an interesting new idea which appeared over the internet quite recently. The number of web frameworks available on internet is massive and many times i found myself puzzled about which one is the best one to use. Of course there are the ones i believe are the &amp;ldquo;classics&amp;rdquo; (django and ruby on rails) plus many minor ones. The first famous microframework was Sinatra, followed now by others.</description>
+    </item>
+    
+    <item>
+      <title>Making complex software not complicated</title>
+      <link>/blog/making-complex-software-not-complicated/</link>
+      <pubDate>Tue, 05 Oct 2010 20:32:05 +0000</pubDate>
+      
+      <guid>/blog/making-complex-software-not-complicated/</guid>
+      <description>I&amp;rsquo;d like to share my thoughts with you about approaching difficult problems in software development. This is pretty much what i came to realize after many years of development.
+A difficult problem is usually divisible in several simple problems, but when developing software you stack up problems and every problem relies on the solution of the sub-problem.
+Example (a common order visualizer)
+ 1st level of the stack: 1) display_order_in_xml() (relies on read_order()) 1) display_order_in_json() (relies on read_order()) 2nd: 2) read_order() (relies on read_orderitems() and an internal calculate_delivery()) 3rd: 3) read_orderitems() (relies on items_mapper::find() OR read_items_from_external_shop()) 4th - case 1 - items_mapper 4) items_mapper::find() (relies on a db_Adapter) 5) db_Adapter (no dependencies) 4th - case 2 - read_items_from_external_shop() 4) read_items_from_external_shop() (relies on json_call()) 5) json_call() (depends on http class for sending requests) 6) http class (no dependencies)  Solution here is to isolate each bit, and being able to feed a fixed solution of the sub-problem to the current problem.</description>
+    </item>
+    
+    <item>
+      <title>Scala</title>
+      <link>/blog/scala/</link>
+      <pubDate>Tue, 05 Oct 2010 20:01:04 +0000</pubDate>
+      
+      <guid>/blog/scala/</guid>
+      <description>This had quickly become one of my favourite languages. If you see it from the point of view of expressiveness, it is really close to Python. It is quite new in the world of programming languages, but it is mature enough to be used by big players such as Twitter and Foursquare.
+What i like of that language is mainly conciseness united with the possibility of using almost every tool and library from the Java world.</description>
+    </item>
+    
+    <item>
+      <title>Nginx rocks</title>
+      <link>/blog/nginx-rocks/</link>
+      <pubDate>Sun, 03 Oct 2010 16:09:47 +0000</pubDate>
+      
+      <guid>/blog/nginx-rocks/</guid>
+      <description>I have installed Nginx some time ago on one of our busiest servers on our partner&amp;rsquo;s networks, i promised i would have blogged about this and now it&amp;rsquo;s about time. This server only serves images of products sold thorugh our e-commerce site. The first configuration was only a simple web server which was serving already resized images directly, due to the massive amount of images and the cleaning of it which was taking days, i decided to use Nginx in reverse proxy mode.</description>
+    </item>
+    
+    <item>
+      <title>Tag-based routing in laconi.ca</title>
+      <link>/blog/tag-based-routing-in-laconica/</link>
+      <pubDate>Thu, 02 Apr 2009 23:15:09 +0000</pubDate>
+      
+      <guid>/blog/tag-based-routing-in-laconica/</guid>
+      <description>Following the last article, i have been experimenting again on laconica and pubsub, this time on the idea of &amp;ldquo;filtering the real time web&amp;rdquo;.
+Stomp and generally JMS messages offer the ability to specify headers and body of the message to transmit, in a way that resembles http requests. In fact, Stomp protocol is really similar to Http protocol, at least in the general structure. The difference is that there are different methods instead of GET, POST, etc.</description>
+    </item>
+    
+    <item>
+      <title>About the use of queues and pubsub in Laconi.ca</title>
+      <link>/blog/about-the-use-of-queues-and-pubsub-in-laconica/</link>
+      <pubDate>Sun, 15 Mar 2009 19:57:51 +0000</pubDate>
+      
+      <guid>/blog/about-the-use-of-queues-and-pubsub-in-laconica/</guid>
+      <description>Lately i have been working on the idea of queues and pubsub mechanisms and how it is possible to integrate them in a microblogging service. I am fascinated by messaging protocols and event pushing!
+Let me say that XMPP is in my opinion the protocol of the future, however its pubsub implementation is quite complex if compared to what STOMP offers, and I didn&amp;rsquo;t find any mature PHP library.</description>
+    </item>
+    
+    <item>
+      <title>Why this blog?</title>
+      <link>/blog/why-this-blog/</link>
+      <pubDate>Sun, 15 Mar 2009 18:39:48 +0000</pubDate>
+      
+      <guid>/blog/why-this-blog/</guid>
+      <description>Humans need interaction. Web 2.0 has been, and still is, all about human interaction. Wikis, blogs, microblogs are all a wonderful way to organize information but, more important, are methods to empower the interaction with the other internet users. The web however is still far from &amp;ldquo;human&amp;rdquo; interactions&amp;hellip; why we have to go to Facebook to see if there&amp;rsquo;s new content from friends?? Why the web can&amp;rsquo;t just say to me.</description>
+    </item>
+    
+    <item>
+      <title>About me</title>
+      <link>/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>Hi, I am Federico Marani, Londoner since 2006, passionate about development and systems since forever. My tools of choice are Python and Django, however I love using many tools and languages and see how they do things differently.
+Recently, I have been through many startups, and learnt a lot from it. I like to create things, and the means to do that are not just coding.
+On this blog you will find mainly posts about technology and startups.</description>
+    </item>
+    
+    <item>
+      <title>Side Projects</title>
+      <link>/projects/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/</guid>
+      <description>Some of the things I enjoyed building throughout the years, some opensource some not:
+ invoicecart: a tool to automatically download invoices of advertising expenses from Facebook, Twitter and Linkedin. coolc: A compiler for a language called COOL, which I eventually will finish. Writing compilers is hard. tunnelchat: a prototype of a chat system inspired by Hipchat/Slack. ligra: a object to graph mapper, similar to an ORM in concept, that was targeting Neo4J.</description>
     </item>
     
   </channel>

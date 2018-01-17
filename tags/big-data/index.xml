@@ -2,12 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Big Data on Blog | Federico Marani</title>
-    <link>/tags/big-data/index.xml</link>
+    <link>/tags/big-data/</link>
     <description>Recent content in Big Data on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <atom:link href="/tags/big-data/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 18 Jun 2017 14:44:35 +0100</lastBuildDate>
+    
+	<atom:link href="/tags/big-data/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Moving data in bulk in and out of Postgresql</title>
@@ -15,82 +18,8 @@
       <pubDate>Sun, 18 Jun 2017 14:44:35 +0100</pubDate>
       
       <guid>/blog/moving-data-in-and-out-of-postgresql/</guid>
-      <description>
-
-&lt;p&gt;Postgresql is a database, and its primary goal is to be efficient when storing and querying information that is stored on disk. Same primary goal of many other databases, with the minor exception of in-memory databases. Postgresql however is a very flexible and extensible system, and in the last few years a lot of extensions came out, one of which is Foreign Data Wrappers.&lt;/p&gt;
-
-&lt;p&gt;With Postgres foreign data wrappers, it is very easy to move data in and out of it from other databases. This is particularly convenient when volumes of data are high and no business logic needs to be applied while copying data. An example scenario could be copying data from Redshift to Postgresql, or viceversa.&lt;/p&gt;
-
-&lt;p&gt;There are many reasons why using this approach makes it more efficient than a normal import/export:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;no intermediary system is needed to issue batched read/writes to databases&lt;/li&gt;
-&lt;li&gt;no temporary storage of data&lt;/li&gt;
-&lt;li&gt;no serialization/deserialization of data&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/importing-with-fdw.svg&#34; alt=&#34;Importing data methods&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;All the steps above, in the case of FDW, are handled trasparently. The drawback of this method is that it uses a feature specific to Postgresql. Although this feature is based on an official extension of SQL (SQL/MED), there is not enough feature parity among database servers to make this portable.&lt;/p&gt;
-
-&lt;h2 id=&#34;data-vs-metadata&#34;&gt;Data vs Metadata&lt;/h2&gt;
-
-&lt;p&gt;First important distinction is between data and metadata, which in this context means table structure (and table list). In Postgres there is a concept called schema: it is a namespace for tables within a database. By default all tables are placed in a schema called &amp;ldquo;public&amp;rdquo;. It is possible however to create tables in a given schema and associate permissions/do operations on schemas.&lt;/p&gt;
-
-&lt;p&gt;In our case, we can use schemas to map a local namespace to all foreign tables on a specific foreign server. In this way we do not have to specify the table structure everytime we do a SELECT on the foreign server.&lt;/p&gt;
-
-&lt;h2 id=&#34;step-by-step-example&#34;&gt;Step by step example&lt;/h2&gt;
-
-&lt;p&gt;Step zero is to enable all the extensions that we need:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE EXTENSION postgres_fdw;
-CREATE EXTENSION dblink;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then as a first step, you need a connection and a user mapping. The first is essentially telling Postgres the location of the foreign server and the second are the credentials that a specific user can use to read from the remote server.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE SERVER foreign_server
-        FOREIGN DATA WRAPPER postgres_fdw
-        OPTIONS (host &#39;blabla.us-east-1.redshift.amazonaws.com&#39;, port &#39;5439&#39;, dbname &#39;dbname_here&#39;, sslmode &#39;require&#39;);
-CREATE USER MAPPING FOR current_db_user
-        SERVER foreign_server
-        OPTIONS (user &#39;remote_user&#39;, password &#39;secret&#39;);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This is the bare minimum to start moving data back and forth. You can issue INSERT SELECT statements now, but without importing the foreign schema, you have to specify all column types.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;INSERT INTO latest_load (id, table_name, loaded_at)
-SELECT *
-FROM dblink(&#39;foreign_server&#39;,$MARK$
-    SELECT id, table_name, loaded_at
-    FROM latest_load
-$MARK$) AS t1 (
-	id varchar(256),
-	table_name varchar(256),
-	loaded_at timestamp);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you are working with Postgres 9.5+ you can import the foreign schema in a local schema and use that to trasparently copy data back and forth between databases. As example, importing a schema from a Redshift database locally, you can issue these two commands:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE SCHEMA redshift;
-IMPORT FOREIGN SCHEMA public FROM SERVER foreign_server INTO redshift;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Not all foreign data wrappers have support for this, and also not all DBMS have the concept of schema. Mysql does not really distinguish between database and schema, while Postgres and Redshift do.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;INSERT INTO redshift.latest_load VALUES (&#39;abc&#39;, now(), &#39;blabla&#39;);
-SELECT * FROM redshift.latest_load;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;These operations are completely transparent now, as in they have the same form as when working locally. For more complex SELECTs, depending on the foreign data wrappers, you have the ability to push down WHERE clauses and local JOINs, decreasing the amount of network traffic the SELECT generates and improving the performance by orders of magnitude.&lt;/p&gt;
-
-&lt;p&gt;It is also possible to clone remote table structure locally, if the foreign schema has been imported.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE TABLE a_table AS SELECT * FROM redshift.table_ccc;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That&amp;rsquo;s a run through of the most important ops. Hope it was useful!&lt;/p&gt;
-</description>
+      <description>Postgresql is a database, and its primary goal is to be efficient when storing and querying information that is stored on disk. Same primary goal of many other databases, with the minor exception of in-memory databases. Postgresql however is a very flexible and extensible system, and in the last few years a lot of extensions came out, one of which is Foreign Data Wrappers.
+With Postgres foreign data wrappers, it is very easy to move data in and out of it from other databases.</description>
     </item>
     
     <item>
@@ -99,44 +28,8 @@ SELECT * FROM redshift.latest_load;
       <pubDate>Wed, 31 May 2017 10:17:15 +0100</pubDate>
       
       <guid>/blog/how-apache-airflow-works/</guid>
-      <description>
-
-&lt;p&gt;(continuing from a &lt;a href=&#34;../../blog/intro-to-apache-airflow/&#34;&gt;previous article&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&#34;scheduler&#34;&gt;Scheduler&lt;/h2&gt;
-
-&lt;p&gt;Airflow is made up of mainly two components: webserver and scheduler. The webserver is the main way to interact with Airflow, although some commands can be issued from the command line, such as setting variables or connection credentials. The scheduler is the component that is in charge of executing whatever needs to be executed at a specific time and using a configurable strategy.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/airflow-scheduler.png&#34; alt=&#34;Airflow scheduler CLI&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;When creating DAGs, you specify an interval (daily/hourly/etc) and in doing so the scheduler knows that a DagRun need to be created at a specific recurring time. DagRuns are a database model and they represent a run of a DAG at a set execution date. For instance, if we generate a report every day, at midnight of each day a new DagRun is created. These will then get collected by a scheduler &amp;ldquo;executor&amp;rdquo; for execution. In addition to this, a DagRun can be created by manually triggering a Dag, with the command &lt;code&gt;trigger_dag&lt;/code&gt; available from the command line.&lt;/p&gt;
-
-&lt;p&gt;In the previous post it was mentioned that DAG are composed by many Tasks. In a parallel way, DagRuns, during execution, get connected to many TaskInstances, which represent the execution of a specific task in the context of a Dag run at a specific time. Task instances have several data points that are saved in the Airflow database, therefore can be analyzed afterwards for spotting problems with task duration, launch time, execution environment, etc. Every instance also has all log information coming from executing its code written to a log file automatically managed by Airflow.&lt;/p&gt;
-
-&lt;p&gt;The normal behaviour of Dag execution is that tasks are executed in a dependency order and only in case the previous task has terminated successfully. This behaviour can be changed to activate regardless of exit status or only in case of failure of the previous task. I never had to change this. If you think you should add an error triggering task, be aware that Airflow comes with its own error reporting facilities, although quite basic. Dependencies between tasks can be declared in both ways, as in &amp;ldquo;is-dependent-from&amp;rdquo; and &amp;ldquo;depends-on&amp;rdquo;. Airflow will automatically make the correct graph out of this and traverse it accordingly.&lt;/p&gt;
-
-&lt;h2 id=&#34;executors&#34;&gt;Executors&lt;/h2&gt;
-
-&lt;p&gt;The actual execution of the task happens somewhat separately from the scheduler process. There are 3 strategies included in Airflow: local, sequential, Celery and Mesos executor. Sequential is the default and good for development, but it will not get you far. Local executor is the one I have seen used the most, and it is based on a pre-fork model: a number of workers are forked from the main scheduler and polling from an IPC queue tasks to run. When a task is taken from the queue, another fork happens and a new process is wrapping the actual execution of the task. There are no external dependencies needed here, and it scales up well until all resources on the server are used.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/airflow-processhierarchy.png&#34; alt=&#34;Airflow processes&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;If you want to scale out to multiple servers, you can use the Celery executor. Celery executor uses Celery (and a messaging queue server) to distribute the load on a pool of workers. It is quite a common pattern used in the Django/RoR world. This is a more complex setup, and it requires the code to be in sync with all machines.&lt;/p&gt;
-
-&lt;h2 id=&#34;retries-and-idempotency&#34;&gt;Retries and Idempotency&lt;/h2&gt;
-
-&lt;p&gt;An important concept is idempotency: any task could be executed potentially any number of time (although ideally not many more than one), therefore it is important that this is taken into account, either by bringing it to a known state every time it starts or some other specific way. If you are not familiar with the term, it is a term that is frequently used in messaging systems, where at-least-once delivery is common. Most background jobs queue implement this.&lt;/p&gt;
-
-&lt;p&gt;If for any reason the task that is being run fails, Airflow, if configured to do so, will try to re-run it after a time delay. This behaviour is helpful in case systems are temporarily unavailable. The number of retries can be configured at DAG-level and at Task-level. Once all the possible runs have been exhausted and the system continuously failed, the task is marked as failed and, depending on the DAG configuration, the whole DAG may be marked as failed.&lt;/p&gt;
-
-&lt;h2 id=&#34;miscellaneous&#34;&gt;Miscellaneous&lt;/h2&gt;
-
-&lt;p&gt;Worth mentioning are the Hooks (Connections in the UI) and Variables. This is a non-core but quite useful part of Airflow. It allows you to manage all connection details and configuration variables of your DAGs and your scripts directly from the Airflow Web UI. Given that all this data is read at runtime, it is quite convenient if you need to update these without restarting Airflow and all its running processes with it. Besides this, they do not offer anything more that you would not get by deploying a configuration file.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/airflow-connections.png&#34; alt=&#34;Airflow Hooks&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;One last thing is XCom. The architecture of Airflow is built in a way that tasks have complete separation from any other tasks in the same DAG. The only truth that you can assert is that all tasks that the current task depends on are guaranteed to be executed. Besides that, there is no implicit way to pass dynamic data between tasks at execution time of the DAG. If you want to do so, you need to use XCom. XCom is a simple key/value store API that uses the Airflow DB, and it&amp;rsquo;s available for querying when a task is being executed. It is generally helpful if, for instance, you generate temporary files/dirs and you want the following tasks to use the dynamically generated file paths.&lt;/p&gt;
-</description>
+      <description>(continuing from a previous article)
+Scheduler Airflow is made up of mainly two components: webserver and scheduler. The webserver is the main way to interact with Airflow, although some commands can be issued from the command line, such as setting variables or connection credentials. The scheduler is the component that is in charge of executing whatever needs to be executed at a specific time and using a configurable strategy.</description>
     </item>
     
     <item>
@@ -145,42 +38,8 @@ SELECT * FROM redshift.latest_load;
       <pubDate>Tue, 16 May 2017 10:17:15 +0100</pubDate>
       
       <guid>/blog/intro-to-apache-airflow/</guid>
-      <description>
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/workflow.jpg&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-
-&lt;p&gt;Apache Airflow is a tool to work with complex and recurring workflows. Workflows is a more formal term to describe scripts like cronjobs. Scripts constitute of a series of tasks, sometimes with retry mechanism attached to it.&lt;/p&gt;
-
-&lt;p&gt;A tool like this is used in data-intensive environments with background jobs that need to run everyday. These background scripts do extraction, enrichment and other transformations to a dataset. Most workflow software gives you a structure to use when writing your scripts, so they are able to distinguish between steps and manage their interdependencies. It is a very handy feature because it allows Airflow to run only the steps that are needed.&lt;/p&gt;
-
-&lt;p&gt;It is a powerful concept those of tasks dependencies: if you have a workflow that starts with a common task and then branches out in two parallel sequence of tasks, a failure in one of the branches can be recovered without running the initial tasks. Generally, if a task depends on another task that has already been run successfully, it will not be re-run again. It is literally a time-saver.&lt;/p&gt;
-
-&lt;p&gt;In data processing there are two kinds of architecture: batch processing and streaming. Generally it is easier to reason in terms of batch processing, and advisable to do so, unless there are near real-time requirements. In batch processing, workflow tasks are started and terminated when they are needed rather than daemonized and kept in the background. The processing happens in &amp;ldquo;batches&amp;rdquo; of data, rather than streamed in through a message queue.&lt;/p&gt;
-
-&lt;p&gt;Apache Airflow comes from the experience of Maxime Beauchemin that worked both at Facebook and Airbnb. When you use it, you realize it covers a lot of use cases and many levels of sophistication. It is the only open source workflow management tool as far as i know that covers both scheduling and workflow management.&lt;/p&gt;
-
-&lt;p&gt;The core concepts are quite simple: workflows are called DAGs, workflow steps are called tasks. Tasks are instances of Operators. There are many types of Operators in Airflow, PythonOperator runs Python code, BashOperator runs shell commands&amp;hellip; you get the idea.&lt;/p&gt;
-
-&lt;h2 id=&#34;what-you-get&#34;&gt;What you get&lt;/h2&gt;
-
-&lt;p&gt;Airflow offers a web UI and most operations are done from there. One of the most helpful web views is the tree view, although slightly harder to read than the graph view. It is a matrix where rows represent tasks and columns represent the time intervals. If your workflow is made up of 3 tasks and runs daily, columns will be days and the 3 rows will be the 3 tasks. Each cell will then represent the task run status.&lt;/p&gt;
-
-&lt;p&gt;In the example below, upload_to_s3 is a step that depends on frontend_generate_report step, which in turns depend on reset_output_folder, which in turn depends on latest_only. That is how it is read.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/airflow-treeview.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;For each task run there are a bunch of useful operations that can be done through the UI. View its logging (Airflow creates a log file per task run), and clear/mark done its status. I found these last options very useful when fixing bugs: if you clear a task run, it will be rescheduled and rerun by the system. Marking it done will allow Airflow to schedule the next dependent task, it is useful when you want to skip some steps.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/airflow-taskrunpopup.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Another view that is interesting to look at is task duration. It&amp;rsquo;s about how long each tasks take from start to end. Useful if you want to make sure they run within a certain amount of time.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;../../attachments/airflow-taskduration.png&#34; alt=&#34;YC&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I will write an article with a more in-depth view of the tool sometimes soon. Stay tuned!&lt;/p&gt;
-</description>
+      <description>Background Apache Airflow is a tool to work with complex and recurring workflows. Workflows is a more formal term to describe scripts like cronjobs. Scripts constitute of a series of tasks, sometimes with retry mechanism attached to it.
+A tool like this is used in data-intensive environments with background jobs that need to run everyday. These background scripts do extraction, enrichment and other transformations to a dataset. Most workflow software gives you a structure to use when writing your scripts, so they are able to distinguish between steps and manage their interdependencies.</description>
     </item>
     
   </channel>

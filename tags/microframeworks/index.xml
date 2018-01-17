@@ -2,12 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Microframeworks on Blog | Federico Marani</title>
-    <link>/tags/microframeworks/index.xml</link>
+    <link>/tags/microframeworks/</link>
     <description>Recent content in Microframeworks on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <atom:link href="/tags/microframeworks/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Oct 2010 00:56:07 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/microframeworks/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Limonade</title>
@@ -15,14 +18,7 @@
       <pubDate>Mon, 11 Oct 2010 00:56:07 +0000</pubDate>
       
       <guid>/blog/limonade/</guid>
-      <description>&lt;p&gt;The idea of microframeworks is an interesting new idea which appeared over the internet quite recently. The number of web frameworks available on internet is massive and many times i found myself puzzled about which one is the best one to use. Of course there are the ones i believe are the &amp;ldquo;classics&amp;rdquo; (django and ruby on rails) plus many minor ones. The first famous microframework was Sinatra, followed now by others.&lt;/p&gt;
-
-&lt;p&gt;Lately i&amp;rsquo;ve been coding a little project on my own and i wanted a framework which offers its services but stands out of the way as much as possible. Microframeworks were ideal: i still wanted to have a base infrastructure to work on, but it needed to be simple. I wanted APIs simple enough to be self-explanatory. I did not want any configuration files in any format. I needed something that can be deployed as soon as possible.&lt;/p&gt;
-
-&lt;p&gt;This project needed to be written in PHP. I used &lt;a href=&#34;http://www.limonade-php.net/&#34;&gt;Limonade&lt;/a&gt; in conjunction with &lt;a href=&#34;http://www.twig-project.org/&#34;&gt;Twig&lt;/a&gt;. Limonade offers his own template language but i really like Twig and that&amp;rsquo;s what i decided to use.&lt;/p&gt;
-
-&lt;p&gt;This post is not meant to be a tutorial on how to set up Limonade (or Twig). Instructions on the website are already clear and concise, there&amp;rsquo;s no need to repeat. I just wanted to say that the experience had been rather enjoyable.&lt;/p&gt;
-</description>
+      <description>The idea of microframeworks is an interesting new idea which appeared over the internet quite recently. The number of web frameworks available on internet is massive and many times i found myself puzzled about which one is the best one to use. Of course there are the ones i believe are the &amp;ldquo;classics&amp;rdquo; (django and ruby on rails) plus many minor ones. The first famous microframework was Sinatra, followed now by others.</description>
     </item>
     
   </channel>

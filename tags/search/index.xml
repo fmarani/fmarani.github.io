@@ -2,12 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Search on Blog | Federico Marani</title>
-    <link>/tags/search/index.xml</link>
+    <link>/tags/search/</link>
     <description>Recent content in Search on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <atom:link href="/tags/search/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 31 Jul 2013 12:09:43 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/search/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Spatial search on multiple points in Solr</title>
@@ -15,72 +18,8 @@
       <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
       
       <guid>/blog/spatial-search-on-multiple-points-in-solr/</guid>
-      <description>&lt;p&gt;At TrialReach we deal with clinical trials data, which contain a lot of spatial information. Tipically, clinical trials treat a certain set of conditions and they happen in various locations globally.
-If you are a patient then searching across clinical trials becomes really spatial sensitive: you are only interested in the closest location to you.&lt;/p&gt;
-
-&lt;p&gt;This case might apply to other events as well, but the key point is global distribution. I am not interested in any point in the globe, just the closest to me.&lt;/p&gt;
-
-&lt;p&gt;&lt;h2&gt;Solution&lt;/h2&gt;
-Solr 4 does have support for this with the new spatial field called SpatialRecursivePrefixTreeFieldType, with many caveats though.&lt;/p&gt;
-
-&lt;p&gt;A schema could look this way:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; ?&amp;gt;
-&amp;lt;schema name=&amp;quot;example&amp;quot; version=&amp;quot;1.5&amp;quot;&amp;gt;
- &amp;lt;fields&amp;gt;
-   &amp;lt;field name=&amp;quot;id&amp;quot; type=&amp;quot;string&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot; multiValued=&amp;quot;false&amp;quot; /&amp;gt; 
-   &amp;lt;field name=&amp;quot;title&amp;quot; type=&amp;quot;text_en&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot;/&amp;gt;
-   &amp;lt;field name=&amp;quot;condition&amp;quot; type=&amp;quot;text_en&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; required=&amp;quot;true&amp;quot; multiValued=&amp;quot;true&amp;quot;/&amp;gt;
-   &amp;lt;field name=&amp;quot;location&amp;quot; type=&amp;quot;location_rpt&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; multiValued=&amp;quot;true&amp;quot;/&amp;gt;
-   &amp;lt;field name=&amp;quot;_version_&amp;quot; type=&amp;quot;long&amp;quot; indexed=&amp;quot;true&amp;quot; stored=&amp;quot;true&amp;quot; /&amp;gt;
- &amp;lt;/fields&amp;gt;
- ... 
-  &amp;lt;types&amp;gt;
- ...
-    &amp;lt;fieldType name=&amp;quot;location_rpt&amp;quot; class=&amp;quot;solr.SpatialRecursivePrefixTreeFieldType&amp;quot;
-        geo=&amp;quot;true&amp;quot; distErrPct=&amp;quot;0.025&amp;quot; maxDistErr=&amp;quot;0.000009&amp;quot; units=&amp;quot;degrees&amp;quot; /&amp;gt;
- &amp;lt;/types&amp;gt;
-&amp;lt;/schema&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A sample indexer using GeoDjango and PySolr (Haystack does not support this). It should be quite easy to work out how it works, PySolr is just a very thin wrapper for doing HTTP POST requests to Apache Solr.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pysolr
-
-solr = pysolr.Solr(&amp;quot;http://1.2.3.4:8983/solr/&amp;quot;, timeout=10)
-
-records = models.Study.objects.all()
-solr_data = []
-for record in records:
-    solr_dict = {
-                &amp;quot;id&amp;quot;: str(record.id),
-                &amp;quot;title&amp;quot;: record.title,
-                &amp;quot;condition&amp;quot;: [c.name for c in record.conditions.all()],
-                &amp;quot;location&amp;quot;: [&amp;quot;{1} {0}&amp;quot;.format(l.point.coords[0], l.point.coords[1]) for l in record.locations.all()],
-		# &amp;quot;point&amp;quot; is a Point GeoDjango type
-		# SOLR FORMAT is &amp;quot;long lat&amp;quot;, separated by a space
-            }
-    solr_data.append(solr_dict)
-solr.add(solr_data)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For querying, we use these sort of urls:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;http://1.2.3.4:8983/solr/select/?sort=score+asc&amp;amp;fq=title:lupus+condition:lupus&amp;amp;q={!geofilt score=distance sfield=location pt=LAT,LONG d=KM_RADIUS}&amp;amp;fl=*,score
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;to return the distance you need to use the score, and the only thing you use in the q parameter is the geofilt (otherwise will influence the score), all other filters go in fq&lt;/li&gt;
-&lt;li&gt;if you do not need the distance, loose the score parameter in geofilt (it is inefficient)&lt;/li&gt;
-&lt;li&gt;distance returned is the distance between specified LAT,LONG and the closest LAT,LONG in the SpatialRecursivePrefixTreeFieldType set.&lt;/li&gt;
-&lt;li&gt;score returned is in DEGREES. You have to convert it in Km or miles.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;h2&gt;Shortcomings&lt;/h2&gt;
-- the only way to get the distance is through the score
-- you cannot get the matched point through highlighting or any other way
-- units of measure are a bit confusing&lt;/p&gt;
-</description>
+      <description>At TrialReach we deal with clinical trials data, which contain a lot of spatial information. Tipically, clinical trials treat a certain set of conditions and they happen in various locations globally. If you are a patient then searching across clinical trials becomes really spatial sensitive: you are only interested in the closest location to you.
+This case might apply to other events as well, but the key point is global distribution.</description>
     </item>
     
   </channel>

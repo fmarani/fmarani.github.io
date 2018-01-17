@@ -158,24 +158,21 @@
 <p><code>ec2-run-instances ami-895069fd -t m1.large &ndash;user-data-file ~/ec2/bootstrap.sh</code></p>
 
 <p>This is an example bootstrap file:</p>
-
-<pre><code class="language-shell">#!/bin/bash
-
-set -e -x
-export DEBIAN_FRONTEND=noninteractive
-apt-get update &amp;&amp; apt-get upgrade -y
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#099">#!/bin/bash
+</span><span style="color:#099"></span>
+<span style="color:#366">set</span> -e -x
+<span style="color:#366">export</span> <span style="color:#033">DEBIAN_FRONTEND</span><span style="color:#555">=</span>noninteractive
+apt-get update <span style="color:#555">&amp;&amp;</span> apt-get upgrade -y
 
 apt-get install -y xorg
 apt-get install -y fluxbox
 apt-get install -y vnc4server
 
-wget --user=&quot;YOURUSER&quot; --password=&quot;YOURPASS&quot; -O /tmp/vnc-conf.tgz https://server/vnc-bootstrap.tgz
-cd /home/ubuntu &amp;&amp; tar xfvz /tmp/vnc-conf.tgz &amp;&amp; chmod -R 700 .vnc
+wget --user<span style="color:#555">=</span><span style="color:#c30">&#34;YOURUSER&#34;</span> --password<span style="color:#555">=</span><span style="color:#c30">&#34;YOURPASS&#34;</span> -O /tmp/vnc-conf.tgz https://server/vnc-bootstrap.tgz
+<span style="color:#366">cd</span> /home/ubuntu <span style="color:#555">&amp;&amp;</span> tar xfvz /tmp/vnc-conf.tgz <span style="color:#555">&amp;&amp;</span> chmod -R <span style="color:#f60">700</span> .vnc
 
-chmod 755 /etc/X11/xinit/xinitrc
-su -c vnc4server ubuntu
-</code></pre>
-
+chmod <span style="color:#f60">755</span> /etc/X11/xinit/xinitrc
+su -c vnc4server ubuntu</code></pre></div>
 <p>In this script, i install all the packages i need and i download some initial data. For anything more serious than this i advise you to look into Puppet or Chef.</p>
 
                 
@@ -203,10 +200,6 @@ if (postTime < cutoffTime) {
     <div id="footer">
         <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
     </div>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 
 
     <script>

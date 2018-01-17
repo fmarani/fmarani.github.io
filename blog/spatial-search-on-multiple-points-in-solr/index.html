@@ -145,46 +145,40 @@ If you are a patient then searching across clinical trials becomes really spatia
 Solr 4 does have support for this with the new spatial field called SpatialRecursivePrefixTreeFieldType, with many caveats though.</p>
 
 <p>A schema could look this way:</p>
-
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-&lt;schema name=&quot;example&quot; version=&quot;1.5&quot;&gt;
- &lt;fields&gt;
-   &lt;field name=&quot;id&quot; type=&quot;string&quot; indexed=&quot;true&quot; stored=&quot;true&quot; required=&quot;true&quot; multiValued=&quot;false&quot; /&gt; 
-   &lt;field name=&quot;title&quot; type=&quot;text_en&quot; indexed=&quot;true&quot; stored=&quot;true&quot; required=&quot;true&quot;/&gt;
-   &lt;field name=&quot;condition&quot; type=&quot;text_en&quot; indexed=&quot;true&quot; stored=&quot;true&quot; required=&quot;true&quot; multiValued=&quot;true&quot;/&gt;
-   &lt;field name=&quot;location&quot; type=&quot;location_rpt&quot; indexed=&quot;true&quot; stored=&quot;true&quot; multiValued=&quot;true&quot;/&gt;
-   &lt;field name=&quot;_version_&quot; type=&quot;long&quot; indexed=&quot;true&quot; stored=&quot;true&quot; /&gt;
- &lt;/fields&gt;
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34; ?&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;schema</span> <span style="color:#309">name=</span><span style="color:#c30">&#34;example&#34;</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.5&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+ <span style="color:#309;font-weight:bold">&lt;fields&gt;</span>
+   <span style="color:#309;font-weight:bold">&lt;field</span> <span style="color:#309">name=</span><span style="color:#c30">&#34;id&#34;</span> <span style="color:#309">type=</span><span style="color:#c30">&#34;string&#34;</span> <span style="color:#309">indexed=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">stored=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">required=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">multiValued=</span><span style="color:#c30">&#34;false&#34;</span> <span style="color:#309;font-weight:bold">/&gt;</span> 
+   <span style="color:#309;font-weight:bold">&lt;field</span> <span style="color:#309">name=</span><span style="color:#c30">&#34;title&#34;</span> <span style="color:#309">type=</span><span style="color:#c30">&#34;text_en&#34;</span> <span style="color:#309">indexed=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">stored=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">required=</span><span style="color:#c30">&#34;true&#34;</span><span style="color:#309;font-weight:bold">/&gt;</span>
+   <span style="color:#309;font-weight:bold">&lt;field</span> <span style="color:#309">name=</span><span style="color:#c30">&#34;condition&#34;</span> <span style="color:#309">type=</span><span style="color:#c30">&#34;text_en&#34;</span> <span style="color:#309">indexed=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">stored=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">required=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">multiValued=</span><span style="color:#c30">&#34;true&#34;</span><span style="color:#309;font-weight:bold">/&gt;</span>
+   <span style="color:#309;font-weight:bold">&lt;field</span> <span style="color:#309">name=</span><span style="color:#c30">&#34;location&#34;</span> <span style="color:#309">type=</span><span style="color:#c30">&#34;location_rpt&#34;</span> <span style="color:#309">indexed=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">stored=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">multiValued=</span><span style="color:#c30">&#34;true&#34;</span><span style="color:#309;font-weight:bold">/&gt;</span>
+   <span style="color:#309;font-weight:bold">&lt;field</span> <span style="color:#309">name=</span><span style="color:#c30">&#34;_version_&#34;</span> <span style="color:#309">type=</span><span style="color:#c30">&#34;long&#34;</span> <span style="color:#309">indexed=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">stored=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309;font-weight:bold">/&gt;</span>
+ <span style="color:#309;font-weight:bold">&lt;/fields&gt;</span>
  ... 
-  &lt;types&gt;
+  <span style="color:#309;font-weight:bold">&lt;types&gt;</span>
  ...
-    &lt;fieldType name=&quot;location_rpt&quot; class=&quot;solr.SpatialRecursivePrefixTreeFieldType&quot;
-        geo=&quot;true&quot; distErrPct=&quot;0.025&quot; maxDistErr=&quot;0.000009&quot; units=&quot;degrees&quot; /&gt;
- &lt;/types&gt;
-&lt;/schema&gt;
-</code></pre>
-
+    <span style="color:#309;font-weight:bold">&lt;fieldType</span> <span style="color:#309">name=</span><span style="color:#c30">&#34;location_rpt&#34;</span> <span style="color:#309">class=</span><span style="color:#c30">&#34;solr.SpatialRecursivePrefixTreeFieldType&#34;</span>
+        <span style="color:#309">geo=</span><span style="color:#c30">&#34;true&#34;</span> <span style="color:#309">distErrPct=</span><span style="color:#c30">&#34;0.025&#34;</span> <span style="color:#309">maxDistErr=</span><span style="color:#c30">&#34;0.000009&#34;</span> <span style="color:#309">units=</span><span style="color:#c30">&#34;degrees&#34;</span> <span style="color:#309;font-weight:bold">/&gt;</span>
+ <span style="color:#309;font-weight:bold">&lt;/types&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/schema&gt;</span></code></pre></div>
 <p>A sample indexer using GeoDjango and PySolr (Haystack does not support this). It should be quite easy to work out how it works, PySolr is just a very thin wrapper for doing HTTP POST requests to Apache Solr.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">pysolr</span>
 
-<pre><code class="language-python">import pysolr
+solr <span style="color:#555">=</span> pysolr<span style="color:#555">.</span>Solr(<span style="color:#c30"></span><span style="color:#c30">&#34;http://1.2.3.4:8983/solr/&#34;</span>, timeout<span style="color:#555">=</span><span style="color:#f60">10</span>)
 
-solr = pysolr.Solr(&quot;http://1.2.3.4:8983/solr/&quot;, timeout=10)
-
-records = models.Study.objects.all()
-solr_data = []
-for record in records:
-    solr_dict = {
-                &quot;id&quot;: str(record.id),
-                &quot;title&quot;: record.title,
-                &quot;condition&quot;: [c.name for c in record.conditions.all()],
-                &quot;location&quot;: [&quot;{1} {0}&quot;.format(l.point.coords[0], l.point.coords[1]) for l in record.locations.all()],
-		# &quot;point&quot; is a Point GeoDjango type
-		# SOLR FORMAT is &quot;long lat&quot;, separated by a space
+records <span style="color:#555">=</span> models<span style="color:#555">.</span>Study<span style="color:#555">.</span>objects<span style="color:#555">.</span><span style="color:#366">all</span>()
+solr_data <span style="color:#555">=</span> []
+<span style="color:#069;font-weight:bold">for</span> record <span style="color:#000;font-weight:bold">in</span> records:
+    solr_dict <span style="color:#555">=</span> {
+                <span style="color:#c30"></span><span style="color:#c30">&#34;id&#34;</span>: <span style="color:#366">str</span>(record<span style="color:#555">.</span><span style="color:#366">id</span>),
+                <span style="color:#c30"></span><span style="color:#c30">&#34;title&#34;</span>: record<span style="color:#555">.</span>title,
+                <span style="color:#c30"></span><span style="color:#c30">&#34;condition&#34;</span>: [c<span style="color:#555">.</span>name <span style="color:#069;font-weight:bold">for</span> c <span style="color:#000;font-weight:bold">in</span> record<span style="color:#555">.</span>conditions<span style="color:#555">.</span><span style="color:#366">all</span>()],
+                <span style="color:#c30"></span><span style="color:#c30">&#34;location&#34;</span>: [<span style="color:#c30"></span><span style="color:#c30">&#34;{1} {0}&#34;</span><span style="color:#555">.</span>format(l<span style="color:#555">.</span>point<span style="color:#555">.</span>coords[<span style="color:#f60">0</span>], l<span style="color:#555">.</span>point<span style="color:#555">.</span>coords[<span style="color:#f60">1</span>]) <span style="color:#069;font-weight:bold">for</span> l <span style="color:#000;font-weight:bold">in</span> record<span style="color:#555">.</span>locations<span style="color:#555">.</span><span style="color:#366">all</span>()],
+		<span style="color:#09f;font-style:italic"># &#34;point&#34; is a Point GeoDjango type</span>
+		<span style="color:#09f;font-style:italic"># SOLR FORMAT is &#34;long lat&#34;, separated by a space</span>
             }
-    solr_data.append(solr_dict)
-solr.add(solr_data)
-</code></pre>
-
+    solr_data<span style="color:#555">.</span>append(solr_dict)
+solr<span style="color:#555">.</span>add(solr_data)</code></pre></div>
 <p>For querying, we use these sort of urls:</p>
 
 <pre><code>http://1.2.3.4:8983/solr/select/?sort=score+asc&amp;fq=title:lupus+condition:lupus&amp;q={!geofilt score=distance sfield=location pt=LAT,LONG d=KM_RADIUS}&amp;fl=*,score
@@ -227,10 +221,6 @@ if (postTime < cutoffTime) {
     <div id="footer">
         <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
     </div>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 
 
     <script>

@@ -139,8 +139,7 @@
 <p><strong>DB Unit test</strong></p>
 
 <p>A dbunit test is basically a unit-test which inherits from PHPUnit_Extensions_Database_TestCase and declares two more methods: getConnection() and getDataSet(). The first one must return the dbunit wrapper of PDO and the second a dataset representation created with create*Dataset() functions.</p>
-
-<pre><code class="language-php">class TestAddress extends PHPUnit_Extensions_Database_TestCase
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">class TestAddress extends PHPUnit_Extensions_Database_TestCase
 {
     private $fixture_addressId;
     private $fixture_location;
@@ -148,19 +147,19 @@
     public function setUp()
     {
         parent::setUp();
-        $this-&gt;fixture_addressId = &quot;5&quot;;
-        $this-&gt;fixture_location = &quot;Melbourne&quot;;
+        $this-&gt;fixture_addressId = &#34;5&#34;;
+        $this-&gt;fixture_location = &#34;Melbourne&#34;;
     }
 
     protected function getConnection()
 	{
 		$pdo = getPdo(); // replace this code
-		return $this-&gt;createDefaultDBConnection($pdo, 'testdb');
+		return $this-&gt;createDefaultDBConnection($pdo, &#39;testdb&#39;);
 	}
 
     protected function getDataSet()
     {
-        return $this-&gt;createFlatXMLDataSet(dirname(__FILE__).'/../fixtures/db-addresses.xml');
+        return $this-&gt;createFlatXMLDataSet(dirname(__FILE__).&#39;/../fixtures/db-addresses.xml&#39;);
     }
 
     public function testBasicFixtureLoading()
@@ -175,100 +174,89 @@
     {
         $mapper = new address_Mapper();
         $address = $mapper-&gt;findById($this-&gt;fixture_addressId);
-        $address-&gt;addressLine3 = &quot;London&quot;;
+        $address-&gt;addressLine3 = &#34;London&#34;;
     	$mapper-&gt;save($address);
     	unset($address);
         $address = $mapper-&gt;findById($this-&gt;fixture_addressId);
-    	$this-&gt;assertEquals(&quot;London&quot;, $address-&gt;addressLine3);
+    	$this-&gt;assertEquals(&#34;London&#34;, $address-&gt;addressLine3);
     }
-}
-</code></pre>
-
+}</code></pre></div>
 <p><strong>model object</strong></p>
 
 <p>Model objects are a representation of data. They are basically a data container. They must not contain any integration logic (ex. database queries), that is responsibility of mapper objects.</p>
-
-<pre><code class="language-php">class Address extends Model
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">class Address extends Model
 {
 	public function __construct()
 	{
-		parent::__construct('addressId');
+		parent::__construct(&#39;addressId&#39;);
 		$this-&gt;setFieldNames(array(
-			'addressId',
-			'firstName',
-			'lastName',
-			'addressLine1',
-			'addressLine2',
-			'addressLine3',
-			'addressLine4',
-			'state',
-			'postCode',
-			'country',
-			'createdDate'
+			&#39;addressId&#39;,
+			&#39;firstName&#39;,
+			&#39;lastName&#39;,
+			&#39;addressLine1&#39;,
+			&#39;addressLine2&#39;,
+			&#39;addressLine3&#39;,
+			&#39;addressLine4&#39;,
+			&#39;state&#39;,
+			&#39;postCode&#39;,
+			&#39;country&#39;,
+			&#39;createdDate&#39;
 			));
 	}
-}
-</code></pre>
-
+}</code></pre></div>
 <p><strong>mapper object</strong></p>
 
 <p>Responsibility of mapper object is to populate and return correspondent models of data. In this case it returns address models. Our mapper class already offers generic find()/insert()/update()/delete() operation but you may want to extend it to use different find methods.</p>
-
-<pre><code class="language-php">class address_Mapper extends Mapper
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">class address_Mapper extends Mapper
 {
-	const STORAGE_NAME = 'Addresses'; // table name
+	const STORAGE_NAME = &#39;Addresses&#39;; // table name
 
 	public function __construct()
 	{
-		parent::__construct(getPdo(), self::STORAGE_NAME, 'addressId');
+		parent::__construct(getPdo(), self::STORAGE_NAME, &#39;addressId&#39;);
 	}
 
     public function findById($addressId)
     {
-        $identity = array('addressId' =&gt; $addressId);
+        $identity = array(&#39;addressId&#39; =&gt; $addressId);
         $model = new Address;
         parent::find($identity, $model);
         return $model;
     }
-}
-</code></pre>
-
+}</code></pre></div>
 <p><strong>Fixture datasets</strong></p>
 
 <p>These are our test data. Each dbunit test has his own dataset. There are many formats available for PHPUnit, the one here is called FlatXMLDataset, which is really simple.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34; ?&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;dataset&gt;</span>
+ <span style="color:#309;font-weight:bold">&lt;Addresses</span>
+   <span style="color:#309">addressId=</span><span style="color:#c30">&#34;5&#34;</span>
+   <span style="color:#309">firstName=</span><span style="color:#c30">&#34;myName&#34;</span>
+   <span style="color:#309">lastName=</span><span style="color:#c30">&#34;mySurname&#34;</span>
+   <span style="color:#309">addressLine1=</span><span style="color:#c30">&#34;myAddr1&#34;</span>
+   <span style="color:#309">addressLine2=</span><span style="color:#c30">&#34;myAddr2&#34;</span>
+   <span style="color:#309">addressLine3=</span><span style="color:#c30">&#34;myAddr3&#34;</span>
+   <span style="color:#309">addressLine4=</span><span style="color:#c30">&#34;Melbourne&#34;</span>
+   <span style="color:#309">state=</span><span style="color:#c30">&#34;&#34;</span>
+   <span style="color:#309">country=</span><span style="color:#c30">&#34;AU&#34;</span>
+   <span style="color:#309">postCode=</span><span style="color:#c30">&#34;3400&#34;</span>
+   <span style="color:#309">createdDate=</span><span style="color:#c30">&#34;18:16:19 2009-10-18&#34;</span>
+  <span style="color:#309;font-weight:bold">/&gt;</span>
 
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-&lt;dataset&gt;
- &lt;Addresses
-   addressId=&quot;5&quot;
-   firstName=&quot;myName&quot;
-   lastName=&quot;mySurname&quot;
-   addressLine1=&quot;myAddr1&quot;
-   addressLine2=&quot;myAddr2&quot;
-   addressLine3=&quot;myAddr3&quot;
-   addressLine4=&quot;Melbourne&quot;
-   state=&quot;&quot;
-   country=&quot;AU&quot;
-   postCode=&quot;3400&quot;
-   createdDate=&quot;18:16:19 2009-10-18&quot;
-  /&gt;
-
- &lt;Addresses
-   addressId=&quot;6&quot;
-   firstName=&quot;Another&quot;
-   lastName=&quot;Person&quot;
-   addressLine1=&quot;Somewhere&quot;
-   addressLine2=&quot;&quot;
-   addressLine3=&quot;London&quot;
-   addressLine4=&quot;&quot;
-   state=&quot;&quot;
-   country=&quot;UK&quot;
-   postCode=&quot;XXX111&quot;
-   createdDate=&quot;18:00:19 2009-10-18&quot;
-  /&gt;
-&lt;/dataset&gt;
-</code></pre>
-
+ <span style="color:#309;font-weight:bold">&lt;Addresses</span>
+   <span style="color:#309">addressId=</span><span style="color:#c30">&#34;6&#34;</span>
+   <span style="color:#309">firstName=</span><span style="color:#c30">&#34;Another&#34;</span>
+   <span style="color:#309">lastName=</span><span style="color:#c30">&#34;Person&#34;</span>
+   <span style="color:#309">addressLine1=</span><span style="color:#c30">&#34;Somewhere&#34;</span>
+   <span style="color:#309">addressLine2=</span><span style="color:#c30">&#34;&#34;</span>
+   <span style="color:#309">addressLine3=</span><span style="color:#c30">&#34;London&#34;</span>
+   <span style="color:#309">addressLine4=</span><span style="color:#c30">&#34;&#34;</span>
+   <span style="color:#309">state=</span><span style="color:#c30">&#34;&#34;</span>
+   <span style="color:#309">country=</span><span style="color:#c30">&#34;UK&#34;</span>
+   <span style="color:#309">postCode=</span><span style="color:#c30">&#34;XXX111&#34;</span>
+   <span style="color:#309">createdDate=</span><span style="color:#c30">&#34;18:00:19 2009-10-18&#34;</span>
+  <span style="color:#309;font-weight:bold">/&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/dataset&gt;</span></code></pre></div>
 <p>Each child tag of <dataset> is <TABLE_NAME column1="value"> kind of syntax. Nothing more than that, no structure only data.</p>
 
 <p><strong>Bootstrapping</strong></p>
@@ -276,58 +264,52 @@
 <p>As we said there is no table definition loading by default in DBunit. Initial environment must be setup before the dbunit test runs and this can be done using PHPUnit bootstrap files (see &ndash;bootstrap option).</p>
 
 <p>It is not necessary to drop and recreate tables everytime but highly advisable, there could be cases in which the test is supposed to fail but it does not because it reads data that should not be in the database. That is why we need to control execution environment as much as possible.</p>
-
-<pre><code class="language-php">define(&quot;FIXTURE_DB_REBASE&quot;, dirname(__FILE__).&quot;/fixtures/db-rebase.sql&quot;);
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">define(&#34;FIXTURE_DB_REBASE&#34;, dirname(__FILE__).&#34;/fixtures/db-rebase.sql&#34;);
 
 // To test database-dependent classes you need a local database with the following settings
-$host = 'localhost';
-$user = 'unittests';
-$password = 'myPassword';
-$dbName = 'app_UnitTests';
+$host = &#39;localhost&#39;;
+$user = &#39;unittests&#39;;
+$password = &#39;myPassword&#39;;
+$dbName = &#39;app_UnitTests&#39;;
 
 // Create a database adapter
 try {
-    $dbh = new PDO(&quot;mysql://&quot;.$host.&quot;/&quot;.$dbName, $user, $password);
+    $dbh = new PDO(&#34;mysql://&#34;.$host.&#34;/&#34;.$dbName, $user, $password);
 } catch (PDOException $e) {
-    echo 'Connection failed: ' . $e-&gt;getMessage();
+    echo &#39;Connection failed: &#39; . $e-&gt;getMessage();
 }
 
 // Ensure database credentials work
 try {
-    $results = $dbh-&gt;query(&quot;SHOW TABLES&quot;)-&gt;fetchAll();
+    $results = $dbh-&gt;query(&#34;SHOW TABLES&#34;)-&gt;fetchAll();
 } catch (PDOException $e) {
-    echo &quot;You need to create a local test database - see bootstrap.php for more details\n&quot;;
-    echo &quot;Connection error: &quot;.$e-&gt;getMessage().&quot;\n&quot;;
+    echo &#34;You need to create a local test database - see bootstrap.php for more details\n&#34;;
+    echo &#34;Connection error: &#34;.$e-&gt;getMessage().&#34;\n&#34;;
     exit;
 }
 
 // rebase the database
-$dbh-&gt;query(file_get_contents(FIXTURE_DB_REBASE))-&gt;closeCursor();
-</code></pre>
-
+$dbh-&gt;query(file_get_contents(FIXTURE_DB_REBASE))-&gt;closeCursor();</code></pre></div>
 <p><strong>DB rebase SQL fixture</strong></p>
-
-<pre><code class="language-sql">--
--- Table structure for table 'Addresses'
---
-
-DROP TABLE IF EXISTS Addresses;
-CREATE TABLE Addresses (
-  addressId int(10) unsigned NOT NULL auto_increment,
-  firstName varchar(128) NOT NULL,
-  lastName varchar(128) NOT NULL,
-  addressLine1 varchar(256) NOT NULL,
-  addressLine2 varchar(256) NOT NULL,
-  addressLine3 varchar(256) NOT NULL,
-  addressLine4 varchar(256) NOT NULL,
-  state varchar(128) NOT NULL,
-  country varchar(128) NOT NULL,
-  postCode varchar(32) NOT NULL,
-  createdDate datetime NOT NULL,
-  PRIMARY KEY  (addressId)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#09f;font-style:italic">--
+</span><span style="color:#09f;font-style:italic">-- Table structure for table &#39;Addresses&#39;
+</span><span style="color:#09f;font-style:italic">--
+</span><span style="color:#09f;font-style:italic"></span>
+<span style="color:#069;font-weight:bold">DROP</span> <span style="color:#069;font-weight:bold">TABLE</span> <span style="color:#069;font-weight:bold">IF</span> <span style="color:#069;font-weight:bold">EXISTS</span> Addresses;
+<span style="color:#069;font-weight:bold">CREATE</span> <span style="color:#069;font-weight:bold">TABLE</span> Addresses (
+  addressId <span style="color:#366">int</span>(<span style="color:#f60">10</span>) unsigned <span style="color:#069;font-weight:bold">NOT</span> <span style="color:#069;font-weight:bold">NULL</span> auto_increment,
+  firstName <span style="color:#366">varchar</span>(<span style="color:#f60">128</span>) <span style="color:#069;font-weight:bold">NOT</span> <span style="color:#069;font-weight:bold">NULL</span>,
+  lastName <span style="color:#366">varchar</span>(<span style="color:#f60">128</span>) <span style="color:#069;font-weight:bold">NOT</span> <span style="color:#069;font-weight:bold">NULL</span>,
+  addressLine1 <span style="color:#366">varchar</span>(<span style="color:#f60">256</span>) <span style="color:#069;font-weight:bold">NOT</span> <span style="color:#069;font-weight:bold">NULL</span>,
+  addressLine2 <span style="color:#366">varchar</span>(<span style="color:#f60">256</span>) <span style="color:#069;font-weight:bold">NOT</span> <span style="color:#069;font-weight:bold">NULL</span>,
+  addressLine3 <span style="color:#366">varchar</span>(<span style="color:#f60">256</span>) <span style="color:#069;font-weight:bold">NOT</span> <span style="color:#069;font-weight:bold">NULL</span>,
+  addressLine4 <span style="color:#366">varchar</span>(<span style="color:#f60">256</span>) <span style="color:#069;font-weight:bold">NOT</span> <span style="color:#069;font-weight:bold">NULL</span>,
+  <span style="color:#069;font-weight:bold">state</span> <span style="color:#366">varchar</span>(<span style="color:#f60">128</span>) <span style="color:#069;font-weight:bold">NOT</span> <span style="color:#069;font-weight:bold">NULL</span>,
+  country <span style="color:#366">varchar</span>(<span style="color:#f60">128</span>) <span style="color:#069;font-weight:bold">NOT</span> <span style="color:#069;font-weight:bold">NULL</span>,
+  postCode <span style="color:#366">varchar</span>(<span style="color:#f60">32</span>) <span style="color:#069;font-weight:bold">NOT</span> <span style="color:#069;font-weight:bold">NULL</span>,
+  createdDate datetime <span style="color:#069;font-weight:bold">NOT</span> <span style="color:#069;font-weight:bold">NULL</span>,
+  <span style="color:#069;font-weight:bold">PRIMARY</span> <span style="color:#069;font-weight:bold">KEY</span>  (addressId)
+) ENGINE<span style="color:#555">=</span>MyISAM <span style="color:#069;font-weight:bold">DEFAULT</span> CHARSET<span style="color:#555">=</span>utf8;</code></pre></div>
                 
                 
     <div id="comments">
@@ -353,10 +335,6 @@ if (postTime < cutoffTime) {
     <div id="footer">
         <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
     </div>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 
 
     <script>

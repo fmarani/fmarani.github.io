@@ -154,8 +154,7 @@
 </pre>
 
 <p>Solution here is to isolate each bit, and being able to feed a fixed solution of the sub-problem to the current problem. Isolating each bit allows us to solve one problem at a time, being able to pass dependencies to the constructor gives us the possibility to pass already computed solutions of the sub-problems.</p>
-
-<pre><code class="language-php">class OrderDisplayer {
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">class OrderDisplayer {
  public function __construct($orderReader) {
   $this-&gt;orderReader = $orderReader; // without orderReader, this class has no reason to exist
  }
@@ -195,7 +194,7 @@ class ItemsMapper {
   $this-&gt;dbAdapter = $dbAdapter; // same story
  }
  public function find($conditions) {
-    return $this-&gt;dbAdapter-&gt;query(&quot;SELECT FROM Items WHERE &quot;.$this-&gt;getWhere($conditions));
+    return $this-&gt;dbAdapter-&gt;query(&#34;SELECT FROM Items WHERE &#34;.$this-&gt;getWhere($conditions));
  }
 }
 
@@ -205,7 +204,7 @@ class remoteItemsReader {
   $this-&gt;jsonRpcService = $jsonRpcService; // same story
  }
  public function  read_items_from_external_shop($conditions) {
-    $this-&gt;serverList = array(&quot;ecommerce.johnsmith.co.uk&quot;, &quot;www.bestshopever.com.au&quot;);
+    $this-&gt;serverList = array(&#34;ecommerce.johnsmith.co.uk&#34;, &#34;www.bestshopever.com.au&#34;);
     foreach ($this-&gt;serverList as $server) {
      $items = $this-&gt;jsonRpcService-&gt;json_call($server, $this-&gt;getJsonBody($conditions));
      if (count($items) &gt; 0)
@@ -221,36 +220,28 @@ class JsonRpcService {
  }
  public function json_call($server, $jsonCall) {
    $this-&gt;httpService-&gt;connect($server);
-    return $this-&gt;httpService-&gt;postAndReadAnswer(&quot;/jsonrpc.php&quot;, $jsonCall);
+    return $this-&gt;httpService-&gt;postAndReadAnswer(&#34;/jsonrpc.php&#34;, $jsonCall);
  }
-}
-</code></pre>
-
+}</code></pre></div>
 <p>Each of these classes are unit-testable, which represents the software unit of measurement of isolation. Ability to feed intermediate solutions to the dependent problems comes from mocked objects:</p>
 
 <p>Example 1:</p>
-
-<pre><code class="language-php">class MockJsonRpcService {
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">class MockJsonRpcService {
   public function json_call($server, $jsonCall) {
    return array($item1, $item2);
  }
 }
 $remoteReader = new remoteItemsReader(new MockJsonRpcService());
 assert($remoteReader-&gt;read_items_from_external_shop() == array($item1, $item2));
-// pseudo code here... see phpunit manual..
-</code></pre>
-
+// pseudo code here... see phpunit manual..</code></pre></div>
 <p>example 2:</p>
-
-<pre><code class="language-php">class MockOrderReader {
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">class MockOrderReader {
  public function read($orderNumber) {
   return array($itemA, $itemB, $itemC);
  }
 }
 $orderDisplayer = new OrderDisplayer(new MockOrderReader());
-assert($orderDisplayer-&gt;toXml(1), &quot;ABC&quot;);
-</code></pre>
-
+assert($orderDisplayer-&gt;toXml(1), &#34;ABC&#34;);</code></pre></div>
 <p>And so on&hellip; having followed the constructor-setter approach we can now test each bit separately. Then, everytime you need a real OrderDisplayer you have to type all this stuff:</p>
 
 <pre><code>$orderDisplayer = new OrderDisplayer(new OrderReader(new ItemsReader(new ItemsMapper(new db_Adapter), new RemoteItemsReader(new JsonRpcService(new HttpService))), new DeliveryCalculator()))
@@ -306,10 +297,6 @@ if (postTime < cutoffTime) {
     <div id="footer">
         <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
     </div>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 
 
     <script>

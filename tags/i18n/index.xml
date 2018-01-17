@@ -2,12 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>I18n on Blog | Federico Marani</title>
-    <link>/tags/i18n/index.xml</link>
+    <link>/tags/i18n/</link>
     <description>Recent content in I18n on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <atom:link href="/tags/i18n/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 31 Jan 2013 15:39:37 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/i18n/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Transifex for your Django projects</title>
@@ -15,34 +18,8 @@
       <pubDate>Thu, 31 Jan 2013 15:39:37 +0000</pubDate>
       
       <guid>/blog/transifex-for-your-django-projects/</guid>
-      <description>&lt;p&gt;I am assuming you already created a project on Transifex (in this example is TxProject), either on the hosted version or on the downloadable version, and all the users you need are on there (just one to start is enough). I am also assuming i18n is already setup and you have at least 2 languages already in your project.&lt;/p&gt;
-
-&lt;p&gt;The aim of integrating Transifex libraries into your code is to make it really easy to push/pull translations of a project to their web front-end.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;pip install transifex-client&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;First thing is to install their python client, make things much easier instead of manually uploading PO files.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;user@host:/workspace/project$ tx init&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;This creates a .tx folder in your project root to store all tx configuration. You should include this in the repository.&lt;/p&gt;
-
-&lt;p&gt;Now suppose you have multiple apps in your django project. For each of those, you should have a locale/ folder inside it with all the application PO files. You need to generate a source language PO file before linking to transifex.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;user@host:/workspace/project/apps/main$ ../../manage.py makemessages -l en&lt;/p&gt;
-
-&lt;p&gt;user@host:/workspace/project$ tx set &amp;ndash;auto-local -r TxProject.main &amp;lsquo;apps/main/locale/&lt;lang&gt;/LC_MESSAGES/django.po&amp;rsquo; &amp;ndash;source-lang en &amp;ndash;source-file apps/main/locale/en/LC_MESSAGES/django.po -t PO&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Repeat the last command for every app you have in your project, changing the resource name (-r option) in TxProject.APPNAME. Next step is to push all your PO files to transifex.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;user@host:/workspace/project$ tx push -s -t&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;After the translations have been done on Transifex, you can pull them into your project by typing.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;user@host:/workspace/project$ tx pull&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;All very nice and easy!&lt;/p&gt;
-</description>
+      <description>I am assuming you already created a project on Transifex (in this example is TxProject), either on the hosted version or on the downloadable version, and all the users you need are on there (just one to start is enough). I am also assuming i18n is already setup and you have at least 2 languages already in your project.
+The aim of integrating Transifex libraries into your code is to make it really easy to push/pull translations of a project to their web front-end.</description>
     </item>
     
   </channel>

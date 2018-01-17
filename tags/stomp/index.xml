@@ -2,12 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Stomp on Blog | Federico Marani</title>
-    <link>/tags/stomp/index.xml</link>
+    <link>/tags/stomp/</link>
     <description>Recent content in Stomp on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <atom:link href="/tags/stomp/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 15 Mar 2009 19:57:51 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/stomp/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>About the use of queues and pubsub in Laconi.ca</title>
@@ -15,173 +18,8 @@
       <pubDate>Sun, 15 Mar 2009 19:57:51 +0000</pubDate>
       
       <guid>/blog/about-the-use-of-queues-and-pubsub-in-laconica/</guid>
-      <description>
-
-&lt;p&gt;Lately i have been working on the idea of queues and pubsub mechanisms and how it is possible to integrate them in a microblogging service. I am fascinated by messaging protocols and event pushing!&lt;/p&gt;
-
-&lt;p&gt;Let me say that XMPP is in my opinion the protocol of the future, however its pubsub implementation is quite complex if compared to what STOMP offers, and I didn&amp;rsquo;t find any mature PHP library.&lt;/p&gt;
-
-&lt;p&gt;AQMP and STOMP are more suitable for internal processing, while XMPP is the perfect option for exposing data to the outside world and perhaps to connect desktop clients with microblogging services.&lt;/p&gt;
-
-&lt;p&gt;Apart from my opinions, STOMP is a mature protocol with a PHP library that works pretty well and  Apache ActiveMQ, the message broker, offers access using several protocols.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;INTRODUCING A MESSAGE BROKER IN LACONI.CA&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;If queues are enabled in laconi.ca, it is possible to modify common_enqueue_notice() (called after the storage of the dent) in order to push the dent in the 4 queues that the software uses (OMB, jabber, sms, public), or simply push the dent in one and configure 3 mirror queues.&lt;/p&gt;
-
-&lt;p&gt;In this way the internal queue system is not used. Queue_item::top() has potential race conditions and polls the db every 5 seconds. That means that if we&amp;rsquo;re lucky we get the message quickly, if unlucky in 5 seconds. Latency could even be something secondary, but the system now is pretty inefficient.&lt;/p&gt;
-
-&lt;p&gt;If laconi.ca passes the message to an external broker, delivery would be more efficient and it is a piece of code that the community wouldn&amp;rsquo;t have to maintain.&lt;/p&gt;
-
-&lt;p&gt;The downside of this is that another software is on the list of requirements. However, if you have the possibility to run queuehandlers in background, it probably means you own the server and you can afford to install a message broker. Queues can still be disabled and the system still works without queues and message brokers, the only difference is that everything is done synchronously.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;WITH A MESSAGE BROKER, PUBSUB COMES FOR FREE&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Another feature of ActiveMQ is the use of &amp;ldquo;topics&amp;rdquo;. The main differences between queues and topics are that in the queues messages are sent to only one consumer (precisely, round-robin among consumers) and messages are persistent (stored internally while waiting consumers to connect). Topics are the opposite, the same message is sent to all its consumers that are currently connected to the broker.&lt;/p&gt;
-
-&lt;p&gt;Topics could be used for introducing a publish-subscribe system in Laconi.ca. In common_enqueue_notice() with only some lines of code it is possible to push each dent to topics such as &amp;ldquo;/topic/laconica.user.IDUSER&amp;rdquo;, &amp;ldquo;/topic/laconica.allusers&amp;rdquo; or do more complex association like &amp;ldquo;/topic/laconica.group.IDGROUP&amp;rdquo; and &amp;ldquo;/topic/laconica.tag.TAGNAME&amp;rdquo;.&lt;/p&gt;
-
-&lt;p&gt;With a topic dedicated to a group and using the XMPP endpoint of ActiveMQ, you can also gain MUC support in Laconi.ca (only read-only if there isn&amp;rsquo;t an handler)&lt;/p&gt;
-
-&lt;p&gt;Offering pubsub using ActiveMQ and STOMP calls is very easy, however i am not sure how interoperable this solution could be. I did not find any XMPP/Pubsub interface for ActiveMQ, although topics could be easily mapped to XMPP/Pubsub nodes.&lt;/p&gt;
-
-&lt;p&gt;If the pubsub notifications have to be XMPP based, i see two solutions: write a wrapper that gets all the messages via an ActiveMQ queue and speaks XMPP with ejabberd, or forget about ActiveMQ and use XMPP requests directly, perhaps using an AtomPub interface.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;POSSIBLE FUTURE DIRECTIONS&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Integrating queues at the end of the stack is not going to help much in terms of performance or flexibility of the whole system, but it&amp;rsquo;s a first step and, as they&amp;rsquo;re used marginally, they&amp;rsquo;re still an optional requirement.&lt;/p&gt;
-
-&lt;p&gt;With all these ideas around, like offering XMPP MUC support, AtomPub interfaces, XMPP/Pubsub output, etc.. in the future the system would have to be &amp;ldquo;decoupled&amp;rdquo;.&lt;/p&gt;
-
-&lt;p&gt;An input system that pushes dents in a queue as quickly as possible. The main Laconi.ca logic that works in the background and asynchronously. The internal logic will then push the info to queue handlers for real-time delivery AND store the dents in the DB. The main website will still poll data from the DB, with all the necessary caching layers, OR/AND poll directly the message broker for the required type of dent (see the list of topics mentioned before) via AJAX calls (ActiveMQ has support for that).&lt;/p&gt;
-
-&lt;p&gt;Any feedback is appreciated, or suggestions on things i might have overlooked! I am not an expert of message queue system so many of the things i have said may seem obvious, but not to someone who has a background of normal website and MVC development so i clearly stated all the steps&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;WHAT I DID&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;
-function common_enqueue_notice($notice)
-{
-if (common_config(&amp;lsquo;queue&amp;rsquo;,&amp;lsquo;subsystem&amp;rsquo;) == &amp;lsquo;stomp&amp;rsquo;) {
-// use an external message queue system via STOMP
-require_once(&amp;ldquo;Stomp.php&amp;rdquo;);
-$con = new Stomp(common_config(&amp;lsquo;queue&amp;rsquo;,&amp;lsquo;stomp_server&amp;rsquo;));
-if (!$con-&amp;gt;connect()) {
-common_log(LOG_ERR, &amp;lsquo;Failed to connect to queue server&amp;rsquo;);
-return false;
-}
-$queue_basename = common_config(&amp;lsquo;queue&amp;rsquo;,&amp;lsquo;queue_basename&amp;rsquo;);
-foreach (array(&amp;lsquo;jabber&amp;rsquo;, &amp;lsquo;omb&amp;rsquo;, &amp;lsquo;sms&amp;rsquo;, &amp;lsquo;public&amp;rsquo;) as $transport) {
-if (!$con-&amp;gt;send(
-&amp;lsquo;/queue/&amp;rsquo;.$queue_basename.&amp;lsquo;-&amp;rsquo;.$transport, // QUEUE
-$notice-&amp;gt;id,            // BODY of the message
-array (                 // HEADERS of the msg
-&amp;lsquo;created&amp;rsquo; =&amp;gt; $notice-&amp;gt;created
-))) {
-common_log(LOG_ERR, &amp;lsquo;Error sending to &amp;lsquo;.$transport.&amp;rsquo; queue&amp;rsquo;);
-return false;
-}
-common_log(LOG_DEBUG, &amp;lsquo;complete remote queueing notice ID = &amp;rsquo; . $notice-&amp;gt;id . &amp;lsquo; for &amp;rsquo; . $transport);
-}
-$con-&amp;gt;send(&amp;lsquo;/topic/laconica.&amp;rsquo;.$notice-&amp;gt;profile_id,
-$notice-&amp;gt;content,
-array(
-&amp;lsquo;profile_id&amp;rsquo; =&amp;gt; $notice-&amp;gt;profile_id,
-&amp;lsquo;created&amp;rsquo; =&amp;gt; $notice-&amp;gt;created
-)
-);
-$con-&amp;gt;send(&amp;lsquo;/topic/laconica.allusers&amp;rsquo;,
-$notice-&amp;gt;content,
-array(
-&amp;lsquo;profile_id&amp;rsquo; =&amp;gt; $notice-&amp;gt;profile_id,
-&amp;lsquo;created&amp;rsquo; =&amp;gt; $notice-&amp;gt;created
-)
-);
-$result = true;
-}
-else {
-// in any other case, &amp;lsquo;internal&amp;rsquo;
-foreach (array(&amp;lsquo;jabber&amp;rsquo;, &amp;lsquo;omb&amp;rsquo;, &amp;lsquo;sms&amp;rsquo;, &amp;lsquo;public&amp;rsquo;) as $transport) {
-$qi = new Queue_item();
-#OTHER OLD CODE&amp;hellip;
-&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;This code sends the dent to 4 queues and 2 topics. Queues are used by the 4 background queuehandlers while 2 topics offer a simple pubsub service to either a single userid or to all of them (public timeline).&lt;/p&gt;
-
-&lt;p&gt;As regards queues, queuehandler.php has to be modified:
-&lt;code&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;called-by-run&#34;&gt;called by run()&lt;/h1&gt;
-
-&lt;p&gt;function stomp_dispatch() {
-require(&amp;ldquo;Stomp.php&amp;rdquo;);
-$con = new Stomp(common_config(&amp;lsquo;queue&amp;rsquo;,&amp;lsquo;stomp_server&amp;rsquo;));
-if (!$con-&amp;gt;connect()) {
-$this-&amp;gt;log(LOG_ERR, &amp;lsquo;Failed to connect to queue server&amp;rsquo;);
-return false;
-}
-$queue_basename = common_config(&amp;lsquo;queue&amp;rsquo;,&amp;lsquo;queue_basename&amp;rsquo;);
-// subscribe to the relevant queue (format: basename-transport)
-$con-&amp;gt;subscribe(&amp;lsquo;/queue/&amp;rsquo;.$queue_basename.&amp;lsquo;-&amp;rsquo;.$this-&amp;gt;transport());
-do {
-$frame = $con-&amp;gt;readFrame();
-if ($frame) {
-$this-&amp;gt;log(LOG_INFO, &amp;lsquo;Got item enqueued &amp;lsquo;.common_exact_date($frame-&amp;gt;headers[&amp;lsquo;created&amp;rsquo;]));
-// XXX: Now the queue handler receives only the ID of the
-// notice, and it has to get it from the DB
-// A massive improvement would be avoid DB query by transmitting
-// all the notice details via queue server&amp;hellip;
-$notice = Notice::staticGet($frame-&amp;gt;body);
-if ($notice) {
-$this-&amp;gt;log(LOG_INFO, &amp;lsquo;broadcasting notice ID = &amp;rsquo; . $notice-&amp;gt;id);
-$result = $this-&amp;gt;handle_notice($notice);
-if ($result) {
-// if the msg has been handled positively, ack it
-// and the queue server will remove it from the queue
-$con-&amp;gt;ack($frame);
-$this-&amp;gt;log(LOG_INFO, &amp;lsquo;finished broadcasting notice ID = &amp;rsquo; . $notice-&amp;gt;id);
-}
-else {
-// no ack
-$this-&amp;gt;log(LOG_WARNING, &amp;lsquo;Failed broadcast for notice ID = &amp;rsquo; . $notice-&amp;gt;id);
-}
-$notice-&amp;gt;free();
-unset($notice);
-$notice = null;
-} else {
-$this-&amp;gt;log(LOG_WARNING, &amp;lsquo;queue item for notice that does not exist&amp;rsquo;);
-}
-}
-} while (true);
-$con-&amp;gt;disconnect();
-}
-&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Here there&amp;rsquo;s the code for a simple pubsub consumer
-&lt;code&gt;
-require_once &amp;ldquo;Stomp.php&amp;rdquo;;
-$con = new Stomp(&amp;lsquo;tcp://localhost:61613&amp;rsquo;);
-if (!$con-&amp;gt;connect())
-print &amp;lsquo;conn failed&amp;rsquo;;
-$what = &amp;lsquo;/topic/laconica.2&amp;rsquo;;
-if (!$con-&amp;gt;subscribe($what))
-print &amp;ldquo;sub failed&amp;rdquo;;
-else
-print &amp;ldquo;sub to &amp;ldquo;.$what.&amp;rdquo; successful\n&amp;rdquo;;
-while (true) {
-$msg = $con-&amp;gt;readFrame();
-if ($msg) {
-print $msg-&amp;gt;headers[&amp;lsquo;profile_id&amp;rsquo;].&amp;rdquo;: &amp;ldquo;.$msg-&amp;gt;body. &amp;rdquo; &amp;ndash; &amp;ldquo;;
-print &amp;ldquo;msg_time:&amp;ldquo;.$msg-&amp;gt;headers[&amp;lsquo;created&amp;rsquo;].&amp;rdquo; &amp;ldquo;;
-print &amp;ldquo;received:&amp;ldquo;.date(&amp;ldquo;Y-m-d H:i:s&amp;rdquo;).&amp;rdquo;\n&amp;rdquo;;
-$con-&amp;gt;ack($msg);
-}
-}
-$con-&amp;gt;disconnect();
-&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Except the last bit, all this code is on the fmarani-clone of the dev repo on gitorious, branch 0.8.x&lt;/p&gt;
-</description>
+      <description>Lately i have been working on the idea of queues and pubsub mechanisms and how it is possible to integrate them in a microblogging service. I am fascinated by messaging protocols and event pushing!
+Let me say that XMPP is in my opinion the protocol of the future, however its pubsub implementation is quite complex if compared to what STOMP offers, and I didn&amp;rsquo;t find any mature PHP library.</description>
     </item>
     
   </channel>

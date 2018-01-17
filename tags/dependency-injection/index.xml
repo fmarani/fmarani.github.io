@@ -2,12 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Dependency Injection on Blog | Federico Marani</title>
-    <link>/tags/dependency-injection/index.xml</link>
+    <link>/tags/dependency-injection/</link>
     <description>Recent content in Dependency Injection on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <atom:link href="/tags/dependency-injection/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Oct 2010 20:32:05 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/dependency-injection/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Making complex software not complicated</title>
@@ -15,157 +18,10 @@
       <pubDate>Tue, 05 Oct 2010 20:32:05 +0000</pubDate>
       
       <guid>/blog/making-complex-software-not-complicated/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;d like to share my thoughts with you about approaching difficult problems in software development. This is pretty much what i came to realize after many years of development.&lt;/p&gt;
-
-&lt;p&gt;A difficult problem is usually divisible in several simple problems, but when developing software you stack up problems and every problem relies on the solution of the sub-problem.&lt;/p&gt;
-
-&lt;p&gt;Example (a common order visualizer)&lt;/p&gt;
-
-&lt;pre&gt;
-1st level of the stack:
-1) display_order_in_xml() (relies on read_order())
-1) display_order_in_json() (relies on read_order())
-2nd:
-2) read_order() (relies on read_orderitems() and an internal calculate_delivery())
-3rd:
-3) read_orderitems() (relies on items_mapper::find() OR read_items_from_external_shop())
-4th - case 1 - items_mapper
-4) items_mapper::find() (relies on a db_Adapter)
-5) db_Adapter (no dependencies)
-4th - case 2 - read_items_from_external_shop()
-4) read_items_from_external_shop() (relies on json_call())
-5) json_call() (depends on http class for sending requests)
-6) http class (no dependencies)
-&lt;/pre&gt;
-
-&lt;p&gt;Solution here is to isolate each bit, and being able to feed a fixed solution of the sub-problem to the current problem. Isolating each bit allows us to solve one problem at a time, being able to pass dependencies to the constructor gives us the possibility to pass already computed solutions of the sub-problems.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;class OrderDisplayer {
- public function __construct($orderReader) {
-  $this-&amp;gt;orderReader = $orderReader; // without orderReader, this class has no reason to exist
- }
- public function toXml($orderNumber) {
-  return $this-&amp;gt;doMagic($this-&amp;gt;orderReader-&amp;gt;read_order($orderNumber));
- }
-}
-
-class OrderReader {
- public function __construct($itemsReader, $calculator) {
-  $this-&amp;gt;itemsReader = $itemsReader; // same here, without these 2 objects this class has no reason to exist
- }
- public function read($orderNumber) {
-  $items = $this-&amp;gt;itemsReader-&amp;gt;read_orderitems($orderNumber));
-  $delivery = $this-&amp;gt;calculator-&amp;gt;applyCrazyDeliveryCosts($items); // this will depend on a currency converter, which depends on a httpclient which connects to a webservice :)
- }
-}
-
-class ItemsReader {
- public function __construct($itemsMapper, $remoteItemsReader) {
-  $this-&amp;gt;itemsMapper = $itemsMapper; // same story
-  $this-&amp;gt;remoteItemsReader = $remoteItemsReader;
- }
- public function read($orderNumber) {
-    $conditions = array(orderNumber == $orderNumber, itemCost &amp;gt; 0, day == today);
-    $items = $this-&amp;gt;itemsMapper-&amp;gt;find($conditions);
-    if (!$items) {
-      $items = $this-&amp;gt;remoteItemsReader-&amp;gt;find($conditions);
-    }
-    return $items;
- }
-}
-
-
-class ItemsMapper {
- public function __construct($dbAdapter) {
-  $this-&amp;gt;dbAdapter = $dbAdapter; // same story
- }
- public function find($conditions) {
-    return $this-&amp;gt;dbAdapter-&amp;gt;query(&amp;quot;SELECT FROM Items WHERE &amp;quot;.$this-&amp;gt;getWhere($conditions));
- }
-}
-
-
-class remoteItemsReader {
- public function __construct($jsonRpcService) {
-  $this-&amp;gt;jsonRpcService = $jsonRpcService; // same story
- }
- public function  read_items_from_external_shop($conditions) {
-    $this-&amp;gt;serverList = array(&amp;quot;ecommerce.johnsmith.co.uk&amp;quot;, &amp;quot;www.bestshopever.com.au&amp;quot;);
-    foreach ($this-&amp;gt;serverList as $server) {
-     $items = $this-&amp;gt;jsonRpcService-&amp;gt;json_call($server, $this-&amp;gt;getJsonBody($conditions));
-     if (count($items) &amp;gt; 0)
-       return $items;
-    }
- }
-}
-
-
-class JsonRpcService {
- public function __construct($httpService) {
-  $this-&amp;gt;httpService = $httpService; // same story
- }
- public function json_call($server, $jsonCall) {
-   $this-&amp;gt;httpService-&amp;gt;connect($server);
-    return $this-&amp;gt;httpService-&amp;gt;postAndReadAnswer(&amp;quot;/jsonrpc.php&amp;quot;, $jsonCall);
- }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Each of these classes are unit-testable, which represents the software unit of measurement of isolation. Ability to feed intermediate solutions to the dependent problems comes from mocked objects:&lt;/p&gt;
-
-&lt;p&gt;Example 1:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;class MockJsonRpcService {
-  public function json_call($server, $jsonCall) {
-   return array($item1, $item2);
- }
-}
-$remoteReader = new remoteItemsReader(new MockJsonRpcService());
-assert($remoteReader-&amp;gt;read_items_from_external_shop() == array($item1, $item2));
-// pseudo code here... see phpunit manual..
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;example 2:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;class MockOrderReader {
- public function read($orderNumber) {
-  return array($itemA, $itemB, $itemC);
- }
-}
-$orderDisplayer = new OrderDisplayer(new MockOrderReader());
-assert($orderDisplayer-&amp;gt;toXml(1), &amp;quot;ABC&amp;quot;);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And so on&amp;hellip; having followed the constructor-setter approach we can now test each bit separately. Then, everytime you need a real OrderDisplayer you have to type all this stuff:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$orderDisplayer = new OrderDisplayer(new OrderReader(new ItemsReader(new ItemsMapper(new db_Adapter), new RemoteItemsReader(new JsonRpcService(new HttpService))), new DeliveryCalculator()))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;By doing this we &amp;ldquo;inverted the control&amp;rdquo;&amp;hellip; instead of creating object inside the classes that uses them, we create them all inside the current file&amp;hellip; but the length of this line is far from ideal. Here what comes really handy is having a Dependency Injection Framework. Internally in our company we use our own framework which is really helpful in this case: just write the xml to do the autowiring.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;
-http.service
-jsonrpc.service&lt;/p&gt;
-
-&lt;p&gt;db.adapter
-items.mapperremote.items.reader&lt;/p&gt;
-
-&lt;p&gt;items.readerorder.delivery.calculator
-order.reader
-&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Done this, to use the real orderDisplayer:&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;
-$orderDisplayer = $serviceLocator-&amp;gt;getService(&amp;ldquo;order.displayer&amp;rdquo;);
-&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;This is the end of the explanation. Doing in this way in my opinion makes it all less complicated (when you got your head around it), and you can still build really high level abstractions, with lots of objects calling other objects, and it&amp;rsquo;s still clear what is happening.&lt;/p&gt;
-
-&lt;p&gt;There are some open source dependency injection frameworks available, Symfony has one for instance.&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;d like to hear from you what you think&amp;hellip; would you solve it in another way?&lt;/p&gt;
-</description>
+      <description>I&amp;rsquo;d like to share my thoughts with you about approaching difficult problems in software development. This is pretty much what i came to realize after many years of development.
+A difficult problem is usually divisible in several simple problems, but when developing software you stack up problems and every problem relies on the solution of the sub-problem.
+Example (a common order visualizer)
+ 1st level of the stack: 1) display_order_in_xml() (relies on read_order()) 1) display_order_in_json() (relies on read_order()) 2nd: 2) read_order() (relies on read_orderitems() and an internal calculate_delivery()) 3rd: 3) read_orderitems() (relies on items_mapper::find() OR read_items_from_external_shop()) 4th - case 1 - items_mapper 4) items_mapper::find() (relies on a db_Adapter) 5) db_Adapter (no dependencies) 4th - case 2 - read_items_from_external_shop() 4) read_items_from_external_shop() (relies on json_call()) 5) json_call() (depends on http class for sending requests) 6) http class (no dependencies)  Solution here is to isolate each bit, and being able to feed a fixed solution of the sub-problem to the current problem.</description>
     </item>
     
   </channel>

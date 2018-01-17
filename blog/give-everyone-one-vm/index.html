@@ -135,8 +135,7 @@
 <p>We started using Ansible as our main DevOps tool, which recently we extended to also take care of DigitalOcean VM creation. DigitalOcean has very easy APIs and is well integrated with Ansible. While we use EC2 for production/staging environments, for these throw-away environments DigitalOcean offer a good price/performance trade-off.</p>
 
 <p>Enough said, this is a vm creation snippet:</p>
-
-<pre><code>---
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml+jinja" data-lang="yaml+jinja">---
 - name: digitalocean creation
   hosts: all
   connection: local
@@ -151,7 +150,7 @@
       command: cat {{ ansible_env.HOME }}/.ssh/id_rsa.pub 
       register: ssh_pub_key
     - name: generate id for this machine
-      shell: hostname | cksum | awk '{print $1;}'
+      shell: hostname | cksum | awk &#39;{print $1;}&#39;
       register: machineid
     - name: copy your ssh pub key on digital ocean
       digital_ocean: &gt;
@@ -160,7 +159,7 @@
           name={{ machineid.stdout }}-{{ user.stdout }}
           client_id={{ client_id }}
           api_key={{ api_key }}
-          ssh_pub_key='{{ ssh_pub_key.stdout }}'
+          ssh_pub_key=&#39;{{ ssh_pub_key.stdout }}&#39;
       register: my_ssh
     - name: creating new digital ocean vm
       digital_ocean: &gt;
@@ -177,9 +176,7 @@
           wait_timeout=500
       register: my_droplet
     - name: writing local2cloud inventory with new vm ip
-      shell: cat local2cloud | sed 's/CHANGE/{{ my_droplet.droplet.ip_address }}/' &gt; local2cloud.templated
-</code></pre>
-
+      shell: cat local2cloud | sed &#39;s/CHANGE/{{ my_droplet.droplet.ip_address }}/&#39; &gt; local2cloud.templated</code></pre></div>
 <p>This script does a bunch of things, create ssh key and vm, but also makes sure people create only one VM. That is what we need for now. This snippet takes a inventory template (local2cloud) and fills it with the new droplet&rsquo;s IP address, so it can used to provision the new server.</p>
 
 <p>To launch this script, make sure right variables are set, and make sure you have dopy installed in your virtualenv, then run:</p>
@@ -214,10 +211,6 @@ if (postTime < cutoffTime) {
     <div id="footer">
         <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
     </div>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 
 
     <script>

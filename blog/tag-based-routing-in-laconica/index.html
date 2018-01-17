@@ -161,68 +161,59 @@ AMQP is still in its early days. STOMP is a ready-to-use protocol as many of its
 Doing this allows to be the target of a Selector.</p>
 
 <p>Push an additional header:</p>
-
-<pre><code class="language-php">//send tags as headers, so they can be used as JMS selectors
-common_log(LOG_DEBUG, 'searching for tags ' . $notice-&gt;id);
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">//send tags as headers, so they can be used as JMS selectors
+common_log(LOG_DEBUG, &#39;searching for tags &#39; . $notice-&gt;id);
 $tags = array();
 $tag = new Notice_tag();
 $tag-&gt;notice_id = $notice-&gt;id;
 if ($tag-&gt;find()) {
 while ($tag-&gt;fetch()) {
-common_log(LOG_DEBUG, 'tag found = ' . $tag-&gt;tag);
+common_log(LOG_DEBUG, &#39;tag found = &#39; . $tag-&gt;tag);
 array_push($tags,$tag-&gt;tag);
 }
 }
 $tag-&gt;free();
 
-$con-&gt;send('/topic/laconica.allusers',
+$con-&gt;send(&#39;/topic/laconica.allusers&#39;,
 $notice-&gt;content,
 array(
-'profile_id' =&gt; $notice-&gt;profile_id,
-'tags' =&gt; implode($tags,' ')
+&#39;profile_id&#39; =&gt; $notice-&gt;profile_id,
+&#39;tags&#39; =&gt; implode($tags,&#39; &#39;)
 )
 );
-common_log(LOG_DEBUG, 'sent to catch-all topic ' . $notice-&gt;id);
-
-</code></pre>
-
+common_log(LOG_DEBUG, &#39;sent to catch-all topic &#39; . $notice-&gt;id);</code></pre></div>
 <p>The Stomp client is really similar to the one of the previous post, but it specifies the additional header &ldquo;selector&rdquo; passed when subscribing.</p>
 
 <p>The selector here is &ldquo;tags LIKE %dent%&rdquo;. This matches all the posts that contains the tag #dent. Substitute it to match the tag you want&hellip;</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#099">&lt;?php</span>
 
-<pre><code class="language-php">
-&lt;?php
+<span style="color:#069;font-weight:bold">require_once</span> <span style="color:#c30">&#34;Stomp.php&#34;</span>;
 
-require_once &quot;Stomp.php&quot;;
+<span style="color:#033">$con</span> <span style="color:#555">=</span> <span style="color:#069;font-weight:bold">new</span> Stomp(<span style="color:#c30">&#39;tcp://localhost:61613&#39;</span>);
+<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#033">$con</span><span style="color:#555">-&gt;</span><span style="color:#309">connect</span>())
+    <span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#39;conn failed&#39;</span>;
 
-$con = new Stomp('tcp://localhost:61613');
-if (!$con-&gt;connect())
-    print 'conn failed';
+<span style="color:#033">$what</span> <span style="color:#555">=</span> <span style="color:#c30">&#39;/topic/laconica.allusers&#39;</span>;
 
-$what = '/topic/laconica.allusers';
+<span style="color:#033">$query</span> <span style="color:#555">=</span> <span style="color:#c30">&#39;tags LIKE \&#39;%dent%\&#39;&#39;</span>;
 
-$query = 'tags LIKE \'%dent%\'';
+<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#033">$con</span><span style="color:#555">-&gt;</span><span style="color:#309">subscribe</span>(<span style="color:#033">$what</span>,<span style="color:#069;font-weight:bold">array</span>(<span style="color:#c30">&#34;selector&#34;</span> <span style="color:#555">=&gt;</span> <span style="color:#033">$query</span>)))
+    <span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#34;sub failed&#34;</span>;
+<span style="color:#069;font-weight:bold">else</span>
+    <span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#34;sub to &#34;</span><span style="color:#555">.</span><span style="color:#033">$what</span><span style="color:#555">.</span><span style="color:#c30">&#34; successful</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>;
 
-if (!$con-&gt;subscribe($what,array(&quot;selector&quot; =&gt; $query)))
-    print &quot;sub failed&quot;;
-else
-    print &quot;sub to &quot;.$what.&quot; successful\n&quot;;
-
-while (true) {
-    $msg = $con-&gt;readFrame();
-    if ($msg) {
-        print $msg-&gt;headers['profile_id'].&quot;: &quot;.$msg-&gt;body. &quot; -- &quot;;
-        print &quot;msg_time:&quot;.$msg-&gt;headers['created'].&quot; &quot;;
-        print &quot;tags: &quot;.$msg-&gt;headers['tags'].&quot;\n&quot;;
-        $con-&gt;ack($msg);
+<span style="color:#069;font-weight:bold">while</span> (<span style="color:#069;font-weight:bold">true</span>) {
+    <span style="color:#033">$msg</span> <span style="color:#555">=</span> <span style="color:#033">$con</span><span style="color:#555">-&gt;</span><span style="color:#309">readFrame</span>();
+    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#033">$msg</span>) {
+        <span style="color:#069;font-weight:bold">print</span> <span style="color:#033">$msg</span><span style="color:#555">-&gt;</span><span style="color:#309">headers</span>[<span style="color:#c30">&#39;profile_id&#39;</span>]<span style="color:#555">.</span><span style="color:#c30">&#34;: &#34;</span><span style="color:#555">.</span><span style="color:#033">$msg</span><span style="color:#555">-&gt;</span><span style="color:#309">body</span><span style="color:#555">.</span> <span style="color:#c30">&#34; -- &#34;</span>;
+        <span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#34;msg_time:&#34;</span><span style="color:#555">.</span><span style="color:#033">$msg</span><span style="color:#555">-&gt;</span><span style="color:#309">headers</span>[<span style="color:#c30">&#39;created&#39;</span>]<span style="color:#555">.</span><span style="color:#c30">&#34; &#34;</span>;
+        <span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#34;tags: &#34;</span><span style="color:#555">.</span><span style="color:#033">$msg</span><span style="color:#555">-&gt;</span><span style="color:#309">headers</span>[<span style="color:#c30">&#39;tags&#39;</span>]<span style="color:#555">.</span><span style="color:#c30">&#34;</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>;
+        <span style="color:#033">$con</span><span style="color:#555">-&gt;</span><span style="color:#309">ack</span>(<span style="color:#033">$msg</span>);
     }
 }
 
-$con-&gt;disconnect();
-?
-
-</code></pre>
-
+<span style="color:#033">$con</span><span style="color:#555">-&gt;</span><span style="color:#309">disconnect</span>();
+<span style="color:#555">?</span></code></pre></div>
                 
                 
     <div id="comments">
@@ -248,10 +239,6 @@ if (postTime < cutoffTime) {
     <div id="footer">
         <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
     </div>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 
 
     <script>

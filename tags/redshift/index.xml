@@ -2,12 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Redshift on Blog | Federico Marani</title>
-    <link>/tags/redshift/index.xml</link>
+    <link>/tags/redshift/</link>
     <description>Recent content in Redshift on Blog | Federico Marani</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <atom:link href="/tags/redshift/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 20 Jul 2017 12:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/redshift/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Feeding data to Redshift with Airflow (Europython 2017)</title>
@@ -15,14 +18,8 @@
       <pubDate>Thu, 20 Jul 2017 12:00:00 +0000</pubDate>
       
       <guid>/blog/feeding-data-to-redshift-with-airflow-presentation/</guid>
-      <description>&lt;p&gt;The presentation I gave at Europython 2017 in Rimini. The talk is divided in 3 parts: some guiding principles on architecting data pipelines, an introduction to Apache Airflow and the last part is about specifically working with Amazon Redshift. The experience in these tools comes from building an analytics engine for meetups, where historical reports, trend analysis and data enrichment are critical factors.&lt;/p&gt;
-
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;380d0b967be44504b386b01b34de1fe5&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;And also the video of the presentation:&lt;/p&gt;
-
-&lt;iframe width=&#34;1024&#34; height=&#34;576&#34; src=&#34;https://www.youtube.com/embed/0s6lmVbvoFo&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
-</description>
+      <description>The presentation I gave at Europython 2017 in Rimini. The talk is divided in 3 parts: some guiding principles on architecting data pipelines, an introduction to Apache Airflow and the last part is about specifically working with Amazon Redshift. The experience in these tools comes from building an analytics engine for meetups, where historical reports, trend analysis and data enrichment are critical factors.
+ And also the video of the presentation:</description>
     </item>
     
   </channel>
