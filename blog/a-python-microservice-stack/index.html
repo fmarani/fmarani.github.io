@@ -77,7 +77,7 @@
     </div>
     <div class="title">
         <h1><a href="../../">Blog | Federico Marani</a></h1>
-        <p class="lead">Freelance Engineer/Architect. Former VP Engineering @TrialReach &amp; CTO at TalentRank. MSc Business Psychology.</p>
+        <p class="lead">Freelance Engineer/Architect. Former VP Engineering @TrialReach &amp; CTO at TalentRank. MSc Business Psychology. Author of <a href='https://www.amazon.co.uk/Practical-Django-Channels-Applications-Capabilities/dp/1484240987/'>Practical Django 2 and Channels 2</a></p>
     </div>
 
     <ul class="sidebar-menu">
@@ -185,28 +185,28 @@
 <p>Here is a very simple client/server implementation of a search service by geometry and/or name.</p>
 
 <h3 id="proto-file">Proto file</h3>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-protobuf" data-lang="protobuf"><span style="color:#309">syntax</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;proto3&#34;</span>;<span style="color:#a00;background-color:#faa">
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-protobuf" data-lang="protobuf">syntax <span style="color:#555">=</span> <span style="color:#c30">&#34;proto3&#34;</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">import</span> <span style="color:#c30">&#34;google/protobuf/empty.proto&#34;</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SearchRequest</span> {<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">query</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">float</span> <span style="color:#309">lat</span> <span style="color:#555">=</span> <span style="color:#f60">4</span>;<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">float</span> <span style="color:#309">lng</span> <span style="color:#555">=</span> <span style="color:#f60">5</span>;<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">int32</span> <span style="color:#309">page_number</span> <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">int32</span> <span style="color:#309">result_per_page</span> <span style="color:#555">=</span> <span style="color:#f60">3</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> query <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">float</span> lat <span style="color:#555">=</span> <span style="color:#f60">4</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">float</span> lng <span style="color:#555">=</span> <span style="color:#f60">5</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">int32</span> page_number <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">int32</span> result_per_page <span style="color:#555">=</span> <span style="color:#f60">3</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SearchResponses</span> {<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>    <span style="color:#069;font-weight:bold">repeated</span> SearchResponse <span style="color:#309">responses</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>    <span style="color:#069;font-weight:bold">repeated</span> SearchResponse responses <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SearchResponse</span> {<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>    <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">response</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>    <span style="color:#078;font-weight:bold">string</span> response <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">MonitorResponse</span> {<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>    <span style="color:#078;font-weight:bold">int32</span> <span style="color:#309">n_things</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>    <span style="color:#078;font-weight:bold">int32</span> n_things <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">service</span> Search {<span style="color:#a00;background-color:#faa">
@@ -237,7 +237,7 @@ log<span style="color:#555">.</span>setLevel(logging<span style="color:#555">.</
 
 ch <span style="color:#555">=</span> logging<span style="color:#555">.</span>StreamHandler(sys<span style="color:#555">.</span>stdout)
 ch<span style="color:#555">.</span>setLevel(logging<span style="color:#555">.</span>DEBUG)
-formatter <span style="color:#555">=</span> logging<span style="color:#555">.</span>Formatter(<span style="color:#c30"></span><span style="color:#c30">&#39;</span><span style="color:#a00">%(asctime)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(name)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(levelname)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(message)s</span><span style="color:#c30">&#39;</span>)
+formatter <span style="color:#555">=</span> logging<span style="color:#555">.</span>Formatter(<span style="color:#c30">&#39;</span><span style="color:#a00">%(asctime)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(name)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(levelname)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(message)s</span><span style="color:#c30">&#39;</span>)
 ch<span style="color:#555">.</span>setFormatter(formatter)
 log<span style="color:#555">.</span>addHandler(ch)
 
@@ -245,43 +245,43 @@ log<span style="color:#555">.</span>addHandler(ch)
 _ONE_DAY_IN_SECONDS <span style="color:#555">=</span> <span style="color:#f60">60</span> <span style="color:#555">*</span> <span style="color:#f60">60</span> <span style="color:#555">*</span> <span style="color:#f60">24</span>
 
 port <span style="color:#555">=</span> random<span style="color:#555">.</span>randint(<span style="color:#f60">50000</span>, <span style="color:#f60">59000</span>)
-stat <span style="color:#555">=</span> statsd<span style="color:#555">.</span>StatsClient(<span style="color:#c30"></span><span style="color:#c30">&#39;localhost&#39;</span>, <span style="color:#f60">8125</span>)
+stat <span style="color:#555">=</span> statsd<span style="color:#555">.</span>StatsClient(<span style="color:#c30">&#39;localhost&#39;</span>, <span style="color:#f60">8125</span>)
 
 <span style="color:#069;font-weight:bold">class</span> <span style="color:#0a8;font-weight:bold">SearchServicer</span>(search_pb2<span style="color:#555">.</span>SearchServicer):
-    <span style="color:#99f">@stat.timer</span>(<span style="color:#c30"></span><span style="color:#c30">&#34;search&#34;</span>)
+    <span style="color:#99f">@stat.timer</span>(<span style="color:#c30">&#34;search&#34;</span>)
     <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">search</span>(self, request, context):
-        stat<span style="color:#555">.</span>incr(<span style="color:#c30"></span><span style="color:#c30">&#34;search_count&#34;</span>)
-        log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;search request: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(request))
+        stat<span style="color:#555">.</span>incr(<span style="color:#c30">&#34;search_count&#34;</span>)
+        log<span style="color:#555">.</span>info(<span style="color:#c30">&#34;search request: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(request))
         query <span style="color:#555">=</span> session<span style="color:#555">.</span>query(Thing)<span style="color:#555">.</span><span style="color:#366">filter</span>(
-                func<span style="color:#555">.</span>ST_Contains(Thing<span style="color:#555">.</span>geom, <span style="color:#c30"></span><span style="color:#c30">&#39;POINT({} {})&#39;</span><span style="color:#555">.</span>format(request<span style="color:#555">.</span>lat, request<span style="color:#555">.</span>lng)))
+                func<span style="color:#555">.</span>ST_Contains(Thing<span style="color:#555">.</span>geom, <span style="color:#c30">&#39;POINT({} {})&#39;</span><span style="color:#555">.</span>format(request<span style="color:#555">.</span>lat, request<span style="color:#555">.</span>lng)))
         responses <span style="color:#555">=</span> [search_pb2<span style="color:#555">.</span>SearchResponse(response<span style="color:#555">=</span>rec<span style="color:#555">.</span>name) <span style="color:#069;font-weight:bold">for</span> rec <span style="color:#000;font-weight:bold">in</span> query]
-        log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;search responses: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(responses))
+        log<span style="color:#555">.</span>info(<span style="color:#c30">&#34;search responses: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(responses))
         <span style="color:#069;font-weight:bold">return</span> search_pb2<span style="color:#555">.</span>SearchResponses(responses<span style="color:#555">=</span>responses)
 
-    <span style="color:#99f">@stat.timer</span>(<span style="color:#c30"></span><span style="color:#c30">&#34;monitor&#34;</span>)
+    <span style="color:#99f">@stat.timer</span>(<span style="color:#c30">&#34;monitor&#34;</span>)
     <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">monitor</span>(self, request, context):
-        stat<span style="color:#555">.</span>incr(<span style="color:#c30"></span><span style="color:#c30">&#34;monitor_count&#34;</span>)
+        stat<span style="color:#555">.</span>incr(<span style="color:#c30">&#34;monitor_count&#34;</span>)
         n_things <span style="color:#555">=</span> session<span style="color:#555">.</span>query(Thing)<span style="color:#555">.</span>count()
         <span style="color:#069;font-weight:bold">return</span> search_pb2<span style="color:#555">.</span>MonitorResponse(n_things<span style="color:#555">=</span>n_things)
 
 <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">register</span>():
-    log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;register started&#34;</span>)
+    log<span style="color:#555">.</span>info(<span style="color:#c30">&#34;register started&#34;</span>)
     c <span style="color:#555">=</span> consul<span style="color:#555">.</span>Consul()
-    check <span style="color:#555">=</span> consul<span style="color:#555">.</span>Check<span style="color:#555">.</span>tcp(<span style="color:#c30"></span><span style="color:#c30">&#34;127.0.0.1&#34;</span>, port, <span style="color:#c30"></span><span style="color:#c30">&#34;30s&#34;</span>)
-    c<span style="color:#555">.</span>agent<span style="color:#555">.</span>service<span style="color:#555">.</span>register(<span style="color:#c30"></span><span style="color:#c30">&#34;search-service&#34;</span>, <span style="color:#c30"></span><span style="color:#c30">&#34;search-service-</span><span style="color:#a00">%d</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> port, address<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#34;127.0.0.1&#34;</span>, port<span style="color:#555">=</span>port, check<span style="color:#555">=</span>check)
-    log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;services: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(c<span style="color:#555">.</span>agent<span style="color:#555">.</span>services()))
+    check <span style="color:#555">=</span> consul<span style="color:#555">.</span>Check<span style="color:#555">.</span>tcp(<span style="color:#c30">&#34;127.0.0.1&#34;</span>, port, <span style="color:#c30">&#34;30s&#34;</span>)
+    c<span style="color:#555">.</span>agent<span style="color:#555">.</span>service<span style="color:#555">.</span>register(<span style="color:#c30">&#34;search-service&#34;</span>, <span style="color:#c30">&#34;search-service-</span><span style="color:#a00">%d</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> port, address<span style="color:#555">=</span><span style="color:#c30">&#34;127.0.0.1&#34;</span>, port<span style="color:#555">=</span>port, check<span style="color:#555">=</span>check)
+    log<span style="color:#555">.</span>info(<span style="color:#c30">&#34;services: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(c<span style="color:#555">.</span>agent<span style="color:#555">.</span>services()))
 
 <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">unregister</span>():
-    log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;unregister started&#34;</span>)
+    log<span style="color:#555">.</span>info(<span style="color:#c30">&#34;unregister started&#34;</span>)
     c <span style="color:#555">=</span> consul<span style="color:#555">.</span>Consul()
-    c<span style="color:#555">.</span>agent<span style="color:#555">.</span>service<span style="color:#555">.</span>deregister(<span style="color:#c30"></span><span style="color:#c30">&#34;search-service-</span><span style="color:#a00">%d</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> port)
-    log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;services: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(c<span style="color:#555">.</span>agent<span style="color:#555">.</span>services()))
+    c<span style="color:#555">.</span>agent<span style="color:#555">.</span>service<span style="color:#555">.</span>deregister(<span style="color:#c30">&#34;search-service-</span><span style="color:#a00">%d</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> port)
+    log<span style="color:#555">.</span>info(<span style="color:#c30">&#34;services: &#34;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(c<span style="color:#555">.</span>agent<span style="color:#555">.</span>services()))
 
 <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">serve</span>():
   server <span style="color:#555">=</span> search_pb2<span style="color:#555">.</span>beta_create_Search_server(SearchServicer())
-  server<span style="color:#555">.</span>add_insecure_port(<span style="color:#c30"></span><span style="color:#c30">&#39;[::]:&#39;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(port))
+  server<span style="color:#555">.</span>add_insecure_port(<span style="color:#c30">&#39;[::]:&#39;</span> <span style="color:#555">+</span> <span style="color:#366">str</span>(port))
   server<span style="color:#555">.</span>start()
-  log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;server started&#34;</span>)
+  log<span style="color:#555">.</span>info(<span style="color:#c30">&#34;server started&#34;</span>)
   <span style="color:#069;font-weight:bold">try</span>:
     <span style="color:#069;font-weight:bold">while</span> True:
       time<span style="color:#555">.</span>sleep(_ONE_DAY_IN_SECONDS)
@@ -289,7 +289,7 @@ stat <span style="color:#555">=</span> statsd<span style="color:#555">.</span>St
     server<span style="color:#555">.</span>stop(<span style="color:#f60">0</span>)
 
 
-<span style="color:#069;font-weight:bold">if</span> __name__ <span style="color:#555">==</span> <span style="color:#c30"></span><span style="color:#c30">&#39;__main__&#39;</span>:
+<span style="color:#069;font-weight:bold">if</span> __name__ <span style="color:#555">==</span> <span style="color:#c30">&#39;__main__&#39;</span>:
     register()
     serve()
     unregister()</code></pre></div>
@@ -301,14 +301,14 @@ stat <span style="color:#555">=</span> statsd<span style="color:#555">.</span>St
 <span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">sqlalchemy.orm</span> <span style="color:#069;font-weight:bold">import</span> sessionmaker
 
 
-engine <span style="color:#555">=</span> create_engine(<span style="color:#c30"></span><span style="color:#c30">&#34;postgresql://user:password@localhost:5434/test&#34;</span>)
+engine <span style="color:#555">=</span> create_engine(<span style="color:#c30">&#34;postgresql://user:password@localhost:5434/test&#34;</span>)
 Base <span style="color:#555">=</span> declarative_base()
 
 <span style="color:#069;font-weight:bold">class</span> <span style="color:#0a8;font-weight:bold">Thing</span>(Base):
-    __tablename__ <span style="color:#555">=</span> <span style="color:#c30"></span><span style="color:#c30">&#34;thing&#34;</span>
+    __tablename__ <span style="color:#555">=</span> <span style="color:#c30">&#34;thing&#34;</span>
     <span style="color:#366">id</span> <span style="color:#555">=</span> Column(Integer, primary_key<span style="color:#555">=</span>True)
     name <span style="color:#555">=</span> Column(String)
-    geom <span style="color:#555">=</span> Column(Geometry(<span style="color:#c30"></span><span style="color:#c30">&#39;POLYGON&#39;</span>))
+    geom <span style="color:#555">=</span> Column(Geometry(<span style="color:#c30">&#39;POLYGON&#39;</span>))
 
 Session <span style="color:#555">=</span> sessionmaker(bind<span style="color:#555">=</span>engine)
 session <span style="color:#555">=</span> Session()</code></pre></div>
@@ -329,35 +329,35 @@ log<span style="color:#555">.</span>setLevel(logging<span style="color:#555">.</
 
 ch <span style="color:#555">=</span> logging<span style="color:#555">.</span>StreamHandler(sys<span style="color:#555">.</span>stdout)
 ch<span style="color:#555">.</span>setLevel(logging<span style="color:#555">.</span>DEBUG)
-formatter <span style="color:#555">=</span> logging<span style="color:#555">.</span>Formatter(<span style="color:#c30"></span><span style="color:#c30">&#39;</span><span style="color:#a00">%(asctime)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(name)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(levelname)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(message)s</span><span style="color:#c30">&#39;</span>)
+formatter <span style="color:#555">=</span> logging<span style="color:#555">.</span>Formatter(<span style="color:#c30">&#39;</span><span style="color:#a00">%(asctime)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(name)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(levelname)s</span><span style="color:#c30"> - </span><span style="color:#a00">%(message)s</span><span style="color:#c30">&#39;</span>)
 ch<span style="color:#555">.</span>setFormatter(formatter)
 log<span style="color:#555">.</span>addHandler(ch)
 
 consul_resolver <span style="color:#555">=</span> resolver<span style="color:#555">.</span>Resolver()
 consul_resolver<span style="color:#555">.</span>port <span style="color:#555">=</span> <span style="color:#f60">8600</span>
-consul_resolver<span style="color:#555">.</span>nameservers <span style="color:#555">=</span> [<span style="color:#c30"></span><span style="color:#c30">&#34;127.0.0.1&#34;</span>]
+consul_resolver<span style="color:#555">.</span>nameservers <span style="color:#555">=</span> [<span style="color:#c30">&#34;127.0.0.1&#34;</span>]
 
-dnsanswer <span style="color:#555">=</span> consul_resolver<span style="color:#555">.</span>query(<span style="color:#c30"></span><span style="color:#c30">&#34;search-service.service.consul&#34;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;A&#39;</span>)
+dnsanswer <span style="color:#555">=</span> consul_resolver<span style="color:#555">.</span>query(<span style="color:#c30">&#34;search-service.service.consul&#34;</span>, <span style="color:#c30">&#39;A&#39;</span>)
 ip <span style="color:#555">=</span> <span style="color:#366">str</span>(dnsanswer[<span style="color:#f60">0</span>])
-dnsanswer_srv <span style="color:#555">=</span> consul_resolver<span style="color:#555">.</span>query(<span style="color:#c30"></span><span style="color:#c30">&#34;search-service.service.consul&#34;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;SRV&#39;</span>)
+dnsanswer_srv <span style="color:#555">=</span> consul_resolver<span style="color:#555">.</span>query(<span style="color:#c30">&#34;search-service.service.consul&#34;</span>, <span style="color:#c30">&#39;SRV&#39;</span>)
 port <span style="color:#555">=</span> <span style="color:#366">int</span>(<span style="color:#366">str</span>(dnsanswer_srv[<span style="color:#f60">0</span>])<span style="color:#555">.</span>split()[<span style="color:#f60">2</span>])
 
-log<span style="color:#555">.</span>info(<span style="color:#c30"></span><span style="color:#c30">&#34;creating grpc client based on consul data: ip=</span><span style="color:#a00">%s</span><span style="color:#c30"> port=</span><span style="color:#a00">%d</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> (ip, port))
-channel <span style="color:#555">=</span> grpc<span style="color:#555">.</span>insecure_channel(<span style="color:#c30"></span><span style="color:#c30">&#39;</span><span style="color:#a00">%s</span><span style="color:#c30">:</span><span style="color:#a00">%d</span><span style="color:#c30">&#39;</span> <span style="color:#555">%</span> (ip, port))
+log<span style="color:#555">.</span>info(<span style="color:#c30">&#34;creating grpc client based on consul data: ip=</span><span style="color:#a00">%s</span><span style="color:#c30"> port=</span><span style="color:#a00">%d</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> (ip, port))
+channel <span style="color:#555">=</span> grpc<span style="color:#555">.</span>insecure_channel(<span style="color:#c30">&#39;</span><span style="color:#a00">%s</span><span style="color:#c30">:</span><span style="color:#a00">%d</span><span style="color:#c30">&#39;</span> <span style="color:#555">%</span> (ip, port))
 stub <span style="color:#555">=</span> search_pb2<span style="color:#555">.</span>SearchStub(channel)
 
-<span style="color:#069;font-weight:bold">if</span> <span style="color:#366">len</span>(sys<span style="color:#555">.</span>argv) <span style="color:#555">==</span> <span style="color:#f60">1</span> <span style="color:#000;font-weight:bold">and</span> sys<span style="color:#555">.</span>argv[<span style="color:#f60">1</span>] <span style="color:#555">==</span> <span style="color:#c30"></span><span style="color:#c30">&#34;--monitor&#34;</span>:
+<span style="color:#069;font-weight:bold">if</span> <span style="color:#366">len</span>(sys<span style="color:#555">.</span>argv) <span style="color:#555">==</span> <span style="color:#f60">1</span> <span style="color:#000;font-weight:bold">and</span> sys<span style="color:#555">.</span>argv[<span style="color:#f60">1</span>] <span style="color:#555">==</span> <span style="color:#c30">&#34;--monitor&#34;</span>:
     monitresp <span style="color:#555">=</span> stub<span style="color:#555">.</span>monitor(search_pb2<span style="color:#555">.</span>google_dot_protobuf_dot_empty__pb2<span style="color:#555">.</span>Empty())
-    log<span style="color:#555">.</span>debug(<span style="color:#c30"></span><span style="color:#c30">&#34;monitor response: {}&#34;</span><span style="color:#555">.</span>format(monitresp))
+    log<span style="color:#555">.</span>debug(<span style="color:#c30">&#34;monitor response: {}&#34;</span><span style="color:#555">.</span>format(monitresp))
 <span style="color:#069;font-weight:bold">else</span>:
     req <span style="color:#555">=</span> search_pb2<span style="color:#555">.</span>SearchRequest(
-        query<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#34;queryabc&#34;</span>,
+        query<span style="color:#555">=</span><span style="color:#c30">&#34;queryabc&#34;</span>,
         lat<span style="color:#555">=</span><span style="color:#366">float</span>(sys<span style="color:#555">.</span>argv[<span style="color:#f60">1</span>]),
         lng<span style="color:#555">=</span><span style="color:#366">float</span>(sys<span style="color:#555">.</span>argv[<span style="color:#f60">2</span>]),
         result_per_page<span style="color:#555">=</span><span style="color:#f60">10</span>)
-    log<span style="color:#555">.</span>debug(<span style="color:#c30"></span><span style="color:#c30">&#34;sending request: {}&#34;</span><span style="color:#555">.</span>format(req))
+    log<span style="color:#555">.</span>debug(<span style="color:#c30">&#34;sending request: {}&#34;</span><span style="color:#555">.</span>format(req))
     resp <span style="color:#555">=</span> stub<span style="color:#555">.</span>search(req)
-    log<span style="color:#555">.</span>debug(<span style="color:#c30"></span><span style="color:#c30">&#34;received response: {}&#34;</span><span style="color:#555">.</span>format(resp))</code></pre></div>
+    log<span style="color:#555">.</span>debug(<span style="color:#c30">&#34;received response: {}&#34;</span><span style="color:#555">.</span>format(resp))</code></pre></div>
 <p>The client is querying Consul DNS service to find the microservice, using the dnspython library.</p>
 
 <h2 id="underlying-services">Underlying services</h2>

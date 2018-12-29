@@ -76,7 +76,7 @@
     </div>
     <div class="title">
         <h1><a href="../../">Blog | Federico Marani</a></h1>
-        <p class="lead">Freelance Engineer/Architect. Former VP Engineering @TrialReach &amp; CTO at TalentRank. MSc Business Psychology.</p>
+        <p class="lead">Freelance Engineer/Architect. Former VP Engineering @TrialReach &amp; CTO at TalentRank. MSc Business Psychology. Author of <a href='https://www.amazon.co.uk/Practical-Django-Channels-Applications-Capabilities/dp/1484240987/'>Practical Django 2 and Channels 2</a></p>
     </div>
 
     <ul class="sidebar-menu">
@@ -142,10 +142,10 @@
 <span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">random</span>
 
 <span style="color:#069;font-weight:bold">class</span> <span style="color:#0a8;font-weight:bold">Classifier</span>(<span style="color:#366">object</span>):
-    <span style="color:#c30"></span><span style="color:#c30">&#34;&#34;&#34;classify by looking at a site&#34;&#34;&#34;</span>
+    <span style="color:#c30">&#34;&#34;&#34;classify by looking at a site&#34;&#34;&#34;</span>
     <span style="color:#069;font-weight:bold">def</span> __init__(self, training_set):
         self<span style="color:#555">.</span>training_set <span style="color:#555">=</span> training_set
-        self<span style="color:#555">.</span>stopwords <span style="color:#555">=</span> nltk<span style="color:#555">.</span>corpus<span style="color:#555">.</span>stopwords<span style="color:#555">.</span>words(<span style="color:#c30"></span><span style="color:#c30">&#34;english&#34;</span>)
+        self<span style="color:#555">.</span>stopwords <span style="color:#555">=</span> nltk<span style="color:#555">.</span>corpus<span style="color:#555">.</span>stopwords<span style="color:#555">.</span>words(<span style="color:#c30">&#34;english&#34;</span>)
         self<span style="color:#555">.</span>stemmer <span style="color:#555">=</span> nltk<span style="color:#555">.</span>PorterStemmer()
         self<span style="color:#555">.</span>minlength <span style="color:#555">=</span> <span style="color:#f60">7</span>
         self<span style="color:#555">.</span>maxlength <span style="color:#555">=</span> <span style="color:#f60">25</span>
@@ -171,7 +171,7 @@
         features <span style="color:#555">=</span> {}
         <span style="color:#069;font-weight:bold">for</span> word <span style="color:#000;font-weight:bold">in</span> self<span style="color:#555">.</span>features_to_test:
             <span style="color:#09f;font-style:italic">#features[&#39;contains(%s)&#39; % word] = (word in document_words)</span>
-            features[<span style="color:#c30"></span><span style="color:#c30">&#39;contains(</span><span style="color:#a00">%s</span><span style="color:#c30">)&#39;</span> <span style="color:#555">%</span> word] <span style="color:#555">=</span> (word <span style="color:#000;font-weight:bold">in</span> document)
+            features[<span style="color:#c30">&#39;contains(</span><span style="color:#a00">%s</span><span style="color:#c30">)&#39;</span> <span style="color:#555">%</span> word] <span style="color:#555">=</span> (word <span style="color:#000;font-weight:bold">in</span> document)
             <span style="color:#09f;font-style:italic">#features[&#39;occurrencies(%s)&#39; % word] = document.count(word) </span>
             <span style="color:#09f;font-style:italic">#features[&#39;atleast3(%s)&#39; % word] = document.count(word) &gt; 3</span>
         <span style="color:#069;font-weight:bold">return</span> features
@@ -192,34 +192,34 @@
         <span style="color:#069;font-weight:bold">print</span> nltk<span style="color:#555">.</span>classify<span style="color:#555">.</span>accuracy(classifier, test_set)
         classifier<span style="color:#555">.</span>show_most_informative_features(<span style="color:#f60">45</span>)
 
-classes <span style="color:#555">=</span> (<span style="color:#c30"></span><span style="color:#c30">&#39;a la carte&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;advertising&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;commission&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;investment&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;pay as you go&#39;</span>)
+classes <span style="color:#555">=</span> (<span style="color:#c30">&#39;a la carte&#39;</span>, <span style="color:#c30">&#39;advertising&#39;</span>, <span style="color:#c30">&#39;commission&#39;</span>, <span style="color:#c30">&#39;investment&#39;</span>, <span style="color:#c30">&#39;pay as you go&#39;</span>)
 
 training_set <span style="color:#555">=</span> [
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;we are a bank specialized in dealing with IT companies&#39;</span>, classes[<span style="color:#f60">3</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;we sell our product at a fixed cost of 10 pounds&#39;</span>, classes[<span style="color:#f60">0</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;the cost per click is 0.01 dollars but if you get more than 10000 impression the cost will be 0.12&#39;</span>, classes[<span style="color:#f60">1</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;we take a 1</span><span style="color:#a00">% c</span><span style="color:#c30">ommission on all sales, overseas sales have an additional charge of 12%&#39;</span>, classes[<span style="color:#f60">2</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;we charge a 1</span><span style="color:#a00">% o</span><span style="color:#c30">n top of your final price.&#39;</span>, classes[<span style="color:#f60">2</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;we sell our product at 5 pounds, excluding with the variant A which costs an extra of 55 pounds&#39;</span>, classes[<span style="color:#f60">0</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;we sell our product at 6 pounds, excluding with the variant B which costs 45 pounds&#39;</span>, classes[<span style="color:#f60">0</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;our commission is normally between 1% and 2%&#39;</span>, classes[<span style="color:#f60">2</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;impressions on the homepage on sundays are worth 0.01 pounds&#39;</span>, classes[<span style="color:#f60">1</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;we will show impressions only to users that correspond to certain criteria.&#39;</span>, classes[<span style="color:#f60">1</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;we manage an hedge fund and we take care of placing investments on behalf of our clients&#39;</span>, classes[<span style="color:#f60">3</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;we bill only for the amount of api you use. 0.10 per 1000 calls&#39;</span>, classes[<span style="color:#f60">4</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;running a virtual machine will cost you 0.12 pounds per hour&#39;</span>, classes[<span style="color:#f60">4</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;we invest in major hedge funds&#39;</span>, classes[<span style="color:#f60">3</span>]),
-    (<span style="color:#c30"></span><span style="color:#c30">&#39;we are an international bank, based in all countries of europe&#39;</span>, classes[<span style="color:#f60">3</span>]),
+    (<span style="color:#c30">&#39;we are a bank specialized in dealing with IT companies&#39;</span>, classes[<span style="color:#f60">3</span>]),
+    (<span style="color:#c30">&#39;we sell our product at a fixed cost of 10 pounds&#39;</span>, classes[<span style="color:#f60">0</span>]),
+    (<span style="color:#c30">&#39;the cost per click is 0.01 dollars but if you get more than 10000 impression the cost will be 0.12&#39;</span>, classes[<span style="color:#f60">1</span>]),
+    (<span style="color:#c30">&#39;we take a 1</span><span style="color:#a00">% c</span><span style="color:#c30">ommission on all sales, overseas sales have an additional charge of 12%&#39;</span>, classes[<span style="color:#f60">2</span>]),
+    (<span style="color:#c30">&#39;we charge a 1</span><span style="color:#a00">% o</span><span style="color:#c30">n top of your final price.&#39;</span>, classes[<span style="color:#f60">2</span>]),
+    (<span style="color:#c30">&#39;we sell our product at 5 pounds, excluding with the variant A which costs an extra of 55 pounds&#39;</span>, classes[<span style="color:#f60">0</span>]),
+    (<span style="color:#c30">&#39;we sell our product at 6 pounds, excluding with the variant B which costs 45 pounds&#39;</span>, classes[<span style="color:#f60">0</span>]),
+    (<span style="color:#c30">&#39;our commission is normally between 1% and 2%&#39;</span>, classes[<span style="color:#f60">2</span>]),
+    (<span style="color:#c30">&#39;impressions on the homepage on sundays are worth 0.01 pounds&#39;</span>, classes[<span style="color:#f60">1</span>]),
+    (<span style="color:#c30">&#39;we will show impressions only to users that correspond to certain criteria.&#39;</span>, classes[<span style="color:#f60">1</span>]),
+    (<span style="color:#c30">&#39;we manage an hedge fund and we take care of placing investments on behalf of our clients&#39;</span>, classes[<span style="color:#f60">3</span>]),
+    (<span style="color:#c30">&#39;we bill only for the amount of api you use. 0.10 per 1000 calls&#39;</span>, classes[<span style="color:#f60">4</span>]),
+    (<span style="color:#c30">&#39;running a virtual machine will cost you 0.12 pounds per hour&#39;</span>, classes[<span style="color:#f60">4</span>]),
+    (<span style="color:#c30">&#39;we invest in major hedge funds&#39;</span>, classes[<span style="color:#f60">3</span>]),
+    (<span style="color:#c30">&#39;we are an international bank, based in all countries of europe&#39;</span>, classes[<span style="color:#f60">3</span>]),
 ]
 
-test_text <span style="color:#555">=</span> <span style="color:#c30"></span><span style="color:#c30">&#34;we are a hedge fund collaborating with many banks in europe&#34;</span>
-test_text2 <span style="color:#555">=</span> <span style="color:#c30"></span><span style="color:#c30">&#34;we charge a fixed fee on top of our client&#39;s sales&#34;</span>
+test_text <span style="color:#555">=</span> <span style="color:#c30">&#34;we are a hedge fund collaborating with many banks in europe&#34;</span>
+test_text2 <span style="color:#555">=</span> <span style="color:#c30">&#34;we charge a fixed fee on top of our client&#39;s sales&#34;</span>
 
-<span style="color:#069;font-weight:bold">if</span> __name__ <span style="color:#555">==</span> <span style="color:#c30"></span><span style="color:#c30">&#39;__main__&#39;</span>:
+<span style="color:#069;font-weight:bold">if</span> __name__ <span style="color:#555">==</span> <span style="color:#c30">&#39;__main__&#39;</span>:
     classifier <span style="color:#555">=</span> Classifier(training_set)
     classifier<span style="color:#555">.</span>run()
-    <span style="color:#069;font-weight:bold">print</span> <span style="color:#c30"></span><span style="color:#c30">&#34;</span><span style="color:#a00">%s</span><span style="color:#c30"> -&gt; classified as: </span><span style="color:#a00">%s</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> (test_text, classifier<span style="color:#555">.</span>classify(test_text))
-    <span style="color:#069;font-weight:bold">print</span> <span style="color:#c30"></span><span style="color:#c30">&#34;</span><span style="color:#a00">%s</span><span style="color:#c30"> -&gt; classified as: </span><span style="color:#a00">%s</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> (test_text2, classifier<span style="color:#555">.</span>classify(test_text2))</code></pre></div>
+    <span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#34;</span><span style="color:#a00">%s</span><span style="color:#c30"> -&gt; classified as: </span><span style="color:#a00">%s</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> (test_text, classifier<span style="color:#555">.</span>classify(test_text))
+    <span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#34;</span><span style="color:#a00">%s</span><span style="color:#c30"> -&gt; classified as: </span><span style="color:#a00">%s</span><span style="color:#c30">&#34;</span> <span style="color:#555">%</span> (test_text2, classifier<span style="color:#555">.</span>classify(test_text2))</code></pre></div>
 <p>You can run this code and classify entities based on their preferred sales target. Some of the above lines are commented, uncomment them if you think it gives you a better representation of the example. Just add a further 1000 good examples and then it should start to make accurate decisions&hellip; enjoy!</p>
 
                 

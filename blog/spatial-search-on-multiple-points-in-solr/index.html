@@ -77,7 +77,7 @@
     </div>
     <div class="title">
         <h1><a href="../../">Blog | Federico Marani</a></h1>
-        <p class="lead">Freelance Engineer/Architect. Former VP Engineering @TrialReach &amp; CTO at TalentRank. MSc Business Psychology.</p>
+        <p class="lead">Freelance Engineer/Architect. Former VP Engineering @TrialReach &amp; CTO at TalentRank. MSc Business Psychology. Author of <a href='https://www.amazon.co.uk/Practical-Django-Channels-Applications-Capabilities/dp/1484240987/'>Practical Django 2 and Channels 2</a></p>
     </div>
 
     <ul class="sidebar-menu">
@@ -164,16 +164,16 @@ Solr 4 does have support for this with the new spatial field called SpatialRecur
 <p>A sample indexer using GeoDjango and PySolr (Haystack does not support this). It should be quite easy to work out how it works, PySolr is just a very thin wrapper for doing HTTP POST requests to Apache Solr.</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">pysolr</span>
 
-solr <span style="color:#555">=</span> pysolr<span style="color:#555">.</span>Solr(<span style="color:#c30"></span><span style="color:#c30">&#34;http://1.2.3.4:8983/solr/&#34;</span>, timeout<span style="color:#555">=</span><span style="color:#f60">10</span>)
+solr <span style="color:#555">=</span> pysolr<span style="color:#555">.</span>Solr(<span style="color:#c30">&#34;http://1.2.3.4:8983/solr/&#34;</span>, timeout<span style="color:#555">=</span><span style="color:#f60">10</span>)
 
 records <span style="color:#555">=</span> models<span style="color:#555">.</span>Study<span style="color:#555">.</span>objects<span style="color:#555">.</span><span style="color:#366">all</span>()
 solr_data <span style="color:#555">=</span> []
 <span style="color:#069;font-weight:bold">for</span> record <span style="color:#000;font-weight:bold">in</span> records:
     solr_dict <span style="color:#555">=</span> {
-                <span style="color:#c30"></span><span style="color:#c30">&#34;id&#34;</span>: <span style="color:#366">str</span>(record<span style="color:#555">.</span><span style="color:#366">id</span>),
-                <span style="color:#c30"></span><span style="color:#c30">&#34;title&#34;</span>: record<span style="color:#555">.</span>title,
-                <span style="color:#c30"></span><span style="color:#c30">&#34;condition&#34;</span>: [c<span style="color:#555">.</span>name <span style="color:#069;font-weight:bold">for</span> c <span style="color:#000;font-weight:bold">in</span> record<span style="color:#555">.</span>conditions<span style="color:#555">.</span><span style="color:#366">all</span>()],
-                <span style="color:#c30"></span><span style="color:#c30">&#34;location&#34;</span>: [<span style="color:#c30"></span><span style="color:#c30">&#34;{1} {0}&#34;</span><span style="color:#555">.</span>format(l<span style="color:#555">.</span>point<span style="color:#555">.</span>coords[<span style="color:#f60">0</span>], l<span style="color:#555">.</span>point<span style="color:#555">.</span>coords[<span style="color:#f60">1</span>]) <span style="color:#069;font-weight:bold">for</span> l <span style="color:#000;font-weight:bold">in</span> record<span style="color:#555">.</span>locations<span style="color:#555">.</span><span style="color:#366">all</span>()],
+                <span style="color:#c30">&#34;id&#34;</span>: <span style="color:#366">str</span>(record<span style="color:#555">.</span><span style="color:#366">id</span>),
+                <span style="color:#c30">&#34;title&#34;</span>: record<span style="color:#555">.</span>title,
+                <span style="color:#c30">&#34;condition&#34;</span>: [c<span style="color:#555">.</span>name <span style="color:#069;font-weight:bold">for</span> c <span style="color:#000;font-weight:bold">in</span> record<span style="color:#555">.</span>conditions<span style="color:#555">.</span><span style="color:#366">all</span>()],
+                <span style="color:#c30">&#34;location&#34;</span>: [<span style="color:#c30">&#34;{1} {0}&#34;</span><span style="color:#555">.</span>format(l<span style="color:#555">.</span>point<span style="color:#555">.</span>coords[<span style="color:#f60">0</span>], l<span style="color:#555">.</span>point<span style="color:#555">.</span>coords[<span style="color:#f60">1</span>]) <span style="color:#069;font-weight:bold">for</span> l <span style="color:#000;font-weight:bold">in</span> record<span style="color:#555">.</span>locations<span style="color:#555">.</span><span style="color:#366">all</span>()],
 		<span style="color:#09f;font-style:italic"># &#34;point&#34; is a Point GeoDjango type</span>
 		<span style="color:#09f;font-style:italic"># SOLR FORMAT is &#34;long lat&#34;, separated by a space</span>
             }

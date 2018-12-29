@@ -67,6 +67,15 @@
     </item>
     
     <item>
+      <title>Book</title>
+      <link>/tags/book/</link>
+      <pubDate>Fri, 28 Dec 2018 15:41:15 +0000</pubDate>
+      
+      <guid>/tags/book/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Cache</title>
       <link>/tags/cache/</link>
       <pubDate>Wed, 14 Jan 2015 11:45:46 +0000</pubDate>
@@ -81,6 +90,15 @@
       <pubDate>Sun, 25 Nov 2012 17:30:21 +0000</pubDate>
       
       <guid>/tags/celery/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Channels</title>
+      <link>/tags/channels/</link>
+      <pubDate>Fri, 28 Dec 2018 15:41:15 +0000</pubDate>
+      
+      <guid>/tags/channels/</guid>
       <description></description>
     </item>
     
@@ -132,7 +150,7 @@
     <item>
       <title>Django</title>
       <link>/tags/django/</link>
-      <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
+      <pubDate>Fri, 28 Dec 2018 15:41:15 +0000</pubDate>
       
       <guid>/tags/django/</guid>
       <description></description>

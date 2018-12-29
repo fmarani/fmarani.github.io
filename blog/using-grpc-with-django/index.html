@@ -77,7 +77,7 @@
     </div>
     <div class="title">
         <h1><a href="../../">Blog | Federico Marani</a></h1>
-        <p class="lead">Freelance Engineer/Architect. Former VP Engineering @TrialReach &amp; CTO at TalentRank. MSc Business Psychology.</p>
+        <p class="lead">Freelance Engineer/Architect. Former VP Engineering @TrialReach &amp; CTO at TalentRank. MSc Business Psychology. Author of <a href='https://www.amazon.co.uk/Practical-Django-Channels-Applications-Capabilities/dp/1484240987/'>Practical Django 2 and Channels 2</a></p>
     </div>
 
     <ul class="sidebar-menu">
@@ -155,16 +155,16 @@
 <p>I will be using as example a toy project called <code>slimmer</code>. We will have a client project, a server project and a shared package, which will contain the stubs. To start with, create an empty folder with a minimal <code>setup.py</code> file:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">setuptools</span> <span style="color:#069;font-weight:bold">import</span> setup
 
-setup(name<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;slimmer_grpc&#39;</span>,
-      version<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;0.1&#39;</span>,
-      description<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;Slimmer client/server stubs&#39;</span>,
-      url<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;http://github.com/fmarani/slimmer_grpc&#39;</span>,
-      author<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;Federico Marani&#39;</span>,
-      author_email<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;flagzeta@gmail.com&#39;</span>,
-      license<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;MIT&#39;</span>,
-      packages<span style="color:#555">=</span>[<span style="color:#c30"></span><span style="color:#c30">&#39;slimmer_grpc&#39;</span>],
+setup(name<span style="color:#555">=</span><span style="color:#c30">&#39;slimmer_grpc&#39;</span>,
+      version<span style="color:#555">=</span><span style="color:#c30">&#39;0.1&#39;</span>,
+      description<span style="color:#555">=</span><span style="color:#c30">&#39;Slimmer client/server stubs&#39;</span>,
+      url<span style="color:#555">=</span><span style="color:#c30">&#39;http://github.com/fmarani/slimmer_grpc&#39;</span>,
+      author<span style="color:#555">=</span><span style="color:#c30">&#39;Federico Marani&#39;</span>,
+      author_email<span style="color:#555">=</span><span style="color:#c30">&#39;flagzeta@gmail.com&#39;</span>,
+      license<span style="color:#555">=</span><span style="color:#c30">&#39;MIT&#39;</span>,
+      packages<span style="color:#555">=</span>[<span style="color:#c30">&#39;slimmer_grpc&#39;</span>],
       install_requires<span style="color:#555">=</span>[
-          <span style="color:#c30"></span><span style="color:#c30">&#39;grpcio==1.8.3&#39;</span>
+          <span style="color:#c30">&#39;grpcio==1.8.3&#39;</span>
       ],
       zip_safe<span style="color:#555">=</span>False)</code></pre></div>
 <p>That is the minimum required to make this package installable. It is missing a dependency that is required when you are developing. We will add that through a <code>requirements-dev.txt</code> file:</p>
@@ -175,7 +175,7 @@ setup(name<span style="color:#555">=</span><span style="color:#c30"></span><span
 <p>Second step you need to create your proto file. I am using an example which is more sophisticated than an &ldquo;Hello world&rdquo;, hope it is clear anyway.</p>
 
 <p>I am placing this file inside a special folder called <code>proto</code> with a folder structure that mirrors the package hierarchy. In this case, that would be <code>proto/slimmer_grpc/main.proto</code>.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-protobuf" data-lang="protobuf"><span style="color:#309">syntax</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;proto3&#34;</span>;<span style="color:#a00;background-color:#faa">
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-protobuf" data-lang="protobuf">syntax <span style="color:#555">=</span> <span style="color:#c30">&#34;proto3&#34;</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">package</span> <span style="color:#0cf;font-weight:bold">slimmer_grpc</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa">
@@ -194,25 +194,25 @@ setup(name<span style="color:#555">=</span><span style="color:#c30"></span><span
 </span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SystemEntity</span> {<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">category</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">name</span> <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">identity</span> <span style="color:#555">=</span> <span style="color:#f60">3</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> category <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> name <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> identity <span style="color:#555">=</span> <span style="color:#f60">3</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SystemRun</span> {<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">system_id</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#069;font-weight:bold">repeated</span> SystemEntity <span style="color:#309">entities</span> <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> system_id <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#069;font-weight:bold">repeated</span> SystemEntity entities <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">SystemRunResponse</span> {<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">run_id</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> run_id <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">Activation</span> {<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">system_id</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> <span style="color:#309">run_id</span> <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  SystemEntity <span style="color:#309">entity</span> <span style="color:#555">=</span> <span style="color:#f60">3</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> system_id <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">string</span> run_id <span style="color:#555">=</span> <span style="color:#f60">2</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  SystemEntity entity <span style="color:#555">=</span> <span style="color:#f60">3</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span>}<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span><span style="color:#069;font-weight:bold">message</span> <span style="color:#0a8;font-weight:bold">ActivationResponse</span> {<span style="color:#a00;background-color:#faa">
-</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">bool</span> <span style="color:#309">success</span> <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
+</span><span style="color:#a00;background-color:#faa"></span>  <span style="color:#078;font-weight:bold">bool</span> success <span style="color:#555">=</span> <span style="color:#f60">1</span>;<span style="color:#a00;background-color:#faa">
 </span><span style="color:#a00;background-color:#faa"></span>}</code></pre></div>
 <p>After you have written all this, now it is time to generate the code. From the folder that contains <code>setup.py</code>, run the following command.</p>
 
@@ -257,7 +257,7 @@ setup(name<span style="color:#555">=</span><span style="color:#c30"></span><span
 
     <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">new_system_run</span>(self, request, context):
         <span style="color:#09f;font-style:italic"># your code here</span>
-        <span style="color:#069;font-weight:bold">return</span> main_pb2<span style="color:#555">.</span>SystemRunResponse(run_id<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#34;your id&#34;</span>)
+        <span style="color:#069;font-weight:bold">return</span> main_pb2<span style="color:#555">.</span>SystemRunResponse(run_id<span style="color:#555">=</span><span style="color:#c30">&#34;your id&#34;</span>)
 
     <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">new_activation</span>(self, request, context):
         <span style="color:#09f;font-style:italic"># your code here</span>
@@ -270,17 +270,17 @@ _ONE_DAY_IN_SECONDS <span style="color:#555">=</span> <span style="color:#f60">6
 <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">serve_forever</span>():
     server <span style="color:#555">=</span> grpc<span style="color:#555">.</span>server(futures<span style="color:#555">.</span>ThreadPoolExecutor(max_workers<span style="color:#555">=</span><span style="color:#f60">10</span>))
     main_pb2_grpc<span style="color:#555">.</span>add_MainServicer_to_server(MainServicer(), server)
-    server<span style="color:#555">.</span>add_insecure_port(<span style="color:#c30"></span><span style="color:#c30">&#39;[::]:50051&#39;</span>)
+    server<span style="color:#555">.</span>add_insecure_port(<span style="color:#c30">&#39;[::]:50051&#39;</span>)
     server<span style="color:#555">.</span>start()
     <span style="color:#069;font-weight:bold">yield</span>
     server<span style="color:#555">.</span>stop(<span style="color:#f60">0</span>)
 
 <span style="color:#069;font-weight:bold">class</span> <span style="color:#0a8;font-weight:bold">Command</span>(BaseCommand):
-    help <span style="color:#555">=</span> <span style="color:#c30"></span><span style="color:#c30">&#39;api server&#39;</span>
+    help <span style="color:#555">=</span> <span style="color:#c30">&#39;api server&#39;</span>
 
     <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">handle</span>(self, <span style="color:#555">*</span>args, <span style="color:#555">**</span>options):
         <span style="color:#069;font-weight:bold">with</span> serve_forever():
-            self<span style="color:#555">.</span>stdout<span style="color:#555">.</span>write(self<span style="color:#555">.</span>style<span style="color:#555">.</span>SUCCESS(<span style="color:#c30"></span><span style="color:#c30">&#39;Successfully started grpc server &#39;</span>))
+            self<span style="color:#555">.</span>stdout<span style="color:#555">.</span>write(self<span style="color:#555">.</span>style<span style="color:#555">.</span>SUCCESS(<span style="color:#c30">&#39;Successfully started grpc server &#39;</span>))
             <span style="color:#069;font-weight:bold">try</span>:
                 <span style="color:#069;font-weight:bold">while</span> True:
                     time<span style="color:#555">.</span>sleep(_ONE_DAY_IN_SECONDS)
@@ -295,10 +295,10 @@ _ONE_DAY_IN_SECONDS <span style="color:#555">=</span> <span style="color:#f60">6
 <span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">grpc</span>
 
 <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">get_client</span>():
-    channel <span style="color:#555">=</span> grpc<span style="color:#555">.</span>insecure_channel(<span style="color:#c30"></span><span style="color:#c30">&#34;1.2.3.4:50051&#34;</span>)
+    channel <span style="color:#555">=</span> grpc<span style="color:#555">.</span>insecure_channel(<span style="color:#c30">&#34;1.2.3.4:50051&#34;</span>)
     client <span style="color:#555">=</span> main_pb2_grpc<span style="color:#555">.</span>MainStub(channel)
-    response <span style="color:#555">=</span> client<span style="color:#555">.</span>ping(main_pb2<span style="color:#555">.</span>Ping(message<span style="color:#555">=</span><span style="color:#c30"></span><span style="color:#c30">&#39;test&#39;</span>))
-    <span style="color:#069;font-weight:bold">if</span> response<span style="color:#555">.</span>message <span style="color:#555">==</span> <span style="color:#c30"></span><span style="color:#c30">&#34;test&#34;</span>:
+    response <span style="color:#555">=</span> client<span style="color:#555">.</span>ping(main_pb2<span style="color:#555">.</span>Ping(message<span style="color:#555">=</span><span style="color:#c30">&#39;test&#39;</span>))
+    <span style="color:#069;font-weight:bold">if</span> response<span style="color:#555">.</span>message <span style="color:#555">==</span> <span style="color:#c30">&#34;test&#34;</span>:
         <span style="color:#069;font-weight:bold">return</span> client</code></pre></div>
 <p>That is a starting point. This will need to be extended with exception handling, etc&hellip;</p>
 
