@@ -69,7 +69,7 @@
     <item>
       <title>Book</title>
       <link>/tags/book/</link>
-      <pubDate>Fri, 28 Dec 2018 15:41:15 +0000</pubDate>
+      <pubDate>Wed, 06 Feb 2019 15:41:15 +0000</pubDate>
       
       <guid>/tags/book/</guid>
       <description></description>
@@ -360,6 +360,15 @@
       <pubDate>Tue, 16 Jan 2018 15:41:15 +0000</pubDate>
       
       <guid>/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reading</title>
+      <link>/tags/reading/</link>
+      <pubDate>Wed, 06 Feb 2019 15:41:15 +0000</pubDate>
+      
+      <guid>/tags/reading/</guid>
       <description></description>
     </item>
     

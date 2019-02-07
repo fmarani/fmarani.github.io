@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 28 Dec 2018 15:41:15 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 06 Feb 2019 15:41:15 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Notes about book I have read (2018)</title>
+      <link>/blog/2018-book-notes/</link>
+      <pubDate>Wed, 06 Feb 2019 15:41:15 +0000</pubDate>
+      
+      <guid>/blog/2018-book-notes/</guid>
+      <description>Some notes about the book I read in 2018. These notes are mostly for my future self. Book are presented in order of &amp;ldquo;impact&amp;rdquo;, which is a completely personal metric.
+4-hour body week (Tim Ferris) Full of very useful, body-related advice. My biggest takeaway from this is that i experimented for a couple of months the low-carb diet he suggested, and i have never been this slim before. I always wrongly assumed that my weight must be genetic, given how much sport I do.</description>
+    </item>
     
     <item>
       <title>Book: Practical Django 2 and Channel 2</title>
