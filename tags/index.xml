@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 15 Mar 2009 18:39:48 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 06 Feb 2019 15:41:15 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,59 +15,14 @@
     <item>
       <title></title>
       <link>/tags/</link>
-      <pubDate>Sun, 15 Mar 2009 18:39:48 +0000</pubDate>
+      <pubDate>Wed, 06 Feb 2019 15:41:15 +0000</pubDate>
       
       <guid>/tags/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Airflow</title>
-      <link>/tags/airflow/</link>
-      <pubDate>Thu, 20 Jul 2017 12:00:00 +0000</pubDate>
-      
-      <guid>/tags/airflow/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Amazon Ec2</title>
-      <link>/tags/amazon-ec2/</link>
-      <pubDate>Sun, 06 May 2012 11:39:37 +0000</pubDate>
-      
-      <guid>/tags/amazon-ec2/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Ansible</title>
-      <link>/tags/ansible/</link>
-      <pubDate>Sun, 27 Jul 2014 12:00:00 +0000</pubDate>
-      
-      <guid>/tags/ansible/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Architecture</title>
-      <link>/tags/architecture/</link>
-      <pubDate>Tue, 16 Jan 2018 15:41:15 +0000</pubDate>
-      
-      <guid>/tags/architecture/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Big Data</title>
-      <link>/tags/big-data/</link>
-      <pubDate>Sun, 18 Jun 2017 14:44:35 +0100</pubDate>
-      
-      <guid>/tags/big-data/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Book</title>
+      <title>book</title>
       <link>/tags/book/</link>
       <pubDate>Wed, 06 Feb 2019 15:41:15 +0000</pubDate>
       
@@ -76,295 +31,7 @@
     </item>
     
     <item>
-      <title>Cache</title>
-      <link>/tags/cache/</link>
-      <pubDate>Wed, 14 Jan 2015 11:45:46 +0000</pubDate>
-      
-      <guid>/tags/cache/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Celery</title>
-      <link>/tags/celery/</link>
-      <pubDate>Sun, 25 Nov 2012 17:30:21 +0000</pubDate>
-      
-      <guid>/tags/celery/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Channels</title>
-      <link>/tags/channels/</link>
-      <pubDate>Fri, 28 Dec 2018 15:41:15 +0000</pubDate>
-      
-      <guid>/tags/channels/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Comprotempo</title>
-      <link>/tags/comprotempo/</link>
-      <pubDate>Wed, 11 Mar 2015 12:00:00 +0000</pubDate>
-      
-      <guid>/tags/comprotempo/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Data</title>
-      <link>/tags/data/</link>
-      <pubDate>Sun, 18 Jun 2017 14:44:35 +0100</pubDate>
-      
-      <guid>/tags/data/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Dependency Injection</title>
-      <link>/tags/dependency-injection/</link>
-      <pubDate>Tue, 05 Oct 2010 20:32:05 +0000</pubDate>
-      
-      <guid>/tags/dependency-injection/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Development</title>
-      <link>/tags/development/</link>
-      <pubDate>Thu, 03 Nov 2011 14:49:36 +0000</pubDate>
-      
-      <guid>/tags/development/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Devops</title>
-      <link>/tags/devops/</link>
-      <pubDate>Sun, 27 Jul 2014 12:00:00 +0000</pubDate>
-      
-      <guid>/tags/devops/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Django</title>
-      <link>/tags/django/</link>
-      <pubDate>Fri, 28 Dec 2018 15:41:15 +0000</pubDate>
-      
-      <guid>/tags/django/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Djugl</title>
-      <link>/tags/djugl/</link>
-      <pubDate>Mon, 02 Dec 2013 13:13:47 +0000</pubDate>
-      
-      <guid>/tags/djugl/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Etl</title>
-      <link>/tags/etl/</link>
-      <pubDate>Sun, 18 Jun 2017 14:44:35 +0100</pubDate>
-      
-      <guid>/tags/etl/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Europython</title>
-      <link>/tags/europython/</link>
-      <pubDate>Thu, 20 Jul 2017 12:00:00 +0000</pubDate>
-      
-      <guid>/tags/europython/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Functional Programming</title>
-      <link>/tags/functional-programming/</link>
-      <pubDate>Sun, 27 Mar 2011 13:29:33 +0000</pubDate>
-      
-      <guid>/tags/functional-programming/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Grpc</title>
-      <link>/tags/grpc/</link>
-      <pubDate>Tue, 16 Jan 2018 15:41:15 +0000</pubDate>
-      
-      <guid>/tags/grpc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Hugo</title>
-      <link>/tags/hugo/</link>
-      <pubDate>Wed, 14 Sep 2016 17:04:43 +0200</pubDate>
-      
-      <guid>/tags/hugo/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>I18n</title>
-      <link>/tags/i18n/</link>
-      <pubDate>Thu, 31 Jan 2013 15:39:37 +0000</pubDate>
-      
-      <guid>/tags/i18n/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Ipfs</title>
-      <link>/tags/ipfs/</link>
-      <pubDate>Wed, 14 Sep 2016 17:04:43 +0200</pubDate>
-      
-      <guid>/tags/ipfs/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Laconica</title>
-      <link>/tags/laconica/</link>
-      <pubDate>Thu, 02 Apr 2009 23:15:09 +0000</pubDate>
-      
-      <guid>/tags/laconica/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Languages</title>
-      <link>/tags/languages/</link>
-      <pubDate>Tue, 05 Oct 2010 20:01:04 +0000</pubDate>
-      
-      <guid>/tags/languages/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Logging</title>
-      <link>/tags/logging/</link>
-      <pubDate>Fri, 08 Apr 2011 01:00:10 +0000</pubDate>
-      
-      <guid>/tags/logging/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Machine Learning</title>
-      <link>/tags/machine-learning/</link>
-      <pubDate>Thu, 17 May 2012 00:28:34 +0000</pubDate>
-      
-      <guid>/tags/machine-learning/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Microframeworks</title>
-      <link>/tags/microframeworks/</link>
-      <pubDate>Mon, 11 Oct 2010 00:56:07 +0000</pubDate>
-      
-      <guid>/tags/microframeworks/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Microservices</title>
-      <link>/tags/microservices/</link>
-      <pubDate>Tue, 16 Jan 2018 15:41:15 +0000</pubDate>
-      
-      <guid>/tags/microservices/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Minimalism</title>
-      <link>/tags/minimalism/</link>
-      <pubDate>Sat, 18 Mar 2017 16:30:28 +0000</pubDate>
-      
-      <guid>/tags/minimalism/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Monitoring</title>
-      <link>/tags/monitoring/</link>
-      <pubDate>Fri, 16 Jan 2015 12:51:25 +0000</pubDate>
-      
-      <guid>/tags/monitoring/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Nginx</title>
-      <link>/tags/nginx/</link>
-      <pubDate>Sun, 17 Oct 2010 13:55:49 +0000</pubDate>
-      
-      <guid>/tags/nginx/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Nltk</title>
-      <link>/tags/nltk/</link>
-      <pubDate>Wed, 21 Mar 2012 22:44:23 +0000</pubDate>
-      
-      <guid>/tags/nltk/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Php</title>
-      <link>/tags/php/</link>
-      <pubDate>Sun, 17 Oct 2010 13:09:26 +0000</pubDate>
-      
-      <guid>/tags/php/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Presentation</title>
-      <link>/tags/presentation/</link>
-      <pubDate>Thu, 20 Jul 2017 12:00:00 +0000</pubDate>
-      
-      <guid>/tags/presentation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Product</title>
-      <link>/tags/product/</link>
-      <pubDate>Sun, 15 Nov 2015 12:00:00 +0000</pubDate>
-      
-      <guid>/tags/product/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Pubsub</title>
-      <link>/tags/pubsub/</link>
-      <pubDate>Thu, 02 Apr 2009 23:15:09 +0000</pubDate>
-      
-      <guid>/tags/pubsub/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Python</title>
-      <link>/tags/python/</link>
-      <pubDate>Tue, 16 Jan 2018 15:41:15 +0000</pubDate>
-      
-      <guid>/tags/python/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Reading</title>
+      <title>reading</title>
       <link>/tags/reading/</link>
       <pubDate>Wed, 06 Feb 2019 15:41:15 +0000</pubDate>
       
@@ -373,7 +40,88 @@
     </item>
     
     <item>
-      <title>Redshift</title>
+      <title>channels</title>
+      <link>/tags/channels/</link>
+      <pubDate>Fri, 28 Dec 2018 15:41:15 +0000</pubDate>
+      
+      <guid>/tags/channels/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>django</title>
+      <link>/tags/django/</link>
+      <pubDate>Fri, 28 Dec 2018 15:41:15 +0000</pubDate>
+      
+      <guid>/tags/django/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>architecture</title>
+      <link>/tags/architecture/</link>
+      <pubDate>Tue, 16 Jan 2018 15:41:15 +0000</pubDate>
+      
+      <guid>/tags/architecture/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>grpc</title>
+      <link>/tags/grpc/</link>
+      <pubDate>Tue, 16 Jan 2018 15:41:15 +0000</pubDate>
+      
+      <guid>/tags/grpc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>microservices</title>
+      <link>/tags/microservices/</link>
+      <pubDate>Tue, 16 Jan 2018 15:41:15 +0000</pubDate>
+      
+      <guid>/tags/microservices/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>/tags/python/</link>
+      <pubDate>Tue, 16 Jan 2018 15:41:15 +0000</pubDate>
+      
+      <guid>/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>airflow</title>
+      <link>/tags/airflow/</link>
+      <pubDate>Thu, 20 Jul 2017 12:00:00 +0000</pubDate>
+      
+      <guid>/tags/airflow/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>europython</title>
+      <link>/tags/europython/</link>
+      <pubDate>Thu, 20 Jul 2017 12:00:00 +0000</pubDate>
+      
+      <guid>/tags/europython/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>presentation</title>
+      <link>/tags/presentation/</link>
+      <pubDate>Thu, 20 Jul 2017 12:00:00 +0000</pubDate>
+      
+      <guid>/tags/presentation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>redshift</title>
       <link>/tags/redshift/</link>
       <pubDate>Thu, 20 Jul 2017 12:00:00 +0000</pubDate>
       
@@ -382,88 +130,43 @@
     </item>
     
     <item>
-      <title>Scala</title>
-      <link>/tags/scala/</link>
-      <pubDate>Sun, 27 Mar 2011 13:29:33 +0000</pubDate>
+      <title>big data</title>
+      <link>/tags/big-data/</link>
+      <pubDate>Sun, 18 Jun 2017 14:44:35 +0100</pubDate>
       
-      <guid>/tags/scala/</guid>
+      <guid>/tags/big-data/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Scalability</title>
-      <link>/tags/scalability/</link>
-      <pubDate>Sun, 25 Nov 2012 17:30:21 +0000</pubDate>
+      <title>data</title>
+      <link>/tags/data/</link>
+      <pubDate>Sun, 18 Jun 2017 14:44:35 +0100</pubDate>
       
-      <guid>/tags/scalability/</guid>
+      <guid>/tags/data/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Search</title>
-      <link>/tags/search/</link>
-      <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
+      <title>etl</title>
+      <link>/tags/etl/</link>
+      <pubDate>Sun, 18 Jun 2017 14:44:35 +0100</pubDate>
       
-      <guid>/tags/search/</guid>
+      <guid>/tags/etl/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Security</title>
-      <link>/tags/security/</link>
-      <pubDate>Thu, 15 Sep 2016 12:23:07 +0200</pubDate>
+      <title>minimalism</title>
+      <link>/tags/minimalism/</link>
+      <pubDate>Sat, 18 Mar 2017 16:30:28 +0000</pubDate>
       
-      <guid>/tags/security/</guid>
+      <guid>/tags/minimalism/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Service Oriented Architecture</title>
-      <link>/tags/service-oriented-architecture/</link>
-      <pubDate>Sun, 22 Jan 2012 21:49:33 +0000</pubDate>
-      
-      <guid>/tags/service-oriented-architecture/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Soa</title>
-      <link>/tags/soa/</link>
-      <pubDate>Sat, 24 Sep 2016 23:16:56 +0200</pubDate>
-      
-      <guid>/tags/soa/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Software</title>
-      <link>/tags/software/</link>
-      <pubDate>Sun, 15 Nov 2015 12:00:00 +0000</pubDate>
-      
-      <guid>/tags/software/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Solr</title>
-      <link>/tags/solr/</link>
-      <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
-      
-      <guid>/tags/solr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Startup</title>
-      <link>/tags/startup/</link>
-      <pubDate>Sun, 26 Jan 2014 15:24:59 +0000</pubDate>
-      
-      <guid>/tags/startup/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Startups</title>
+      <title>startups</title>
       <link>/tags/startups/</link>
       <pubDate>Sat, 18 Mar 2017 16:30:28 +0000</pubDate>
       
@@ -472,7 +175,43 @@
     </item>
     
     <item>
-      <title>Static Sites</title>
+      <title>soa</title>
+      <link>/tags/soa/</link>
+      <pubDate>Sat, 24 Sep 2016 23:16:56 +0200</pubDate>
+      
+      <guid>/tags/soa/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>security</title>
+      <link>/tags/security/</link>
+      <pubDate>Thu, 15 Sep 2016 12:23:07 +0200</pubDate>
+      
+      <guid>/tags/security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hugo</title>
+      <link>/tags/hugo/</link>
+      <pubDate>Wed, 14 Sep 2016 17:04:43 +0200</pubDate>
+      
+      <guid>/tags/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ipfs</title>
+      <link>/tags/ipfs/</link>
+      <pubDate>Wed, 14 Sep 2016 17:04:43 +0200</pubDate>
+      
+      <guid>/tags/ipfs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>static sites</title>
       <link>/tags/static-sites/</link>
       <pubDate>Wed, 14 Sep 2016 17:04:43 +0200</pubDate>
       
@@ -481,25 +220,7 @@
     </item>
     
     <item>
-      <title>Stomp</title>
-      <link>/tags/stomp/</link>
-      <pubDate>Sun, 15 Mar 2009 19:57:51 +0000</pubDate>
-      
-      <guid>/tags/stomp/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tabs.to</title>
-      <link>/tags/tabs.to/</link>
-      <pubDate>Sun, 26 Jan 2014 15:24:59 +0000</pubDate>
-      
-      <guid>/tags/tabs.to/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Talentrank</title>
+      <title> talentrank</title>
       <link>/tags/talentrank/</link>
       <pubDate>Sun, 01 May 2016 20:43:48 +0000</pubDate>
       
@@ -508,7 +229,178 @@
     </item>
     
     <item>
-      <title>Text Analysis</title>
+      <title> software</title>
+      <link>/tags/software/</link>
+      <pubDate>Sun, 15 Nov 2015 12:00:00 +0000</pubDate>
+      
+      <guid>/tags/software/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>product</title>
+      <link>/tags/product/</link>
+      <pubDate>Sun, 15 Nov 2015 12:00:00 +0000</pubDate>
+      
+      <guid>/tags/product/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title> comprotempo</title>
+      <link>/tags/comprotempo/</link>
+      <pubDate>Wed, 11 Mar 2015 12:00:00 +0000</pubDate>
+      
+      <guid>/tags/comprotempo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>monitoring</title>
+      <link>/tags/monitoring/</link>
+      <pubDate>Fri, 16 Jan 2015 12:51:25 +0000</pubDate>
+      
+      <guid>/tags/monitoring/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cache</title>
+      <link>/tags/cache/</link>
+      <pubDate>Wed, 14 Jan 2015 11:45:46 +0000</pubDate>
+      
+      <guid>/tags/cache/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web architectures</title>
+      <link>/tags/web-architectures/</link>
+      <pubDate>Wed, 14 Jan 2015 11:45:46 +0000</pubDate>
+      
+      <guid>/tags/web-architectures/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ansible</title>
+      <link>/tags/ansible/</link>
+      <pubDate>Sun, 27 Jul 2014 12:00:00 +0000</pubDate>
+      
+      <guid>/tags/ansible/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>devops</title>
+      <link>/tags/devops/</link>
+      <pubDate>Sun, 27 Jul 2014 12:00:00 +0000</pubDate>
+      
+      <guid>/tags/devops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>startup</title>
+      <link>/tags/startup/</link>
+      <pubDate>Sun, 26 Jan 2014 15:24:59 +0000</pubDate>
+      
+      <guid>/tags/startup/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tabs.to</title>
+      <link>/tags/tabs.to/</link>
+      <pubDate>Sun, 26 Jan 2014 15:24:59 +0000</pubDate>
+      
+      <guid>/tags/tabs.to/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>djugl</title>
+      <link>/tags/djugl/</link>
+      <pubDate>Mon, 02 Dec 2013 13:13:47 +0000</pubDate>
+      
+      <guid>/tags/djugl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>search</title>
+      <link>/tags/search/</link>
+      <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
+      
+      <guid>/tags/search/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>solr</title>
+      <link>/tags/solr/</link>
+      <pubDate>Wed, 31 Jul 2013 12:09:43 +0000</pubDate>
+      
+      <guid>/tags/solr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>i18n</title>
+      <link>/tags/i18n/</link>
+      <pubDate>Thu, 31 Jan 2013 15:39:37 +0000</pubDate>
+      
+      <guid>/tags/i18n/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>celery</title>
+      <link>/tags/celery/</link>
+      <pubDate>Sun, 25 Nov 2012 17:30:21 +0000</pubDate>
+      
+      <guid>/tags/celery/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>scalability</title>
+      <link>/tags/scalability/</link>
+      <pubDate>Sun, 25 Nov 2012 17:30:21 +0000</pubDate>
+      
+      <guid>/tags/scalability/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>machine learning</title>
+      <link>/tags/machine-learning/</link>
+      <pubDate>Thu, 17 May 2012 00:28:34 +0000</pubDate>
+      
+      <guid>/tags/machine-learning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>amazon ec2</title>
+      <link>/tags/amazon-ec2/</link>
+      <pubDate>Sun, 06 May 2012 11:39:37 +0000</pubDate>
+      
+      <guid>/tags/amazon-ec2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nltk</title>
+      <link>/tags/nltk/</link>
+      <pubDate>Wed, 21 Mar 2012 22:44:23 +0000</pubDate>
+      
+      <guid>/tags/nltk/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>text analysis</title>
       <link>/tags/text-analysis/</link>
       <pubDate>Wed, 21 Mar 2012 22:44:23 +0000</pubDate>
       
@@ -517,7 +409,70 @@
     </item>
     
     <item>
-      <title>Unit Testing</title>
+      <title>service oriented architecture</title>
+      <link>/tags/service-oriented-architecture/</link>
+      <pubDate>Sun, 22 Jan 2012 21:49:33 +0000</pubDate>
+      
+      <guid>/tags/service-oriented-architecture/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>development</title>
+      <link>/tags/development/</link>
+      <pubDate>Thu, 03 Nov 2011 14:49:36 +0000</pubDate>
+      
+      <guid>/tags/development/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>logging</title>
+      <link>/tags/logging/</link>
+      <pubDate>Fri, 08 Apr 2011 01:00:10 +0000</pubDate>
+      
+      <guid>/tags/logging/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>functional programming</title>
+      <link>/tags/functional-programming/</link>
+      <pubDate>Sun, 27 Mar 2011 13:29:33 +0000</pubDate>
+      
+      <guid>/tags/functional-programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>scala</title>
+      <link>/tags/scala/</link>
+      <pubDate>Sun, 27 Mar 2011 13:29:33 +0000</pubDate>
+      
+      <guid>/tags/scala/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nginx</title>
+      <link>/tags/nginx/</link>
+      <pubDate>Sun, 17 Oct 2010 13:55:49 +0000</pubDate>
+      
+      <guid>/tags/nginx/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>php</title>
+      <link>/tags/php/</link>
+      <pubDate>Sun, 17 Oct 2010 13:09:26 +0000</pubDate>
+      
+      <guid>/tags/php/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>unit-testing</title>
       <link>/tags/unit-testing/</link>
       <pubDate>Sun, 17 Oct 2010 13:09:26 +0000</pubDate>
       
@@ -526,11 +481,56 @@
     </item>
     
     <item>
-      <title>Web Architectures</title>
-      <link>/tags/web-architectures/</link>
-      <pubDate>Wed, 14 Jan 2015 11:45:46 +0000</pubDate>
+      <title>microframeworks</title>
+      <link>/tags/microframeworks/</link>
+      <pubDate>Mon, 11 Oct 2010 00:56:07 +0000</pubDate>
       
-      <guid>/tags/web-architectures/</guid>
+      <guid>/tags/microframeworks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dependency injection</title>
+      <link>/tags/dependency-injection/</link>
+      <pubDate>Tue, 05 Oct 2010 20:32:05 +0000</pubDate>
+      
+      <guid>/tags/dependency-injection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>languages</title>
+      <link>/tags/languages/</link>
+      <pubDate>Tue, 05 Oct 2010 20:01:04 +0000</pubDate>
+      
+      <guid>/tags/languages/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>laconica</title>
+      <link>/tags/laconica/</link>
+      <pubDate>Thu, 02 Apr 2009 23:15:09 +0000</pubDate>
+      
+      <guid>/tags/laconica/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pubsub</title>
+      <link>/tags/pubsub/</link>
+      <pubDate>Thu, 02 Apr 2009 23:15:09 +0000</pubDate>
+      
+      <guid>/tags/pubsub/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>stomp</title>
+      <link>/tags/stomp/</link>
+      <pubDate>Sun, 15 Mar 2009 19:57:51 +0000</pubDate>
+      
+      <guid>/tags/stomp/</guid>
       <description></description>
     </item>
     
