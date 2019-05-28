@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta property="og:title" content=" Evolution of Single Sign On &middot;  Blog | Federico Marani" />
+<meta property="og:site_name" content="Blog | Federico Marani" />
+<meta property="og:url" content="/blog/evolution-of-single-sign-on/" />
+
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content="2019-05-15T17:54:18&#43;01:00" />
+    <meta property="og:article:tag" content="SSO" />
+    <meta property="og:article:tag" content="enterprise" />
+    <meta property="og:article:tag" content="web architectures" />
+    
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@" />
+    <meta name="twitter:creator" content="@" />
+    <meta name="twitter:title" content="Evolution of Single Sign On" />
+    <meta name="twitter:description" content="" />
+    <meta name="twitter:url" content="/blog/evolution-of-single-sign-on/" />
+
+
+<title> Evolution of Single Sign On &middot;  Blog | Federico Marani</title>
+
+
+    <meta name="description" content="" />
+
+
+<meta name="p:domain_verify" content="fc173d84e3a4de948ed4bda2908afd3e"/>
+<meta name="HandheldFriendly" content="True" />
+<meta name="MobileOptimized" content="320" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+
+
+
+<link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../../css/pure-min.css">
+
+
+    <link rel="stylesheet" href="../../css/grids-responsive-min.css">
+
+<link rel="stylesheet" href="../../css/crisp.css">
+<link rel="stylesheet" href="../../css/rrssb.css">
+
+
+
+
+
+
+
+
+<link rel="canonical" href="../../blog/evolution-of-single-sign-on/" />
+
+
+    
+
+
+    </head>
+    <div id="layout" class="pure-g">
+        <div class="sidebar pure-u-1 pure-u-md-1-6">
+            <div class="header">
+    <div class="logo">
+        
+        
+            
+                <a id="logo" href="../../"><img src="../../img/me.png" alt="Blog | Federico Marani" /></a>
+            
+        
+    </div>
+    <div class="title">
+        <h1><a href="../../">Blog | Federico Marani</a></h1>
+        <p class="lead">Freelance Engineer/Architect. Founder of <a href='http://patternlift.com/'>PatternLift</a> software consultancy. Author of <a href='https://www.amazon.co.uk/Practical-Django-Channels-Applications-Capabilities/dp/1484240987/'>Practical Django 2 and Channels 2</a></p>
+    </div>
+
+    <ul class="sidebar-menu">
+        
+    </ul>
+
+    <div id="follow-icons">
+        <a href="http://twitter.com/flagZ" target="_blank" rel="me"><i class="fa fa-twitter fa-3x"></i></a>
+        <a href="http://uk.linkedin.com/in/federicomarani" target="_blank" rel="me"><i class="fa fa-linkedin fa-3x"></i></a>
+        <a href="http://github.com/fmarani" target="_blank" rel="me"><i class="fa fa-github fa-3x"></i></a>
+        <a href="https://speakerdeck.com/fmarani" target="_blank" rel="me"><i class="fa fa-slideshare fa-3x"></i></a>
+        <a href="mailto:flagzeta@gmail.com"><i class="fa fa-envelope fa-3x"></i></a>
+        <a href=""><i class="fa fa-rss fa-2x"></i></a> 
+    </div>
+
+    
+        <div class="cc">
+            
+            
+            
+            
+            
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+            
+        </div>
+    
+</div>
+
+        </div>
+        <div class="content pure-u-1 pure-u-md-5-6">
+            <div class="article singlepage" id="" class="blog">
+                <div class="post-stamp">
+                    <h1 class="post-title">Evolution of Single Sign On</h1>
+                    <span class="post-date">May 15, 2019 &middot; 4 minute read</span>
+                    
+
+                    <span class="taglist">
+                    
+                        &middot;
+                        
+                            <a href="../../tags/sso/">SSO</a>
+                        
+                            <a href="../../tags/enterprise/">enterprise</a>
+                        
+                            <a href="../../tags/web-architectures/">web architectures</a>
+                        
+                    
+                    </span>
+                </div>
+        <div id="blogpost-old" style="display: none">
+            This post is quite old... Technologies and techniques described here might not apply anymore.
+        </div>
+                <p>Single sign on is a very common requirement for organizations with many employees. Once you reach a certain stage and new employees are onboarded regularly, you need a smooth process for this. Similarly, employee churn becomes an ordinary event, and you have to make sure that people that do not work for the company anymore are taken out from your user database and their accesses revoked.</p>
+
+<p>Before the advent of SSO (or LDAP/AD), users were created and managed on the various systems separately. Support teams would create accesses for the users multiple times, on the various systems that the user needed for work. Needless to say this was burdensome and, when users left the company, it was easy to forget removing them.</p>
+
+<p>To solve this problem, companies started to centralize the list of users of the company in one database. This made it easier for IT support teams to add/remove users at the right moment. This allowed easier access management. A big step forward.</p>
+
+<p><img src="../../attachments/ldap.svg" alt="How LDAP works" /></p>
+
+<p>LDAP (or AD) however did not simplify the login procedure, and with the prolification of services in the enterprise environment, a user would have needed to login separately to each one to be able to do anything. This is when SSO (Single Sign On) comes in.</p>
+
+<p><img src="../../attachments/sso.svg" alt="How SSO works" /></p>
+
+<p>SSO is slightly more than a centralized user database. It moves the login responsibility from the many services you might have to a central one. If any services under SSO detect that you are not logged in, they will redirect to your SSO server, where you will enter your credentials.</p>
+
+<p>SSO is a higher level abstraction than LDAP. By controlling the initial interaction with a user, many SSO tools available on the market allow you to have for free features that you would normally have to integrate yourself, such as:</p>
+
+<ul>
+<li>Federated identities (Social login and similar)</li>
+<li>2 Factor authentication (or multiple)</li>
+<li>Password brute force protection</li>
+<li>Login audit trails</li>
+</ul>
+
+<p>The features listed above can be present in a system without SSO, but in that case they would need to be implement for every single service.</p>
+
+<p>Integrations between the protected services and the SSO system can happen through various protocols, the most used being OpenID connect, which is an extension of OAuth. OAuth is also the protocol that is normally used for social login.</p>
+
+<p>SSO can be quite complex to understand. There are many acronyms and many implementations. What I labelled above &ldquo;User checks&rdquo; is dependent on the implementation of SSO. If your implementation uses JWT tokens, this flow will be different than an implementation that does not use them.</p>
+
+<p>Because of its complexity, this design is evolving. One interesting evolution is what Google is purposing with its BeyondCorp papers. Google is dressing this a lot with device management, context, etc&hellip; which is more than plain identity verification. Essentially this is what it is:</p>
+
+<p><img src="../../attachments/beyondcorp.svg" alt="BeyondCorp" /></p>
+
+<p>Google has also productized this in a product called Identity Aware Proxy (IAP), which is only available for services hosted internally in the Google network. I imagine this is due to the fact that LOAS is internal only.</p>
+
+<p>The biggest difference between IAP and what Google uses is the location of the proxy server. You can deploy IAP only to the Google network, therefore it is technically a reverse proxy.</p>
+
+<p>Amazon offers a similar service but, internally, it is structured differently. AWS ALB (Application Load balancer) can be configured to require authentication. When it is so, it must be connected to a AWS Cognito instance. Cognito is primarily an authentication bridge, connecting systems that requires authentication to user databases.</p>
+
+<p>There are other designs that use proxies. Bitly&rsquo;s oauth2_proxy project, which is not a SSO design, is another one. oauth2_proxy is specifically targeting social login (oAuth) with Google. A similar design would be using Apache with mod_auth_ldap, configured to expose user info to the backend.</p>
+
+<p><img src="../../attachments/oauth2_proxy.svg" alt="oauth2_proxy" /></p>
+
+<p>The design above is not offering SSO. In an enterprise environment, with many services, this is a UX nuisance. Buzzfeed has heavily modified the oauth2_proxy project to implement a SSO system, using a double oAuth mechanism. By storing the state in the sso-auth node, multiple sso-proxy instances can use that.</p>
+
+<p><img src="../../attachments/buzzfeed-sso.svg" alt="BuzzFeed SSO" /></p>
+
+<p>If you ignore the number of reverse proxies, the diagram above is similar to the diagram of Google BeyondCorp. The number of proxies is actually not relevant, as both systems support multiple proxies.</p>
+
+<p>The difference is the presence of an authentication bridge. In this particular setup, it stores the login state so that multiple proxies can benefit from it. This bridge is similar in principle to a SSO server that is configured with federated identities. Keycloak, for instance, is a project that supports this.</p>
+
+<p>Given the complexity of integrating SSO, I think we are going to see more designs based on HTTP proxies in the future. There are a number of open source implementations of BeyondCorp, such as <a href="https://www.pomerium.io/">Pomerium</a> and <a href="https://github.com/cogolabs/transcend">Trascend</a>, both on Github.</p>
+
+<p>
+<a href="https://news.ycombinator.com/submit" class="hn-button">Vote on Hacker News</a>
+</p>
+                
+                
+    <div id="comments">
+        
+        
+            <div id="disqus_thread"></div>
+            <script>
+
+            var disqus_config = function () {
+            this.page.url = "https://flagzeta.org\/blog\/evolution-of-single-sign-on\/";
+            this.page.identifier = "evolution-of-single-sign-on";
+            };
+            (function() { 
+            var d = document, s = d.createElement('script');
+            s.src = 'https://flagzeta-org.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+            })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+<script type="text/javascript">var HN=[];HN.factory=function(e){return function(){HN.push([e].concat(Array.prototype.slice.call(arguments,0)))};},HN.on=HN.factory("on"),HN.once=HN.factory("once"),HN.off=HN.factory("off"),HN.emit=HN.factory("emit"),HN.load=function(){var e="hn-button.js";if(document.getElementById(e))return;var t=document.createElement("script");t.id=e,t.src="//hn-button.herokuapp.com/hn-button.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n)},HN.load();</script>
+
+<script type="text/javascript" charset="utf-8">
+var cutoffTime = new Date().getTime() - (2 * 365 * 24 * 60 * 60 * 1000);
+var postTime = new Date("2019-05-15T17:54:18+01:00").getTime();
+if (postTime < cutoffTime) {
+    document.getElementById("blogpost-old").style.display = "block";
+}
+</script>
+
+                
+    <div id="footer">
+        <section id="footer-message">&copy; Blog | Federico Marani. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
+    </div>
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-47493827-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+            </div>
+        </div>
+    </body>
+</html>
+
